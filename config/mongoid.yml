@@ -1,0 +1,29 @@
+development:
+  sessions:
+    default:  
+      database: artsapi_development
+      hosts:
+        - localhost:27017
+      options:        
+  options:
+
+production:
+  sessions:
+    default:
+      database: scotgov_pmd2_production
+      hosts:
+        - __PRODUCTION_MONGODB_HOST__:27017
+      options:
+
+test:
+  sessions:
+    default:
+      database: artsapi_test
+      hosts:
+        - localhost:27017
+      options:
+        read: primary
+        # In the test environment we lower the retries and retry interval to
+        # low amounts for fast failures.
+        max_retries: 1
+        retry_interval: 0

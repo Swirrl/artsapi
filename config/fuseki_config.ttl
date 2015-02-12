@@ -1,0 +1,63 @@
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+
+[] rdf:type fuseki:Server ;
+   # Services available.  Only explicitly listed services are configured.
+   # If there is a service description not linked from this list, it is ignored.
+   fuseki:services (
+     <#artsapi-development>
+     <#artsapi-test>
+   ) .
+
+[] ja:loadClass "com.hp.hpl.jena.tdb.TDB" .
+tdb:DatasetTDB  rdfs:subClassOf  ja:RDFDataset .
+tdb:GraphTDB    rdfs:subClassOf  ja:Model .
+
+<#artsapi-dev> a fuseki:Service ;
+    fuseki:name "artsapi-development";
+    # http://host:port/artsapi-dev
+
+    fuseki:serviceQuery "sparql";
+    # SPARQL query service  http://host:port/artsapi-dev/sparql?query=...
+
+    fuseki:serviceUpdate "update";
+    # SPARQL update service  http://host:port/artsapi-dev/update?query=
+
+    fuseki:serviceReadWriteGraphStore "data";
+    # SPARQL Graph store protocol (read and write)
+
+    fuseki:dataset <#dataset-artsapi-development>;
+    .
+
+ <#dataset-artsapi-dev> a tdb:DatasetTDB ;
+    tdb:location "/tdb_data/artsapi-development" ;  # change to suit your local installation
+    # Query timeout on this dataset (1s, 1000 milliseconds)
+    ja:context [ ja:cxtName "arq:queryTimeout" ;  ja:cxtValue "10000" ] ;
+    tdb:unionDefaultGraph true ;
+    .
+
+<#artsapi-test> a fuseki:Service ;
+    fuseki:name "artsapi-test";
+    # http://host:port/artsapi-test
+
+    fuseki:serviceQuery "sparql";
+    # SPARQL query service  http://host:port/artsapi-test/sparql?query=...
+
+    fuseki:serviceUpdate "update";
+    # SPARQL update servicehttp://host:port/artsapi-test/update?query=
+
+    fuseki:serviceReadWriteGraphStore "data";
+    # SPARQL Graph store protocol (read and write)
+
+    fuseki:dataset <#dataset-artsapi-test>;
+    .
+
+ <#dataset-artsapi-test> a tdb:DatasetTDB ;
+    tdb:location "/tdb_data/artsapi-test" ;  # change to suit your local installation
+    # Query timeout on this dataset (1s, 1000 milliseconds)
+    ja:context [ ja:cxtName "arq:queryTimeout" ;  ja:cxtValue "10000" ] ;
+    tdb:unionDefaultGraph true ;
+    .

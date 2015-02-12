@@ -1,0 +1,9 @@
+module RDF
+  #SITE = RDF::Vocabulary.new("#{ARTSAPI_VOCAB_ROOT}/def/")
+  DCAT = RDF::Vocabulary.new("http://www.w3.org/ns/dcat#")
+  VOID = RDF::Vocabulary.new("http://rdfs.org/ns/void#")
+  CUBE = RDF::Vocabulary.new("http://purl.org/linked-data/cube#")
+  VCARD = RDF::Vocabulary.new("http://www.w3.org/2006/vcard/ns#")
+  FOAF = RDF::Vocabulary.new("http://xmlns.com/foaf/0.1/")
+  DC_ELEM = RDF::Vocabulary.new("http://purl.org/dc/elements/1.1/")
+end
