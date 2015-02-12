@@ -1,1 +1,1 @@
-ORG_MAPPING = YAML.load_file(Rails.root + 'config/organisation_config.yml')
+#ORG_MAPPING = YAML.load_file(Rails.root + 'config/organisation_config.yml')
