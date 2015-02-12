@@ -39,3 +39,10 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end
+
+Tripod.configure do |config|
+
+  config.update_endpoint = 'http://127.0.0.1:3030/artsapi-dev/update'
+  config.query_endpoint = 'http://127.0.0.1:3030/artsapi-dev/sparql'
+
+end

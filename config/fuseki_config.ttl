@@ -8,7 +8,7 @@
    # Services available.  Only explicitly listed services are configured.
    # If there is a service description not linked from this list, it is ignored.
    fuseki:services (
-     <#artsapi-development>
+     <#artsapi-dev>
      <#artsapi-test>
    ) .
 
@@ -17,7 +17,7 @@ tdb:DatasetTDB  rdfs:subClassOf  ja:RDFDataset .
 tdb:GraphTDB    rdfs:subClassOf  ja:Model .
 
 <#artsapi-dev> a fuseki:Service ;
-    fuseki:name "artsapi-development";
+    fuseki:name "artsapi-dev";
     # http://host:port/artsapi-dev
 
     fuseki:serviceQuery "sparql";
@@ -29,11 +29,11 @@ tdb:GraphTDB    rdfs:subClassOf  ja:Model .
     fuseki:serviceReadWriteGraphStore "data";
     # SPARQL Graph store protocol (read and write)
 
-    fuseki:dataset <#dataset-artsapi-development>;
+    fuseki:dataset <#dataset-artsapi-dev>;
     .
 
  <#dataset-artsapi-dev> a tdb:DatasetTDB ;
-    tdb:location "/tdb_data/artsapi-development" ;  # change to suit your local installation
+    tdb:location "/tdb_data/artsapi-dev" ;  # change to suit your local installation
     # Query timeout on this dataset (1s, 1000 milliseconds)
     ja:context [ ja:cxtName "arq:queryTimeout" ;  ja:cxtValue "10000" ] ;
     tdb:unionDefaultGraph true ;

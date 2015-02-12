@@ -79,3 +79,10 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   # config.active_record.dump_schema_after_migration = false
 end
+
+Tripod.configure do |config|
+
+  config.update_endpoint = nil
+  config.query_endpoint = nil
+
+end
