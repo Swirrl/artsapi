@@ -1,8 +1,8 @@
 class Keyword
 
-  include Resource
+  include Concept
 
-  rdf_type 'http://artsapi.com/def/arts/Keyword'
+  rdf_type RDF::SKOS['Concept']
   graph_uri 'http://artsapi.com/graph/keywords'
 
 end
