@@ -28,9 +28,6 @@ class Person
 
   # on initialize we need to work out connections in order to display them. SPARQL time!
 
-  def all_accounts
-  end
-
   def all_emails
     Email.find_by_sparql("
       SELECT ?uri 
