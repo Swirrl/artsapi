@@ -14,6 +14,10 @@ class Concepts::Keyword
       uri.to_s.match(/\/[A-z]+$/)[0][1..-1].titleize
     end
 
+    def uri_from_label(label)
+      "#{ArtsAPI::HOST}/id/keywords/keyword/#{label.downcase}"
+    end
+
   end
 
 end

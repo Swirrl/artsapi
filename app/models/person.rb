@@ -60,6 +60,22 @@ class Person
     kw_hash
   end
 
+  def sorted_keywords
+    sorted = []
+    ak = all_keywords
+    ak.sort { |a, b| ak[b[0]][1] <=> ak[a[0]][1] }.each { |h| sorted << [ak[h[0]][0], ak[h[0]][1]] }
+    sorted
+  end
+
+  def keywords_csv
+  end
+
+  # for debug and partner feedback; not for production use!
+  def print_sorted_keywords
+    puts "#{self.name.titleize}: #{self.uri}\n\n"
+    sorted_keywords.each { |a| puts "'#{a[0]}' mentions: #{a[1]}"}
+  end
+
   class << self
 
     def get_uri_from_email(email_string)

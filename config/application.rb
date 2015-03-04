@@ -35,3 +35,7 @@ module ArtsAPI
 
   HOST = "http://artsapi.com"
 end
+
+Tripod.configure do |config|
+    config.response_limit_bytes = 20.megabytes
+end
