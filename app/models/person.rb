@@ -42,4 +42,22 @@ class Person
     all_emails.count
   end
 
+  def all_keywords
+    keyword_hash = {}
+
+    all_emails.each do |e| 
+      e.all_keywords do |kw|
+
+        if keyword_hash.has_key?(kw.uri.to_s)
+          keyword_hash[(kw.uri.to_s)][1] = keyword_hash[(kw.uri.to_s)][1] += 1
+        else
+          keyword_hash[(kw.uri.to_s)] = [kw.label, 1]
+        end
+
+      end
+    end
+
+    keyword_hash
+  end
+
 end

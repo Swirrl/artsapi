@@ -13,7 +13,12 @@ class Email
   field :sent_at, RDF::ARTS['sentAt'], :datatype => RDF::XSD.datetime
 
   def all_keywords
-
+    Concepts::Keyword.find_by_sparql("
+      SELECT ?uri 
+      WHERE { 
+        ?uri a <http://artsapi.com/def/arts/keywords/Keyword> . 
+        <#{self.uri.to_s}> <http://artsapi.com/def/arts/containsKeyword> ?uri . 
+      }")
   end
 
 end
