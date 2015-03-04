@@ -1,6 +1,5 @@
 module Resource
 
-  include Tripod::Resource
-  include TripodCache
+  extend ActiveSupport::Concern
 
 end
