@@ -63,4 +63,16 @@ class Person
     kw_hash
   end
 
+  class << self
+
+    def get_uri_from_email(email_string)
+      "#{ArtsAPI::HOST}/id/people/#{email_string.downcase.gsub(/\./, '-').gsub(/@/, '-')}"
+    end
+
+    def rdf_uri_from_email(email_string)
+      RDF::URI(self.get_uri_from_email(email_string))
+    end
+
+  end
+
 end
