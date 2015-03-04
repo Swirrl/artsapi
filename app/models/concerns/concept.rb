@@ -9,7 +9,7 @@ module Concept
     field :in_scheme, RDF::SKOS.inScheme, :is_uri => true
     field :label, RDF::RDFS.label
     field :description, 'http://purl.org/dc/terms/description'
-    field :sub_class_of, RDF::SKOS.subClassOf, :is_uri => true
+    field :sub_class_of, RDF::RDFS.subClassOf, :is_uri => true
     field :broader, RDF::SKOS.broader, :is_uri => true
     field :narrower, RDF::SKOS.narrower, :is_uri => true, :multivalued => true
     rdf_type RDF::SKOS.Concept

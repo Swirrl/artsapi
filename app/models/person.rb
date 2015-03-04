@@ -5,12 +5,12 @@ class Person
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
   graph_uri 'http://artsapi.com/graph/people'
 
-  field :account, RDF::FOAF['account'], is_uri: true
+  field :account, RDF::FOAF['account'], is_uri: true, multivalued: true
   field :name, RDF::FOAF['name']
   field :given_name, RDF::FOAF['givenName']
   field :family_name, RDF::FOAF['familyName']
   field :knows, RDF::FOAF['knows'], is_uri: true
-  field :made, RDF::FOAF['made'], is_uri: true
+  field :made, RDF::FOAF['made'], is_uri: true, multivalued: true
   field :has_email, RDF::VCARD['hasEmail']
   field :mbox, RDF::FOAF['mbox']
   field :member_of, RDF::ORG['memberOf'], is_uri: true
@@ -18,6 +18,8 @@ class Person
   field :position, RDF::ARTS['position']
   field :department, RDF::ARTS['department']
   field :possible_department, RDF::ARTS['possibleDepartment']
+
+  #linked_to :email, :made
 
   # we may use these
   # field :subject_area
@@ -43,21 +45,22 @@ class Person
   end
 
   def all_keywords
-    keyword_hash = {}
+    kw_hash = {}
 
     all_emails.each do |e| 
-      e.all_keywords do |kw|
+      e.contains_keywords.each do |kw|
 
-        if keyword_hash.has_key?(kw.uri.to_s)
-          keyword_hash[(kw.uri.to_s)][1] = keyword_hash[(kw.uri.to_s)][1] += 1
+        if kw_hash.has_key?(kw.to_s)
+          kw_hash[(kw.to_s)][1] = kw_hash[(kw.to_s)][1] += 1
         else
-          keyword_hash[(kw.uri.to_s)] = [kw.label, 1]
+          label = Concepts::Keyword.find(kw.to_s).label rescue Concepts::Keyword.label_from_uri(kw)
+          kw_hash[(kw.to_s)] = [label, 1]
         end
 
       end
     end
 
-    keyword_hash
+    kw_hash
   end
 
 end
