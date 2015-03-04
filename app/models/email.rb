@@ -12,4 +12,8 @@ class Email
   field :contains_keyword, RDF::ARTS['containsKeyword'], is_uri:true
   field :sent_at, RDF::ARTS['sentAt'], :datatype => RDF::XSD.datetime
 
+  def all_keywords
+
+  end
+
 end
