@@ -5,6 +5,8 @@ class Person
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
   graph_uri 'http://artsapi.com/graph/people'
 
+  attr_accessor :all_connections
+
   field :account, RDF::FOAF['account'], is_uri: true, multivalued: true
   field :name, RDF::FOAF['name'], multivalued: true
   field :given_name, RDF::FOAF['givenName']
@@ -14,7 +16,7 @@ class Person
   field :has_email, RDF::VCARD['hasEmail']
   field :mbox, RDF::FOAF['mbox']
   field :member_of, RDF::ORG['memberOf'], is_uri: true
-  field :connection, RDF::ARTS['connection'], is_uri: true
+  field :connections, RDF::ARTS['connection'], is_uri: true
   field :position, RDF::ARTS['position']
   field :department, RDF::ARTS['department']
   field :possible_department, RDF::ARTS['possibleDepartment']
@@ -37,6 +39,37 @@ class Person
     end
 
     correct_name ||= self.name.first
+  end
+
+  def get_connections
+    if self.connections.empty?
+      calculate_connections
+      write_connections
+    end
+
+    self.all_connections || self.connections
+  end
+
+  def calculate_connections
+    connection_set = []
+
+    # hairy sparql time - find each reciprocal email exchange 
+    # and return the associated foaf:Person
+
+    self.all_connections = connection_set
+  end
+
+  # write connections between foaf:People and
+  # write connections between org:Organizations
+  def write_connections
+    self.all_connections.each do |conn|
+      other_person = Person.find(conn)
+
+      self.write_predicate() # write the connection on this Person
+      other_person.write_predicate() # write on the other Person
+
+      Organisation.write_link(self.member_of, other_person.member_of)
+    end
   end
 
   def all_emails
