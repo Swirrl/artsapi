@@ -6,7 +6,7 @@ class Person
   graph_uri 'http://artsapi.com/graph/people'
 
   field :account, RDF::FOAF['account'], is_uri: true, multivalued: true
-  field :name, RDF::FOAF['name']
+  field :name, RDF::FOAF['name'], multivalued: true
   field :given_name, RDF::FOAF['givenName']
   field :family_name, RDF::FOAF['familyName']
   field :knows, RDF::FOAF['knows'], is_uri: true
@@ -27,6 +27,17 @@ class Person
   # field :contains_keyword
 
   # on initialize we need to work out connections in order to display them. SPARQL time!
+
+  def human_name
+    correct_name = nil
+
+    self.name.each do |n| 
+      match = n.strip.match(/^[A-Z][a-z]+\b \b[A-Z][a-z]+$/)
+      correct_name = match[0] if !match.nil?
+    end
+
+    correct_name ||= self.name.first
+  end
 
   def all_emails
     Email.find_by_sparql("
@@ -70,10 +81,19 @@ class Person
   def keywords_csv
   end
 
+  # for use in rake tasks etc
+  # works out a possible department and writes a triple
+  def generate_and_write_possible_department
+  end
+
   # for debug and partner feedback; not for production use!
   def print_sorted_keywords
     puts "#{self.name.titleize}: #{self.uri}\n\n"
     sorted_keywords.each { |a| puts "'#{a[0]}' mentions: #{a[1]}"}
+  end
+
+  def get_colleagues
+    Organisation.find(self.member_of).has_members
   end
 
   class << self
