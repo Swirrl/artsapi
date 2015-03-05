@@ -50,7 +50,7 @@ class Person
         if kw_hash.has_key?(kw.to_s)
           kw_hash[(kw.to_s)][1] = kw_hash[(kw.to_s)][1] += 1
         else
-          label = Concepts::Keyword.find(kw.to_s).label rescue Concepts::Keyword.label_from_uri(kw)
+          label = Keyword.find(kw.to_s).label rescue Keyword.label_from_uri(kw)
           kw_hash[(kw.to_s)] = [label, 1]
         end
 
