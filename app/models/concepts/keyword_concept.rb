@@ -1,12 +1,10 @@
-class Concepts::Keyword
+module Concepts
+class KeywordConcept
 
   include Tripod::Resource
   include Concept
 
-  # @prefix keywordresource: <http://artsapi.com/id/keywords/keyword/> .
-
   graph_uri 'http://artsapi.com/def/arts/keywords/keywords'
-
 
   class << self
 
@@ -20,4 +18,5 @@ class Concepts::Keyword
 
   end
 
+end
 end
