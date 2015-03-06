@@ -89,13 +89,15 @@ class Person
       ").map { |r| r["person"]["value"] }
   end
 
+  # memoizes all connections to self.all_collections to avoid db calls later
   def get_connections
     if self.connections.empty?
       calculate_connections
       write_connections
     end
 
-    self.connections
+    self.all_connections = self.connections
+    self.all_connections
   end
 
   def calculate_connections
