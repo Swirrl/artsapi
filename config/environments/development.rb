@@ -44,6 +44,6 @@ Tripod.configure do |config|
 
   config.update_endpoint = 'http://127.0.0.1:3030/artsapi-dev/update'
   config.query_endpoint = 'http://127.0.0.1:3030/artsapi-dev/sparql'
-  config.timeout_seconds = 30
+  config.timeout_seconds = 120
 
 end

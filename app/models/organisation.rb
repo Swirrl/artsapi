@@ -14,8 +14,11 @@ class Organisation
   class << self
 
     def write_link(org_one, org_two)
-      org_one.write_predicate() # write org:linkedTo
-      org_two.write_predicate() # write org:linkedTo
+      org_one.linked_to << org_two.uri # write org:linkedTo
+      org_two.linked_to << org_one.uri # write org:linkedTo
+
+      org_one.save
+      org_two.save
     end
 
   end
