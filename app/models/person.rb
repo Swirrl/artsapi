@@ -1,6 +1,7 @@
 class Person
 
   include Tripod::Resource
+  include Connections
 
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
   graph_uri 'http://artsapi.com/graph/people'
@@ -52,99 +53,6 @@ class Person
 
   def number_of_sent_emails
     all_emails.count
-  end
-
-  def get_recipients_of_emails
-    Tripod::SparqlClient::Query.select("
-      #{Person.query_prefixes}
-
-      SELECT DISTINCT ?person
-      WHERE {
-        ?person a foaf:Person .
-        ?email a arts:Email .
-
-        GRAPH <http://artsapi.com/graph/emails> {
-          ?email arts:emailRecipient ?person
-        }
-
-        VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
-      }
-    ").map { |r| r["person"]["value"] }
-  end
-
-  def get_incoming_mail_senders
-    Tripod::SparqlClient::Query.select("
-      #{Person.query_prefixes}
-
-      SELECT DISTINCT ?person
-      WHERE {
-        ?person a foaf:Person .
-        ?email a arts:Email .
-
-        GRAPH <http://artsapi.com/graph/emails> {
-          ?email arts:emailRecipient <#{self.uri}>.
-          ?email arts:emailSender ?person .
-        }
-      }
-      ").map { |r| r["person"]["value"] }
-  end
-
-  # memoizes all connections to self.all_collections to avoid db calls later
-  def get_connections
-    if self.connections.empty?
-      calculate_connections
-      write_connections
-    end
-
-    self.all_connections = self.connections
-    self.all_connections
-  end
-
-  def calculate_connections
-    connection_set = []
-    recipients = self.get_recipients_of_emails
-
-    filtered = Tripod::SparqlClient::Query.select("
-      #{Person.query_prefixes}
-
-      SELECT DISTINCT ?person
-
-      WHERE {
-        ?person a foaf:Person .
-        ?email a arts:Email .
-
-        GRAPH <http://artsapi.com/graph/emails> {
-          ?email arts:emailRecipient <#{self.uri}>.
-          ?email arts:emailSender ?person .
-        }
-        VALUES ?person { <#{recipients.join("> <")}> }
-      }
-      ").map { |r| r["person"]["value"] }
-
-    self.all_connections = filtered
-  end
-
-  # write connections between foaf:People and
-  # write connections between org:Organizations
-  def write_connections
-
-    begin
-      self.connections << self.all_connections # write the connections on this Person
-      self.save!
-    rescue
-
-    end
-
-    begin
-      self.all_connections.each do |conn|
-        other_person.connections << self.uri # write on the other Person
-        other_person.save!
-      end
-    rescue
-
-    end
-
-    Organisation.write_link(self.member_of, other_person.member_of)
   end
 
   def all_keywords
@@ -204,6 +112,21 @@ class Person
     def query_prefixes
       "PREFIX foaf: <http://xmlns.com/foaf/0.1/>
       PREFIX arts: <http://artsapi.com/def/arts/>"
+    end
+
+    def write_connections_on(person, conns)
+      if conns.is_a? Array
+        person.connections = conns
+      else
+        person.connections << conns
+      end
+
+      begin
+        person.save!
+        true
+      rescue
+        false
+      end
     end
 
   end

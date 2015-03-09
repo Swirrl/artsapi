@@ -13,12 +13,21 @@ class Organisation
 
   class << self
 
+    # takes a uri object or string
     def write_link(org_one, org_two)
+      org_one = Organisation.find(org_one)
+      org_two = Organisation.find(org_two)
+
       org_one.linked_to << org_two.uri # write org:linkedTo
       org_two.linked_to << org_one.uri # write org:linkedTo
 
-      org_one.save
-      org_two.save
+      begin
+        org_one.save!
+        org_two.save!
+        true
+      rescue
+        false
+      end
     end
 
   end
