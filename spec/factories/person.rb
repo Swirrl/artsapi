@@ -10,7 +10,7 @@ FactoryGirl.define do
 
     uri { RDF::URI("http://artsapi.com/id/people/#{email.gsub(/@/, '-').gsub(/\./, '-')}") }
 
-    # account []
+    # account {[]}
     sequence(:name, 'i') { |n| "Jeff Lebowsk#{n}" }
 
     # given_name nil
@@ -26,7 +26,7 @@ FactoryGirl.define do
     mbox { email }
     member_of { RDF::URI("http://artsapi.com/id/organisations/#{email.match(/@.+/)[0][1..-1].gsub(/\./, '-')}") }
 
-    connections []
+    connections {[]}
 
     # position {  }
     # department {  }

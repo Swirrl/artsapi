@@ -6,8 +6,8 @@ FactoryGirl.define do
 
     uri { RDF::URI('http://artsapi.com/id/organisations/widgetcorp-org') }
     label "widgetcorp.org"
-    has_members []
-    linked_to []
+    has_members {[]}
+    linked_to {[]}
     owns_domain { RDF::URI('http://artsapi.com/id/domains/widgetcorp-org') }
     # works_on {  }
 
