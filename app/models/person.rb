@@ -118,12 +118,11 @@ class Person
       if conns.is_a? Array
         person.connections = conns
       else
-        person.connections << conns
+        person.connections = person.connections + [conns]
       end
 
       begin
         person.save!
-        true
       rescue
         false
       end

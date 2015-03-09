@@ -2,15 +2,11 @@ module Connections
 
   extend ActiveSupport::Concern
 
-  # memoizes all connections to self.all_collections to avoid db calls later
   def get_connections
-    if self.connections.empty?
-      calculate_connections
-      write_connections
-    end
+    calculate_connections
+    write_connections
 
-    self.all_connections = self.connections
-    self.all_connections
+    self.connections
   end
 
   def get_recipients_of_emails
@@ -80,8 +76,9 @@ module Connections
     Person.write_connections_on(self, self.all_connections)
 
     self.all_connections.each do |conn|
-      Person.write_connections_on(conn, self.uri)
-      Organisation.write_link(self.member_of, conn.member_of)
+      other_person = Person.find(conn)
+      Person.write_connections_on(other_person, self.uri)
+      Organisation.write_link(self.member_of, other_person.member_of)
     end
 
   end
