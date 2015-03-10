@@ -24,7 +24,14 @@ describe 'Person' do
       sender: walter_uri, 
       recipient: [RDF::URI("http://artsapi.com/id/people/jeff-widgetcorp-org"), RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")]) }
 
-  let!(:jeff) { FactoryGirl.create(:person, made: [email.uri, email_two.uri]) }
+  let!(:email_four) { 
+    FactoryGirl.create(:email, 
+      sender: jeff_uri, 
+      recipient: [RDF::URI("http://artsapi.com/id/people/john-nyc-gov"),
+      RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")], 
+      contains_keywords: [RDF::URI('http://artsapi.com/id/keywords/keyword/ask')]) }
+
+  let!(:jeff) { FactoryGirl.create(:person, made: [email.uri, email_two.uri, email_four.uri]) }
   let!(:walter) { FactoryGirl.create(:person, email: 'walter@widgetcorp.org', made: [email_three.uri]) }
 
   let(:organisation) { FactoryGirl.create(:organisation, has_members: [jeff.uri, walter.uri]) }
@@ -63,7 +70,7 @@ describe 'Person' do
     end
 
     it "should be able to get number of sent emails" do
-      expect(jeff.number_of_sent_emails).to eq(2)
+      expect(jeff.number_of_sent_emails).to eq(3)
     end
 
     it "should be able to get contained keywords" do
@@ -95,6 +102,16 @@ describe 'Person' do
 
       describe "after writing" do
 
+        let!(:email_five) { 
+          FactoryGirl.create(:email, 
+            sender: RDF::URI("http://artsapi.com/id/people/john-nyc-gov"), 
+            recipient: [jeff_uri], 
+            contains_keywords: [RDF::URI('http://artsapi.com/id/keywords/keyword/planning')]) }
+
+        let!(:john_mcclane) { FactoryGirl.create(:person, email: 'john@nyc.gov', made: [email_five.uri]) }
+
+        let!(:organisation_two) { FactoryGirl.create(:organisation, uri: RDF::URI('http://artsapi.com/id/organisations/nyc-gov'), has_members: [john_mcclane.uri]) }
+
         before do
           jeff.get_connections
         end
@@ -111,8 +128,9 @@ describe 'Person' do
         end
 
         it "should write linked_to field on org:Organisations" do
-          pending "more factories needed to test this"
-          expect(organisation.linked_to).to include organisation_two
+          org_uri = organisation.uri
+          organisation = Organisation.find(org_uri)
+          expect(organisation.linked_to).to include organisation_two.uri
         end
 
       end
