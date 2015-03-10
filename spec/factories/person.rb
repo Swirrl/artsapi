@@ -6,9 +6,10 @@ FactoryGirl.define do
 
     transient do
       email "jeff@widgetcorp.org"
+      uri { RDF::URI("http://artsapi.com/id/people/#{email.gsub(/@/, '-').gsub(/\./, '-')}") }
     end
 
-    uri { RDF::URI("http://artsapi.com/id/people/#{email.gsub(/@/, '-').gsub(/\./, '-')}") }
+    initialize_with { new(rdf_type, graph_uri) }
 
     # account {[]}
     sequence(:name, 'i') { |n| "Jeff Lebowsk#{n}" }
@@ -18,8 +19,8 @@ FactoryGirl.define do
     # knows {  }
 
     made {[
-      FactoryGirl.create(:email, sender: uri )
-      FactoryGirl.create(:email, sender: uri )
+      FactoryGirl.create(:email, sender: uri),
+      FactoryGirl.create(:email, sender: uri, recipient: [RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")])
     ]}
 
     has_email { email }

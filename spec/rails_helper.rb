@@ -40,4 +40,18 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
+
+  # TODO: database cleaner
+  # TODO: seed concept schemes
+
+  config.before(:suite) do
+    #Tripod.cache_store.clear!
+    #delete everything from fuseki
+    Tripod::SparqlClient::Update.update('
+      # delete from default graph:
+      DELETE {?s ?p ?o} WHERE {?s ?p ?o};
+      # delete from named graphs:
+      DELETE {graph ?g {?s ?p ?o}} WHERE {graph ?g {?s ?p ?o}};
+    ')
+  end
 end

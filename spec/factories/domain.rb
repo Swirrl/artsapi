@@ -8,5 +8,7 @@ FactoryGirl.define do
     label "widgetcorp.org"
     has_url "http://widgetcorp.org"
 
+    initialize_with { new(rdf_type, graph_uri) }
+
   end
 end
