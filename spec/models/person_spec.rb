@@ -5,27 +5,27 @@ describe 'Person' do
   let(:jeff_uri) { RDF::URI("http://artsapi.com/id/people/jeff-widgetcorp-org") }
   let(:walter_uri) { RDF::URI("http://artsapi.com/id/people/walter-widgetcorp-org") }
 
-  let(:email) { 
+  let!(:email) { 
     FactoryGirl.create(:email, 
       sender: jeff_uri, 
       recipient: [RDF::URI("http://artsapi.com/id/people/walter-widgetcorp-org"),
       RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")], 
       contains_keywords: [RDF::URI('http://artsapi.com/id/keywords/keyword/ask')]) }
 
-  let(:email_two) { 
+  let!(:email_two) { 
     FactoryGirl.create(:email, 
       sender: jeff_uri, 
       recipient: [RDF::URI("http://artsapi.com/id/people/walter-widgetcorp-org"),
       RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")], 
       contains_keywords: [RDF::URI('http://artsapi.com/id/keywords/keyword/ask')]) }
 
-  let(:email_three) { 
+  let!(:email_three) { 
     FactoryGirl.create(:email, 
       sender: walter_uri, 
       recipient: [RDF::URI("http://artsapi.com/id/people/jeff-widgetcorp-org"), RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")]) }
 
-  let(:jeff) { FactoryGirl.create(:person, made: [email.uri, email_two.uri]) }
-  let(:walter) { FactoryGirl.create(:person, email: 'walter@widgetcorp.org', made: [email_three.uri]) }
+  let!(:jeff) { FactoryGirl.create(:person, made: [email.uri, email_two.uri]) }
+  let!(:walter) { FactoryGirl.create(:person, email: 'walter@widgetcorp.org', made: [email_three.uri]) }
 
   let(:organisation) { FactoryGirl.create(:organisation, has_members: [jeff.uri, walter.uri]) }
   let(:domain) { FactoryGirl.create(:domain) }
@@ -56,7 +56,7 @@ describe 'Person' do
 
     let(:bad_name) { FactoryGirl.create(:person, name: ["The \n dude", "Jeff Lebowski"]) }
 
-    before { organisation; email; email_two }
+    before { organisation }
 
     it "should be able to find a better name" do
       expect(bad_name.human_name).to eq("Jeff Lebowski")
@@ -83,14 +83,7 @@ describe 'Person' do
     # as well as a class method on Person to write connections
     describe "connections" do
 
-      before do
-        jeff
-        walter
-        email
-        email_two
-        email_three
-        organisation
-      end
+      before { organisation }
 
       describe "before writing" do
 
@@ -112,6 +105,7 @@ describe 'Person' do
         end
 
         it "should write on other foaf:People" do
+          walter = Person.find(walter_uri)
           expect(walter.connections.empty?).to be false
           expect(walter.connections).to include jeff.uri
         end
