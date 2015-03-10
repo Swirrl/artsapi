@@ -2,20 +2,38 @@ require 'rails_helper'
 
 describe 'Person' do
 
-  let(:jeff) { FactoryGirl.create(:person) }
-  let(:walter) { FactoryGirl.create(:person, email: 'walter@widgetcorp.org') }
+  let(:jeff_uri) { RDF::URI("http://artsapi.com/id/people/jeff-widgetcorp-org") }
+  let(:walter_uri) { RDF::URI("http://artsapi.com/id/people/walter-widgetcorp-org") }
 
-  let(:email) { FactoryGirl.create(:email, sender: jeff.uri, 
-    recipient: [RDF::URI("http://artsapi.com/id/people/walter-widgetcorp-org"),
-      RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")]) }
+  let(:email) { 
+    FactoryGirl.create(:email, 
+      sender: jeff_uri, 
+      recipient: [RDF::URI("http://artsapi.com/id/people/walter-widgetcorp-org"),
+      RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")], 
+      contains_keywords: [RDF::URI('http://artsapi.com/id/keywords/keyword/ask')]) }
 
-  let(:email_two) { FactoryGirl.create(:email, sender: walter.uri, 
-    recipient: [RDF::URI("http://artsapi.com/id/people/jeff-widgetcorp-org"),
-      RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")]) }
+  let(:email_two) { 
+    FactoryGirl.create(:email, 
+      sender: jeff_uri, 
+      recipient: [RDF::URI("http://artsapi.com/id/people/walter-widgetcorp-org"),
+      RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")], 
+      contains_keywords: [RDF::URI('http://artsapi.com/id/keywords/keyword/ask')]) }
 
-  let(:organisation) { FactoryGirl.create(:organisation) }
+  let(:email_three) { 
+    FactoryGirl.create(:email, 
+      sender: walter_uri, 
+      recipient: [RDF::URI("http://artsapi.com/id/people/jeff-widgetcorp-org"), RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")]) }
+
+  let(:jeff) { FactoryGirl.create(:person, made: [email.uri, email_two.uri]) }
+  let(:walter) { FactoryGirl.create(:person, email: 'walter@widgetcorp.org', made: [email_three.uri]) }
+
+  let(:organisation) { FactoryGirl.create(:organisation, has_members: [jeff.uri, walter.uri]) }
   let(:domain) { FactoryGirl.create(:domain) }
 
+  let(:keyword_two) { FactoryGirl.create(:keyword, 
+    uri: RDF::URI('http://artsapi.com/id/keywords/keyword/planning'), 
+    label: 'Planning', 
+    in_sub_category: RDF::URI('http://artsapi.com/id/keywords/subcategory/operational')) }
 
   context "validations" do
 
@@ -24,7 +42,7 @@ describe 'Person' do
     end
 
     it "should have an rdf type" do
-      expect(walter.rdf_type).to eq(RDF::FOAF['Person'])
+      expect(walter.rdf_type.first).to eq(RDF::FOAF['Person'])
     end
 
     it "should have a named graph" do
@@ -38,7 +56,7 @@ describe 'Person' do
 
     let(:bad_name) { FactoryGirl.create(:person, name: ["The \n dude", "Jeff Lebowski"]) }
 
-    before { organisation }
+    before { organisation; email; email_two }
 
     it "should be able to find a better name" do
       expect(bad_name.human_name).to eq("Jeff Lebowski")
@@ -84,7 +102,9 @@ describe 'Person' do
 
       describe "after writing" do
 
-        before { jeff.get_connections }
+        before do
+          jeff.get_connections
+        end
 
         it "array should be populated" do
           expect(jeff.connections.empty?).to be false
@@ -97,7 +117,8 @@ describe 'Person' do
         end
 
         it "should write linked_to field on org:Organisations" do
-          pending
+          pending "more factories needed to test this"
+          expect(organisation.linked_to).to include organisation_two
         end
 
       end
