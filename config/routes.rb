@@ -54,6 +54,22 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
+  # keywords --------------------------------------
+
+  # keyword category
+
+  # keyword sub category
+
+  # keyword
+
+  # linked data resources -------------------------
+
+  # e.g. http://artsapi.com/id/people/jeff-widgetcorp-org
+  # e.g. http://artsapi.com/id/emails/email-hash-here>
+  get 'id/:resource_type/:uri', to: 'resources#show'
+
+  # static pages ----------------------------------
+
   get '/about' => 'static#about', as: :about
   get '/contact' => 'static#contact', as: :contact
 
