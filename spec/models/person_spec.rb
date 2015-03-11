@@ -15,20 +15,20 @@ describe 'Person' do
   let!(:email_two) { 
     FactoryGirl.create(:email, 
       sender: jeff_uri, 
-      recipient: [RDF::URI("http://artsapi.com/id/people/walter-widgetcorp-org"),
+      recipient: [walter_uri,
       RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")], 
       contains_keywords: [RDF::URI('http://artsapi.com/id/keywords/keyword/ask')]) }
 
   let!(:email_three) { 
     FactoryGirl.create(:email, 
       sender: walter_uri, 
-      recipient: [RDF::URI("http://artsapi.com/id/people/jeff-widgetcorp-org"), RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")]) }
+      recipient: [jeff_uri, RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")]) }
 
   let!(:email_four) { 
     FactoryGirl.create(:email, 
       sender: jeff_uri, 
       recipient: [RDF::URI("http://artsapi.com/id/people/john-nyc-gov"),
-      RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org")], 
+      RDF::URI("http://artsapi.com/id/people/donny-widgetcorp-org"), jeff_uri], 
       contains_keywords: [RDF::URI('http://artsapi.com/id/keywords/keyword/ask')]) }
 
   let!(:jeff) { FactoryGirl.create(:person, made: [email.uri, email_two.uri, email_four.uri]) }
@@ -127,10 +127,22 @@ describe 'Person' do
           expect(walter.connections).to include jeff.uri
         end
 
+        it "should not write a connection to itself" do
+          expect(jeff.connections.empty?).to be false
+          expect(jeff.connections).not_to include jeff.uri
+        end
+
         it "should write linked_to field on org:Organisations" do
           org_uri = organisation.uri
           organisation = Organisation.find(org_uri)
           expect(organisation.linked_to).to include organisation_two.uri
+        end
+
+        it "should not link an org:Organisation to itself" do
+          org_uri = organisation.uri
+          organisation = Organisation.find(org_uri)
+          expect(organisation.linked_to.empty?).to be false
+          expect(organisation.linked_to).not_to include org_uri
         end
 
       end

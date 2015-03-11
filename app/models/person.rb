@@ -114,11 +114,14 @@ class Person
       PREFIX arts: <http://artsapi.com/def/arts/>"
     end
 
+    # write connections for arrays or single strings
+    # we check and avoid writing self <-> self as a connection
     def write_connections_on(person, conns)
       if conns.is_a? Array
+        conns.delete(person.uri.to_s)
         person.connections = conns
       else
-        person.connections = person.connections + [conns]
+        person.connections = person.connections + [conns] unless person.uri.to_s == conns
       end
 
       begin

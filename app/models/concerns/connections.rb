@@ -77,7 +77,7 @@ module Connections
 
     self.all_connections.each do |conn|
       other_person = Person.find(conn)
-      Person.write_connections_on(other_person, self.uri)
+      Person.write_connections_on(other_person, self.uri.to_s)
       Organisation.write_link(self.member_of, other_person.member_of)
     end
 
