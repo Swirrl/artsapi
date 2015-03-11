@@ -11,6 +11,19 @@ class Organisation
   field :owns_domain, RDF::ARTS['ownsDomain'], is_uri: true
   field :works_on, RDF::ARTS['worksOn'], is_uri: true, multivalued: true
 
+  # (re)generate connections for all members of an organisation
+  # takes an rdf uri or uri as a string
+  def generate_all_connections
+    organisation_level_connections = []
+
+    self.has_members.each do |member_uri|
+      member = Person.find(member_uri)
+      organisation_level_connections << member.get_connections
+    end
+
+    organisation_level_connections.flatten.uniq
+  end
+
   class << self
 
     # takes a uri object or string
