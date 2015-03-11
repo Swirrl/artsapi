@@ -102,10 +102,10 @@ class Person
   class << self
 
     def get_uri_from_email(email_string)
-      "#{ArtsAPI::HOST}/id/people/#{email_string.downcase.gsub(/\./, '-').gsub(/@/, '-')}"
+      "#{ArtsAPI::HOST}/id/people/#{email_string.strip.downcase.gsub(/\./, '-').gsub(/@/, '-')}"
     end
 
-    def rdf_uri_from_email(email_string)
+    def get_rdf_uri_from_email(email_string)
       RDF::URI(self.get_uri_from_email(email_string))
     end
 

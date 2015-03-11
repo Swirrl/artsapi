@@ -86,6 +86,17 @@ describe 'Person' do
 
   context "class methods" do
 
+    describe "#get_uri_from_email" do
+
+      it { expect(Person.get_uri_from_email("kaneda@capsules.jp")).to eq "http://artsapi.com/id/people/kaneda-capsules-jp" }
+      it { expect(Person.get_uri_from_email("kaneda@capsules.jp ")).to eq "http://artsapi.com/id/people/kaneda-capsules-jp" }
+      it { expect(Person.get_uri_from_email(" kaneda@capsules.jp ")).to eq "http://artsapi.com/id/people/kaneda-capsules-jp" }
+    end
+
+    describe "#get_rdf_uri_from_email" do
+      it { expect(Person.get_rdf_uri_from_email("kaneda@capsules.jp")).to eq RDF::URI("http://artsapi.com/id/people/kaneda-capsules-jp") }
+    end
+
     # this actually uses methods in the Connections concern
     # as well as a class method on Person to write connections
     describe "connections" do
