@@ -1,4 +1,4 @@
-class Person
+class Person < ResourceWithPresenter
 
   include Tripod::Resource
   include Connections
@@ -28,8 +28,6 @@ class Person
   # field :subject_area
   # field :functional_area
   # field :contains_keyword
-
-  # on initialize we need to work out connections in order to display them. SPARQL time!
 
   def human_name
     correct_name = nil

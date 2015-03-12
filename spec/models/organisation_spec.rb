@@ -8,6 +8,10 @@ describe 'Organisation' do
       describe "#generate_all_connections" do
         before { @connections = organisation.generate_all_connections }
 
+        it "should have a presenter" do
+          expect(organisation.presenter).not_to be nil
+        end
+
         it "should return a flattened array of results" do
           expect(@connections.empty?).to be false
         end

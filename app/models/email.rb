@@ -1,4 +1,4 @@
-class Email
+class Email < ResourceWithPresenter
 
   include Tripod::Resource
 

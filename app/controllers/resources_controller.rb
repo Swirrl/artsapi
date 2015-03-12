@@ -2,7 +2,13 @@ class ResourcesController < ApplicationController
 
   def show
 
-    render text: "#{ArtsAPI::HOST}/id/#{params[:resource_type]}/#{params[:slug]}"
+    @presenter = Dispatcher.load_presenter_with(params)
+
+    if @presenter.nil?
+      render 'public/404'
+    else
+      render :show
+    end
 
   end
 

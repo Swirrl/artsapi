@@ -1,4 +1,4 @@
-class Organisation
+class Organisation < ResourceWithPresenter
 
   include Tripod::Resource
 

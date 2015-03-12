@@ -33,6 +33,10 @@ describe 'Person' do
 
       before { organisation }
 
+      it "should have a presenter" do
+        expect(jeff.presenter).not_to be nil
+      end
+
       it "should be able to find a better name" do
         expect(bad_name.human_name).to eq("Jeff Lebowski")
       end

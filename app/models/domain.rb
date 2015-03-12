@@ -1,4 +1,4 @@
-class Domain
+class Domain < ResourceWithPresenter
 
   include Tripod::Resource
 
