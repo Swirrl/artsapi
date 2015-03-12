@@ -57,16 +57,19 @@ Rails.application.routes.draw do
   # keywords --------------------------------------
 
   # keyword category
+  get 'id/keywords/category/:slug', to: 'keywords#category'
 
   # keyword sub category
+  get 'id/keywords/subcategory/:slug', to: 'keywords#subcategory'
 
   # keyword
+  get 'id/keywords/keyword/:slug', to: 'keywords#show'
 
   # linked data resources -------------------------
 
   # e.g. http://artsapi.com/id/people/jeff-widgetcorp-org
   # e.g. http://artsapi.com/id/emails/email-hash-here>
-  get 'id/:resource_type/:uri', to: 'resources#show'
+  get 'id/:resource_type/:slug', to: 'resources#show'
 
   # static pages ----------------------------------
 
