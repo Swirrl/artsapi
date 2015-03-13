@@ -42,9 +42,9 @@ end
 
 Tripod.configure do |config|
 
-  config.cache_store = nil
+  #config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new('localhost:11211')
   config.update_endpoint = 'http://127.0.0.1:3030/artsapi-dev/update'
   config.query_endpoint = 'http://127.0.0.1:3030/artsapi-dev/sparql'
-  config.timeout_seconds = 120
+  config.timeout_seconds = 240
 
 end

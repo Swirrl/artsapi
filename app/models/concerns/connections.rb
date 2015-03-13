@@ -2,11 +2,17 @@ module Connections
 
   extend ActiveSupport::Concern
 
-  def get_connections
+  # writes to db
+  def get_connections!
     calculate_connections
     write_connections
 
     self.connections
+  end
+
+  # pure read
+  def get_connections
+    calculate_connections
   end
 
   def get_recipients_of_emails
@@ -15,14 +21,14 @@ module Connections
 
       SELECT DISTINCT ?person
       WHERE {
+        VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
+
         ?person a foaf:Person .
         ?email a arts:Email .
 
         GRAPH <http://artsapi.com/graph/emails> {
           ?email arts:emailRecipient ?person
         }
-
-        VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
       }
     ").map { |r| r["person"]["value"] }
   end
@@ -52,8 +58,9 @@ module Connections
       #{Person.query_prefixes}
 
       SELECT DISTINCT ?person
-
       WHERE {
+        VALUES ?person { <#{recipients.join("> <")}> }
+
         ?person a foaf:Person .
         ?email a arts:Email .
 
@@ -61,7 +68,7 @@ module Connections
           ?email arts:emailRecipient <#{self.uri}>.
           ?email arts:emailSender ?person .
         }
-        VALUES ?person { <#{recipients.join("> <")}> }
+
       }
       ").map { |r| r["person"]["value"] }
 

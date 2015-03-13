@@ -6,7 +6,7 @@ class Person < ResourceWithPresenter
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
   graph_uri 'http://artsapi.com/graph/people'
 
-  attr_accessor :all_connections
+  attr_accessor :all_connections, :correct_name
 
   field :account, RDF::FOAF['account'], is_uri: true, multivalued: true
   field :name, RDF::FOAF['name'], multivalued: true
@@ -30,19 +30,42 @@ class Person < ResourceWithPresenter
   # field :contains_keyword
 
   def human_name
-    correct_name = nil
+    if self.correct_name.nil? && self.name.length > 1
+      results = {}
+      all_split = self.name.map { |n| n.downcase.split(' ') }.flatten
 
-    self.name.each do |n| 
-      match = n.strip.match(/^[A-Z][a-z]+\b \b[A-Z][a-z]+$/)
-      correct_name = match[0] if !match.nil?
+      all_split.each do |word|
+
+        if results.has_key?(word)
+          results[word] = results[word] += 1
+        else
+          results[word] = 1
+        end
+
+      end
+
+      top_two = results.sort_by { |name, occurrences| occurrences }[-2..-1]
+      self.correct_name = "#{top_two.last[0]} #{top_two.first[0]}".titleize
+    else
+      match = sanitize_name.match(/^[A-Z][a-z]+\b +\b[A-Z][a-z]+$/)
+      self.correct_name = match[0] if !match.nil?
     end
 
-    correct_name ||= self.name.first
+    self.correct_name || self.name
+  end
+
+  def sanitize_name
+    self.name.first.strip
+      .gsub(/'/, '')
+      .gsub(/"/, '')
+      .gsub(/\(/, '')
+      .gsub(/\)/, '')
+      .gsub(/\\n/, '')
   end
 
   def all_emails
     Email.find_by_sparql("
-      SELECT ?uri 
+      SELECT DISTINCT ?uri 
       WHERE { 
         ?uri a <http://artsapi.com/def/arts/Email> . 
         <#{self.uri.to_s}> <http://xmlns.com/foaf/0.1/made> ?uri . 
@@ -50,7 +73,16 @@ class Person < ResourceWithPresenter
   end
 
   def number_of_sent_emails
-    all_emails.count
+    query = Tripod::SparqlQuery.new("
+      #{Person.query_prefixes}
+      SELECT DISTINCT ?uri 
+      WHERE { 
+        VALUES ?self { <#{self.uri.to_s}> }
+        ?uri a arts:Email . 
+        ?self foaf:made ?uri . 
+      }
+      ")
+    Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
   end
 
   def all_keywords

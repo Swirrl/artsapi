@@ -1,6 +1,17 @@
 <% provide :title, @presenter.title %>
 <h1>Viewing <%= @presenter.title %></h1>
 
+<% if @presenter.person? %>
+  <div id='person-summary'>
+    <p><%= @presenter.connections %> Connections</p>
+    <!-- 
+    <p><%# @presenter.resource.number_of_sent_emails %> Emails sent</p>
+    <p><%# @presenter.resource.get_recipients_of_emails.count %> Email recipients</p>
+    <p><%# @presenter.resource.get_incoming_mail_senders.count %> Incoming Email senders</p> 
+    -->
+  </div>
+<% end %>
+
 <table>
   <thead>
     <th>Description</th>

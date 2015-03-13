@@ -12,9 +12,7 @@ module Presenters
     end
 
     def title
-      case resource.class.name
-
-      when 'Person'
+      if person?
         resource.human_name
       else
         resource.label rescue 'Resource'
@@ -30,13 +28,33 @@ module Presenters
       fields_hash.each do |k,v|
         description = v.name.to_s.gsub(/-/,' ').titleize
         predicate = v.predicate.to_s
-        object = resource.send(v.name)
+
+        if person? && v.name == :made
+            object = ["#{resource.number_of_sent_emails} Emails"]
+        else
+          object = resource.send(v.name)
+        end
+
+        # annoying array sanitization
+        if object.is_a?(Array)
+          object = !object.empty? ? object.join(", ") : ''
+        end
 
         results << [description, predicate, object]
 
       end
 
       results
+    end
+
+    # if there are less than 10 connections, they've probably been created by other resources
+    # that have written to this one, the list is likely to be much larger
+    def connections
+      resource.connections.length < 10 ? resource.get_connections.count : resource.connections.count
+    end
+
+    def person?
+      !!(resource.class.name == 'Person')
     end
 
   end

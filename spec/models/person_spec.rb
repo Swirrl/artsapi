@@ -29,7 +29,8 @@ describe 'Person' do
 
     context "instance methods" do
 
-      let(:bad_name) { FactoryGirl.create(:person, name: ["The \n dude", "Jeff Lebowski"]) }
+      let(:bad_name) { FactoryGirl.create(:person, name: ["The \n dude", "Jeff Lebowski", "jeff"]) }
+      let(:bad_name_two) { FactoryGirl.create(:person, name: ["jeff \n Lebowski"]) }
 
       before { organisation }
 
@@ -71,7 +72,7 @@ describe 'Person' do
 
       # this actually uses methods in the Connections concern
       # as well as a class method on Person to write connections
-      describe "connections" do
+      describe "#get_connections!" do
 
         before { organisation }
 
@@ -86,10 +87,10 @@ describe 'Person' do
         describe "after writing" do
 
           before do
-            jeff.get_connections
+            jeff.get_connections!
           end
 
-          it "array should be populated" do
+          it "connections field should be populated" do
             expect(jeff.connections.empty?).to be false
             expect(jeff.connections).to include walter.uri
           end
@@ -118,6 +119,42 @@ describe 'Person' do
             expect(organisation.linked_to).not_to include org_uri
           end
 
+        end
+
+      end
+
+      describe "#get_connections" do
+
+        before do
+          organisation
+          @connections = jeff.get_connections
+        end
+
+        it "return array should be populated" do
+          expect(@connections.empty?).to be false
+          expect(@connections).to include walter.uri
+        end
+
+        it "connections field should not be populated" do
+          expect(jeff.connections.empty?).to be true
+          expect(jeff.connections).not_to include walter.uri
+        end
+
+        it "should not write on other foaf:People" do
+          walter = Person.find(walter_uri)
+          expect(walter.connections.empty?).to be true
+          expect(walter.connections).not_to include jeff.uri
+        end
+
+        it "should not write a connection to itself" do
+          expect(jeff.connections.empty?).to be true
+          expect(jeff.connections).not_to include jeff.uri
+        end
+
+        it "should not write linked_to field on org:Organisations" do
+          org_uri = organisation.uri
+          organisation = Organisation.find(org_uri)
+          expect(organisation.linked_to).not_to include organisation_two.uri
         end
 
       end

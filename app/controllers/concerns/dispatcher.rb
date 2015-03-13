@@ -34,9 +34,9 @@ module Dispatcher
         <#{uri.to_s}> ?p ?o .
       }
       LIMIT 1
-      ")
+      ")[0]["uri"]["value"] rescue nil
 
-    resource.hydrate!
+    resource.hydrate! unless resource.nil?
   end
 
 end
