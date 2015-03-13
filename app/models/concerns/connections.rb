@@ -17,8 +17,6 @@ module Connections
 
   # async
   def generate_connections_async
-    #worker = ::ConnectionsWorker.new
-    #::ConnectionsWorker.perform_in(1.minute, self.uri.to_s)
     ::ConnectionsWorker.perform_in(50.seconds, self.uri.to_s)
   end
 
