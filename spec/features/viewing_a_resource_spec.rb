@@ -25,6 +25,14 @@ describe "Viewing a resource" do
       end
     end
 
+    context "an invalid uri" do
+      before { visit '/id/people/darth-vader' }
+
+      it "should 404" do
+        expect(page).to have_content('404')
+      end
+    end
+
   end
 
 end

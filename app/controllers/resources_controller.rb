@@ -5,7 +5,7 @@ class ResourcesController < ApplicationController
     @presenter = Dispatcher.load_presenter_with(params)
 
     if @presenter.nil?
-      render 'public/404'
+      render 'public/404', status: 404
     else
       render :show
     end
