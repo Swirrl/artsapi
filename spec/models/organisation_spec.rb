@@ -6,7 +6,7 @@ describe 'Organisation' do
     context "instance methods" do
 
       describe "#generate_all_connections" do
-        before { @connections = organisation.generate_all_connections }
+        before { @connections = organisation.generate_all_connections! }
 
         it "should have a presenter" do
           expect(organisation.presenter).not_to be nil

@@ -44,6 +44,9 @@ gem 'mongoid', '~> 4.0.0'
 
 gem 'bootstrap-sass', '~> 3.3.3'
 
+# background processing
+gem 'sidekiq'
+
 group :development, :test do
   gem "rspec-rails", "~> 3.0.0"
   gem "factory_girl_rails", "~> 4.5.0"

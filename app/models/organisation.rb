@@ -13,7 +13,7 @@ class Organisation < ResourceWithPresenter
 
   # (re)generate connections for all members of an organisation
   # takes an rdf uri or uri as a string
-  def generate_all_connections
+  def generate_all_connections!
     organisation_level_connections = []
 
     self.has_members.each do |member_uri|
@@ -22,6 +22,11 @@ class Organisation < ResourceWithPresenter
     end
 
     organisation_level_connections.flatten.uniq
+  end
+
+  # for background processing using sidekiq
+  def generate_all_connections_async
+    ConnectionsWorker.perform_async(self, :generate_all_connections!)
   end
 
   class << self

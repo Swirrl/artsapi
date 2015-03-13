@@ -15,6 +15,11 @@ module Connections
     calculate_connections
   end
 
+  # async
+  def generate_connections
+    ConnectionsWorker.perform_async(self, :get_connections!)
+  end
+
   def get_recipients_of_emails
     Tripod::SparqlClient::Query.select("
       #{Person.query_prefixes}
