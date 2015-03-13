@@ -50,7 +50,12 @@ module Presenters
     # if there are less than 10 connections, they've probably been created by other resources
     # that have written to this one, the list is likely to be much larger
     def connections
-      resource.connections.length < 10 ? resource.get_connections.count : resource.connections.count
+      resource.connections.length < 10 ? generate_and_get_connections : resource.connections.count
+    end
+
+    def generate_and_get_connections
+      resource.generate_connections_async
+      resource.get_connections.count
     end
 
     def person?

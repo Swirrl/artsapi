@@ -24,11 +24,6 @@ class Organisation < ResourceWithPresenter
     organisation_level_connections.flatten.uniq
   end
 
-  # for background processing using sidekiq
-  def generate_all_connections_async
-    ConnectionsWorker.perform_async(self, :generate_all_connections!)
-  end
-
   class << self
 
     # takes a uri object or string
