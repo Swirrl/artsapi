@@ -1,27 +1,6 @@
 # ArtsAPI
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Foo
 
 ## Development
 
@@ -29,3 +8,11 @@ Things you may want to cover:
 2. Copy the `fuseki_config.ttl` file from the `/config` folder.
 3. In the file, change the value next to `tdb:location` to the location of your tdb folder, for example `/Users/<your-user>/tdb_data/artsapi-dev`.
 4. Add `alias fuseki_artsapi="cd $HOME/jena-fuseki-1.0.1 ; ./fuseki-server --config=fuseki_config.ttl"` to your shell to start Fuseki using `$ fuseki-artsapi`. Change `jena-fuseki-1.0.1` in the previous command to the version and folder of your installed version of Fuseki.
+
+### Seed data
+
+You will need to upload the concept scheme for keywords; this is in the [ArtsAPI Grafter Project](https://github.com/Swirrl/artsapi-email-processing-tool), in the `doc` folder. Upload these to the named graph of the concept scheme using Fuseki's `s-put` tool. 
+
+1. `cd` into your Fuseki installation directory
+2. Load the concept scheme resources `./s-put http://localhost:3030/artsapi-dev/data 'http://artsapi.com/def/arts/keywords/keywords' '/path/to/artsapi-graft/doc/keywords_concept_scheme.ttl'`
+3. Load the keyword resources `./s-put http://localhost:3030/artsapi-dev/data 'http://artsapi.com/def/arts/keywords/keywords' '/path/to/artsapi-graft/doc/keywords_resources.ttl'`
