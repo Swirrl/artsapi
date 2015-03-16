@@ -28,9 +28,6 @@ module Connections
       WHERE {
         VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
 
-        ?person a foaf:Person .
-        ?email a arts:Email .
-
         GRAPH <http://artsapi.com/graph/emails> {
           ?email arts:emailRecipient ?person
         }
@@ -44,8 +41,6 @@ module Connections
 
       SELECT DISTINCT ?person
       WHERE {
-        ?person a foaf:Person .
-        ?email a arts:Email .
 
         GRAPH <http://artsapi.com/graph/emails> {
           ?email arts:emailRecipient <#{self.uri}>.
@@ -66,9 +61,6 @@ module Connections
       WHERE {
         VALUES ?person { <#{recipients.join("> <")}> }
 
-        ?person a foaf:Person .
-        ?email a arts:Email .
-
         GRAPH <http://artsapi.com/graph/emails> {
           ?email arts:emailRecipient <#{self.uri}>.
           ?email arts:emailSender ?person .
@@ -78,6 +70,44 @@ module Connections
       ").map { |r| r["person"]["value"] }
 
     filtered
+  end
+
+  # requires you to know the connections in advance
+  def calculate_email_density
+    results = []
+
+    self.connections.each do |conn|
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+
+        SELECT ?email
+        WHERE {
+          VALUES ?other_person { <#{conn.to_s}> }
+
+          GRAPH <http://artsapi.com/graph/emails> {
+            {
+              ?email arts:emailRecipient ?other_person .
+              ?email arts:emailSender <#{self.uri}> .
+            }
+            UNION
+            {
+              ?email arts:emailRecipient <#{self.uri}> .
+              ?email arts:emailSender ?other_person .
+            }
+          }
+        }
+        ")
+      count = Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+
+      results << [conn.to_s, count]
+    end
+
+    results
+  end
+
+  # for views or usage where order matters, i.e. not graphs
+  def sorted_email_density
+    self.calculate_email_density.sort { |a, b| b[1] <=> a[1] }
   end
 
   # write connections between foaf:People and

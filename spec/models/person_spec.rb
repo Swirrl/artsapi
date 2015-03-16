@@ -159,6 +159,14 @@ describe 'Person' do
 
       end
 
+      describe "#calculate_email_density" do
+        pending
+      end
+
+      describe "#sorted_email_density" do
+        pending
+      end
+
     end
 
   end

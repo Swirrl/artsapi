@@ -12,5 +12,13 @@ module Presenters
       "The data is currently loading - please refresh the page in a couple of minutes."
     end
 
+    def keywords
+      resource.sorted_keywords
+    end
+
+    def weighted_connections
+      resource.sorted_email_density
+    end
+
   end
 end
