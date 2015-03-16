@@ -1,0 +1,42 @@
+/* 
+----------------------------------------
+  COLOURS
+----------------------------------------
+*/
+
+$dark-red: #BF202F;
+$light-red: #EE4136;
+$orange: #F15B2A;
+$orange-yellow: #F79323;
+$green: #2CB673;
+$blue-green: #07A69C;
+$purple: #652EBD;
+
+/* 
+----------------------------------------
+  LAYOUT
+----------------------------------------
+*/
+
+body {
+  margin-top:20px;
+  padding:10px;
+}
+
+/* 
+----------------------------------------
+  CONTAINERS
+----------------------------------------
+*/
+
+.container-fluid {
+
+  .tab-content {
+    #graph, #data {
+      padding-top:20px;
+      border:1px solid #DDD;
+      border-top:0px;
+    }
+  }
+
+}

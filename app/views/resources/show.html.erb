@@ -3,28 +3,60 @@
 
 <% if @presenter.person? %>
   <div id='person-summary'>
-    <p><%= @presenter.connections %></p>
-    <!-- 
-    <p><%# @presenter.resource.number_of_sent_emails %> Emails sent</p>
-    <p><%# @presenter.resource.get_recipients_of_emails.count %> Email recipients</p>
-    <p><%# @presenter.resource.get_incoming_mail_senders.count %> Incoming Email senders</p> 
-    -->
+    <blockquote>
+      <ul class="list-inline">
+        <li><p><%= @presenter.connections %></p></li>
+        <li><p><%= @presenter.resource.number_of_sent_emails %> Emails sent</p></li>
+        <!--
+        <li><p><%# @presenter.resource.get_recipients_of_emails.count %> Email recipients</p></li>
+        <li><p><%# @presenter.resource.get_incoming_mail_senders.count %> Incoming Email senders</p></li>
+        -->
+      </ul>
+    </blockquote>
   </div>
 <% end %>
 
-<table>
-  <thead>
-    <th>Description</th>
-    <th>URI</th>
-    <th>Object</th>
-  </thead>
-  <tbody>
-    <% @presenter.fields.each do |field| %>
-      <tr>
-        <td><%= field[0] %></td>
-        <td><%= field[1] %></td>
-        <td><%= field[2] %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div>
+  <ul class="nav nav-tabs nav-justified" role="tablist" id='resource-tabs'>
+    <li role="presentation" class="active">
+      <a href="#graph" aria-controls="graph" role="tab" data-toggle="tab">Graph</a>
+    </li>
+    <li role="presentation">
+      <a href="#data" aria-controls="data" role="tab" data-toggle="tab">Data</a>
+    </li>
+  </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="graph">
+
+        <p>Graph vis goes here</p>
+
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="data">
+
+        <table class='table table-striped'>
+          <thead>
+            <th>Description</th>
+            <th>URI</th>
+            <th>Object</th>
+          </thead>
+          <tbody>
+            <% @presenter.fields.each do |field| %>
+
+              <% if !field[2].nil? && !field[2].blank? %>
+                <tr>
+                  <td><%= field[0] %></td>
+                  <td><%= field[1] %></td>
+                  <td><%= field[2] %></td>
+                </tr>
+              <% end %>
+
+            <% end %>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>

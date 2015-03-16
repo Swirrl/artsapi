@@ -17,7 +17,9 @@ module Dispatcher
       when :organisations
         Organisation.find(uri).presenter
       when :people
-        Person.find(uri).presenter
+        p = Person.find(uri)
+        p.presenter_type = Presenters::PersonPresenter
+        p.presenter
       else
         self.wildcard_find(uri)
       end

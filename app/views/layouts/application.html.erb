@@ -3,17 +3,32 @@
 <head>
   <title>ArtsAPI <%= page_title(yield(:title)) %></title>
 
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
   <%= stylesheet_link_tag    'application' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
-  <%= favicon_link_tag '' %>
+  <%= favicon_link_tag 'aa-icon.png' %>
 
   <%= render 'shared/head' %>
   <%= render 'shared/shiv' %>
 </head>
 <body>
 
-  <%= yield %>
+  <div class="container-fluid">
+
+    <div class='row'>
+      <%= render 'shared/header' %>
+    </div>
+
+    <div class='row'>
+      <%= yield %>
+    </div>
+
+  </div>
 
 </body>
+<footer>
+
+</footer>
 </html>
