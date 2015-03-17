@@ -51,3 +51,20 @@ p#connections-notice {
   font-size:0.8em;
   color:#666;
 }
+
+/* 
+----------------------------------------
+  GRAPH VIS
+----------------------------------------
+*/
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
