@@ -35,8 +35,21 @@ module Presenters
         end
 
         # annoying array sanitization
+        # useful anchor tag creator
         if object.is_a?(Array)
-          object = !object.empty? ? object.join(", ") : ''
+          if !object.empty?
+            object = object.map { |item|
+
+              if item.to_s.match(/http:\/\/artsapi.com\/id.+/) # it is a uri
+                old = item
+                uri = URI(item.to_s.match(/http:\/\/artsapi.com\/id.+/)[0]).path
+                item = "<a href='#{uri}'>#{item}</a>"
+              end
+
+              item
+
+            }.join(", ")
+          end
         end
 
         results << [description, predicate, object]

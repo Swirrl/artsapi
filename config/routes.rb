@@ -71,6 +71,10 @@ Rails.application.routes.draw do
   # e.g. http://artsapi.com/id/emails/email-hash-here>
   get 'id/:resource_type/:slug', to: 'resources#show'
 
+  # label mini API --------------------------------
+
+  post '/label', to: 'labels#find'
+
   # static pages ----------------------------------
 
   get '/about' => 'static#about', as: :about

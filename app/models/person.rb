@@ -51,7 +51,7 @@ class Person < ResourceWithPresenter
       self.correct_name = match[0] if !match.nil?
     end
 
-    self.correct_name || self.name
+    self.correct_name || self.name.first
   end
 
   def sanitize_name

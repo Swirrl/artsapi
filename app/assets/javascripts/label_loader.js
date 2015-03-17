@@ -16,19 +16,23 @@ function getLabelByAjax(uri, el){
     error: function(message){
       promise.reject(message);
     }
-  });promise
+  });
 
   return promise;
 }
 
 function refreshLabel(label, el){
-  $(el).text = label;
+  labelText = label["text"].replace(/(\r\n|\n|\r)/gm,"");
+  $(el).html(labelText);
+}
+
+function logError(msg) {
+  console.log(msg);
 }
 
 $(function(){
   $('a.ajax-label').each(function(){
     var uri = $(this).data('uri');
-    console.log('Loading label for ' + uri);
-    getLabelByAjax(uri, this).then(refreshLabel);
+    getLabelByAjax(uri, this).then(refreshLabel, logError);
   });
 });
