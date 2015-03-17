@@ -1,6 +1,6 @@
-function getConnectionsByAjax(uri){
+function calculateConnectionsByAjax(uri){
   var promise = $.Deferred();
-  var url = '/connections';
+  var url = '/generate_connections';
 
   $.ajax({
     url: url,
@@ -11,11 +11,33 @@ function getConnectionsByAjax(uri){
       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
     },
     success: function(response){
-      console.log(response["text"]);
       promise.resolve(response);
     },
     error: function(message){
-      promise.reject(message);
+      promise.reject(message["text"]);
+    }
+  });
+
+  return promise;
+}
+
+function getConnectionsByAjax(uri){
+  var promise = $.Deferred();
+  var url = '/get_connections';
+
+  $.ajax({
+    url: url,
+    data: {uri: uri},
+    type: 'post',
+    dataType: 'json',
+    beforeSend: function(xhr){
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+    },
+    success: function(response){
+      promise.resolve(response["connections"]);
+    },
+    error: function(message){
+      promise.reject(message["text"]);
     }
   });
 
@@ -23,8 +45,12 @@ function getConnectionsByAjax(uri){
 }
 
 function reloadPage(response){
-  //alert('Loading complete. The page will now refresh.');
-  //window.location.reload();
+  alert('Loading complete. The page will now refresh.');
+  window.location.reload();
+}
+
+function logSuccess(msg){
+  console.log(msg);
 }
 
 function logError(msg) {
@@ -32,10 +58,12 @@ function logError(msg) {
 }
 
 $(function(){
+
   $('a#recalculate-connections').on('click', function(e){
     e.stopPropagation();
     e.preventDefault();
     var uri = $(this).data('uri');
-    getConnectionsByAjax(uri).then(reloadPage, logError);
+    calculateConnectionsByAjax(uri).then(logSuccess, logError);
   });
+
 });

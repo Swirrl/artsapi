@@ -77,7 +77,8 @@ Rails.application.routes.draw do
 
   # connections mini API --------------------------
 
-  post '/connections', to: 'connections#find'
+  post '/get_connections', to: 'connections#find'
+  post '/generate_connections', to: 'connections#schedule'
 
   # static pages ----------------------------------
 
