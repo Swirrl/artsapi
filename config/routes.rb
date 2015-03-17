@@ -75,6 +75,10 @@ Rails.application.routes.draw do
 
   post '/label', to: 'labels#find'
 
+  # connections mini API --------------------------
+
+  post '/connections', to: 'connections#find'
+
   # static pages ----------------------------------
 
   get '/about' => 'static#about', as: :about

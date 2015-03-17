@@ -5,7 +5,7 @@
   <div id='person-summary'>
     <blockquote>
       <ul class="list-inline">
-        <li><p><%= @presenter.connections %></p></li>
+        <li><p><%= add_connection_advice? @presenter.connections, @presenter.resource.uri %></p></li>
         <li><p><%= @presenter.resource.number_of_sent_emails %> Emails sent</p></li>
         <!--
         <li><p><%# @presenter.resource.get_recipients_of_emails.count %> Email recipients</p></li>

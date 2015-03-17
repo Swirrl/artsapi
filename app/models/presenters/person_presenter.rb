@@ -4,12 +4,22 @@ module Presenters
     # if there are less than 10 connections, they've probably been created by other resources
     # that have written to this one, the list is likely to be much larger
     def connections
-      resource.connections.length < 10 ? generate_and_get_connections : "#{resource.connections.count} Connections"
+      if resource.connections.empty?
+        generate_and_get_connections
+      elsif connections_length < 15
+        nil
+      else
+        "#{resource.connections.count} Connections"
+      end
+    end
+
+    def connections_length
+      resource.connections.length
     end
 
     def generate_and_get_connections
       resource.generate_connections_async
-      "The data is currently loading - please refresh the page in a couple of minutes."
+      "Connections are being calculated for this Person. Please refresh in a few minutes."
     end
 
     def keywords
