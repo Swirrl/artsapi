@@ -1,7 +1,7 @@
 (function($, window){
 
   // call reinforcements
-  window.artsapi = window.artsapi || new Object();
+  // window.artsapi = window.artsapi || new Object();
 
   function calculateConnectionsByAjax(uri){
     var promise = $.Deferred();
@@ -62,6 +62,16 @@
     console.log(msg);
   }
 
+  function loadConnectionsGraph(){
+    var resourceUri = $('p#graph-for').data('uriForGraph') || null;
+
+    if(resourceUri !== null){
+      var path = '/get_connections_for_graph?uri=' + resourceUri;
+      var visualisation = new window.artsapi.GraphVis(path);
+      visualisation.init();
+    }
+  }
+
   $(function(){
 
     $('a#recalculate-connections').on('click', function(e){
@@ -70,6 +80,8 @@
       var uri = $(this).data('uri');
       calculateConnectionsByAjax(uri).then(logSuccess, logError);
     });
+
+    loadConnectionsGraph();
 
   });
 })($, window);

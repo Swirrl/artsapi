@@ -1,26 +1,25 @@
 (function($, window){
 
-  var GraphVis = function(uri){
+  var GraphVis = function(jsonRequestPath){
 
       var self = this;
-      var path = '/get_connections_for_graph?uri=' + uri;
 
       this.init = function(){
-        var width = 960,
-          height = 500;
+        var width = $(window).width() - 30,
+          height = 800;
 
         var color = d3.scale.category20();
 
         var force = d3.layout.force()
             .charge(-120)
-            .linkDistance(30)
+            .linkDistance(100)
             .size([width, height]);
 
         var svg = d3.select("#graph-vis").append("svg")
             .attr("width", width)
             .attr("height", height);
 
-        d3.json(path, function(error, graph) {
+        d3.json(jsonRequestPath, function(error, graph) {
           force
               .nodes(graph.nodes)
               .links(graph.links)

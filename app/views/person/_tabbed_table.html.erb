@@ -17,7 +17,10 @@
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="graph">
 
-        <canvas id='graph-vis'></canvas>
+        <p id='graph-for' class='lead text-center' data-uri-for-graph='<%= @presenter.resource_uri %>'>
+          Visual representation of connections for <%= @presenter.title %>
+        </p>
+        <div id='graph-vis'></div>
 
       </div>
 
