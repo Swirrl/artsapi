@@ -57,7 +57,9 @@ class Person < ResourceWithPresenter
   def sanitize_name
     self.name.first.strip
       .gsub(/'/, '')
+      .gsub(/,/, '')
       .gsub(/"/, '')
+      .gsub(/\"/, '')
       .gsub(/\(/, '')
       .gsub(/\)/, '')
       .gsub(/\\n/, '')
