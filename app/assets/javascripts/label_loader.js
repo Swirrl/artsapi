@@ -31,10 +31,16 @@
     console.log(msg);
   }
 
-  $(function(){
+  function triggerLabelLoad(){
     $('a.ajax-label').each(function(){
       var uri = $(this).data('uri');
       getLabelByAjax(uri, this).then(refreshLabel, logError);
+    });
+  }
+
+  $(function(){
+    $('a.trigger-label-load').on('click', function(e){
+      triggerLabelLoad();
     });
   });
 })($, window);

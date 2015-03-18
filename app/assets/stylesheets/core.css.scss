@@ -21,6 +21,14 @@ $purple: #652EBD;
 body {
   margin-top:20px;
   padding:10px;
+
+  img {
+
+    &#main-logo {
+      display:block;
+      margin:0 auto;
+    }
+  }
 }
 
 /* 
@@ -41,6 +49,19 @@ body {
 
   div.no-margins {
     margin:0;
+  }
+
+  div#graph-loading-placeholder {
+    width:180px;
+    margin:40px auto 0px auto;
+    p {
+      color:$orange;
+      text-align:center;
+    }
+    img {
+      display:block;
+      margin:0 auto;
+    }
   }
 
 }

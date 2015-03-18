@@ -58,6 +58,10 @@
     console.log(msg);
   }
 
+  function alertSuccess(msg){
+    alert('Success: ' + msg);
+  }
+
   function logError(msg) {
     console.log(msg);
   }
@@ -78,7 +82,7 @@
       e.stopPropagation();
       e.preventDefault();
       var uri = $(this).data('uri');
-      calculateConnectionsByAjax(uri).then(logSuccess, logError);
+      calculateConnectionsByAjax(uri).then(alertSuccess, logError);
     });
 
     loadConnectionsGraph();

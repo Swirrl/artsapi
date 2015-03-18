@@ -4,7 +4,7 @@
       <a href="#graph" aria-controls="graph" role="tab" data-toggle="tab">Graph</a>
     </li>
     <li role="presentation">
-      <a href="#connections" aria-controls="connections" role="tab" data-toggle="tab">Connections</a>
+      <a href="#connections" class='trigger-label-load' aria-controls="connections" role="tab" data-toggle="tab">Connections</a>
     </li>
     <li role="presentation">
       <a href="#keywords" aria-controls="keywords" role="tab" data-toggle="tab">Keywords</a>
@@ -20,13 +20,25 @@
         <p id='graph-for' class='lead text-center' data-uri-for-graph='<%= @presenter.resource_uri %>'>
           Visual representation of connections for <%= @presenter.title %>
         </p>
-        <div id='graph-vis'></div>
+        <div id='graph-vis'>
+          <div id='graph-loading-placeholder'>
+            </p><em>Loading, please be patient...</em></p>
+            <%= image_tag 'loading.gif', width: 60, height: 60 %>
+          </div>
+        </div>
 
       </div>
 
       <div role="tabpanel" class="tab-pane" id="connections">
 
         <p class='lead text-center'>This Person has <%= @presenter.connections_length %> known connections.</p>
+        <p class='text-center'>
+          <small>To recalculate, click below and refresh the page in a few minutes to see the results.</small>
+          <br><br>
+          <a href='#' class='btn btn-primary' data-uri='<%= @presenter.resource_uri %>' id='recalculate-connections'>
+            Recalculate and write connections
+          </a>
+        </p>
 
         <table class='table table-striped'>
           <thead>

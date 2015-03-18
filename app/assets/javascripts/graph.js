@@ -5,7 +5,7 @@
       var self = this;
 
       this.init = function(){
-        var width = $(window).width() - 30,
+        var width = $(window).width() - 15,
           height = 800;
 
         var color = d3.scale.category20();
@@ -20,6 +20,12 @@
             .attr("height", height);
 
         d3.json(jsonRequestPath, function(error, graph) {
+          $('#graph-loading-placeholder').fadeOut('fast');
+
+          if(graph.nodes.length < 100){
+            force.size([width, 500]);
+          }
+
           force
               .nodes(graph.nodes)
               .links(graph.links)
