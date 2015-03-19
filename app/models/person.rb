@@ -45,19 +45,25 @@ class Person < ResourceWithPresenter
       end
 
       top_two = results.sort_by { |name, occurrences| occurrences }[-2..-1]
-      self.correct_name = "#{top_two.last[0]} #{top_two.first[0]}".titleize
+      self.correct_name = sanitize_name("#{top_two.last[0]} #{top_two.first[0]}").titleize
     else
-      match = sanitize_name.match(/^[A-Z][a-z]+\b +\b[A-Z][a-z]+$/)
+      match = sanitized_default_name.match(/^[A-Z][a-z]+\b +\b[A-Z][a-z]+$/)
       self.correct_name = match[0] if !match.nil?
     end
 
-    self.correct_name || self.sanitize_name
+    self.correct_name || self.sanitized_default_name
   end
 
-  def sanitize_name
-    self.name.first.strip
+  def sanitized_default_name
+    sanitize_name(self.name.first)
+  end
+
+  def sanitize_name(name)
+    name.strip
       .gsub(/'/, '')
+      .gsub(/\'/, '')
       .gsub(/,/, '')
+      .gsub(/\,/, '')
       .gsub(/"/, '')
       .gsub(/\"/, '')
       .gsub(/\(/, '')
