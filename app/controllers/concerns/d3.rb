@@ -22,12 +22,12 @@ module D3
     conn_hash["nodes"] << {id: 0, name: person.human_name, group: person_member_of}
 
     # work out how deep the rabbit hole goes
-    initial_bin_threshold = 5
+    initial_bin_threshold = 3
     filtered_connections = self.filter_connections(conn_array, initial_bin_threshold)
 
     filtered_connections.each do |conn|
 
-      conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], person_uri, conn_hash, person_mapping, person_counter, (initial_bin_threshold + 1))
+      conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], person_uri, conn_hash, person_mapping, person_counter, (initial_bin_threshold + 3))
 
     end
 
@@ -101,7 +101,7 @@ module D3
 
         filtered_connections.each do |conn|
 
-          conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], uri, conn_hash, person_mapping, person_counter, (bin_cutoff + 1))
+          conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], uri, conn_hash, person_mapping, person_counter, (bin_cutoff + 2))
 
         end
 
