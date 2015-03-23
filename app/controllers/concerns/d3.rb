@@ -14,7 +14,7 @@ module D3
     conn_hash["links"] = []
 
     person_uri = person.uri.to_s
-    person_mapping[person_uri] = 0
+    person_mapping[person_uri] = {id: 0, connections: conn_array}
     person_counter = 1
 
     # bootstrap the self element
@@ -27,7 +27,7 @@ module D3
 
     filtered_connections.each do |conn|
 
-      conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], person_uri, conn_hash, person_mapping, person_counter, (initial_bin_threshold + 3))
+      conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], person_uri, conn_hash, person_mapping, person_counter, (initial_bin_threshold + 1))
 
     end
 
@@ -44,7 +44,7 @@ module D3
     conn_array.map { |a| a if a[1] > filter_threshold }.compact
   end
 
-
+  # todo: memoize so you don't need to lookup person and call sort on each
   def self.add_to_hash(uri, value, target_uri, conn_hash, person_mapping, person_counter, bin_cutoff)
 
     if bin_cutoff >= 10
@@ -55,19 +55,19 @@ module D3
       org = p.member_of.to_s
 
       if !person_mapping.has_key?(uri)
-        person_mapping[uri] = person_counter
+        person_mapping[uri] = {id: person_counter}
         person_counter += 1
 
         conn_hash["nodes"] << {
-          id: person_mapping[uri],
+          id: person_mapping[uri][:id],
           name: name,
           group: org
         }
       end
 
       conn_hash["links"] << {
-        source: person_mapping[uri],
-        target: person_mapping[target_uri],
+        source: person_mapping[uri][:id],
+        target: person_mapping[target_uri][:id],
         value: value
       }
 
@@ -80,23 +80,26 @@ module D3
         org = p.member_of.to_s
 
         if !person_mapping.has_key?(uri)
-          person_mapping[uri] = person_counter
+          conn_array = p.sorted_email_density
+
+          person_mapping[uri] = {id: person_counter, connections: conn_array}
           person_counter += 1
 
           conn_hash["nodes"] << {
-            id: person_mapping[uri],
+            id: person_mapping[uri][:id],
             name: name,
             group: org
           }
+        else
+          conn_array = person_mapping[uri][:connections]
         end
 
         conn_hash["links"] << {
-          source: person_mapping[uri],
-          target: person_mapping[target_uri],
+          source: person_mapping[uri][:id],
+          target: person_mapping[target_uri][:id],
           value: value
         }
 
-        conn_array = p.sorted_email_density
         filtered_connections = self.filter_connections(conn_array, bin_cutoff)
 
         filtered_connections.each do |conn|

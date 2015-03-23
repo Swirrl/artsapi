@@ -15,7 +15,7 @@
         promise.resolve(response, el);
       },
       error: function(message){
-        promise.reject(message);
+        promise.reject(message["text"]);
       }
     });
 
