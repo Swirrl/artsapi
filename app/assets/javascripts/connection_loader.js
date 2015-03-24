@@ -85,7 +85,8 @@
       calculateConnectionsByAjax(uri).then(alertSuccess, logError);
     });
 
-    loadConnectionsGraph();
+    // wait five seconds to kick off the AJAX extravaganza
+    window.setTimeout(loadConnectionsGraph, 5000);
 
   });
 })($, window);

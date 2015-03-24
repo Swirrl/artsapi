@@ -51,9 +51,17 @@ body {
     margin:0;
   }
 
+  p {
+    &#graph-legend {
+      margin:0 auto;
+      width:50%;
+      text-align:justify;
+    }
+  }
+
   div#graph-loading-placeholder {
     width:180px;
-    margin:40px auto 0px auto;
+    margin:40px auto 20px auto;
     p {
       color:$orange;
       text-align:center;

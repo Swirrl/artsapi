@@ -5,118 +5,85 @@ module D3
   # here be dragons!
   # construct a correctly formatted hash
   # that will be acceptable to d3
-  # on reflection this should probably be a class named Graph
-  # the method below should be the new method
-  # conn_hash, person_mapping and person_mapping should be accessible attributes
-  # stored on the class, rather than passed repeatedly as arguments
-  def self.format_graph_for_d3(person, conn_array)
-    conn_hash = {}
+  class ConnectionsGraph
 
-    person_mapping = {}
+    attr_accessor :person_mapping, :conn_hash
 
-    conn_hash["nodes"] = []
-    conn_hash["links"] = []
+    def initialize(person, conn_array)
+      self.bootstrap_hash_and_mapping
 
-    person_uri = person.uri.to_s
-    person_mapping[person_uri] = {id: 0, connections: conn_array}
-    person_counter = 1
+      person_uri = person.uri.to_s
+      self.person_mapping[person_uri] = 0
+      person_counter = 1
 
-    # bootstrap the self element
-    person_member_of = person.member_of.to_s
-    conn_hash["nodes"] << {id: 0, name: person.human_name, group: person_member_of}
+      # bootstrap the self element
+      person_member_of = person.member_of.to_s
+      self.conn_hash["nodes"] << {id: 0, name: person.human_name, uri: person_uri, group: person_member_of}
 
-    # work out how deep the rabbit hole goes
-    initial_bin_threshold = 5
-    filtered_connections = self.filter_connections(conn_array, initial_bin_threshold)
+      # work out how deep the rabbit hole goes
+      initial_bin_threshold = 1
+      filtered_connections = self.filter_connections(conn_array, initial_bin_threshold)
 
-    filtered_connections.each do |conn|
+      filtered_connections.each do |conn|
 
-      conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], person_uri, conn_hash, person_mapping, person_counter, (initial_bin_threshold + 1))
+        person_counter = self.add_to_hash(conn[0], conn[1], person_uri, person_counter, (initial_bin_threshold + 1))
 
+      end
     end
 
-    conn_hash
-  end
+    def bootstrap_hash_and_mapping
+      self.conn_hash = {}
+      self.person_mapping = {}
 
-  def self.filter_connections(conn_array, bin_cutoff)
-    highest_value = conn_array.first[1].to_f
-    lowest_value = conn_array.last[1].to_f
+      self.conn_hash["nodes"] = []
+      self.conn_hash["links"] = []
+    end
 
-    naive_bin_size = (highest_value - lowest_value) / 10
-    filter_threshold = (naive_bin_size * bin_cutoff) + lowest_value
+    def filter_connections(conn_array, bin_cutoff)
+      highest_value = conn_array.first[1].to_f
+      lowest_value = conn_array.last[1].to_f
 
-    conn_array.map { |a| a if a[1] > filter_threshold }.compact
-  end
+      naive_bin_size = (highest_value - lowest_value) / 10
+      filter_threshold = (naive_bin_size * bin_cutoff) + lowest_value
 
-  def self.add_to_hash(uri, value, target_uri, conn_hash, person_mapping, person_counter, bin_cutoff)
+      conn_array.map { |a| a if a[1] > filter_threshold }.compact
+    end
 
-    if bin_cutoff >= 10
+    def add_to_hash(uri, value, target_uri, person_counter, bin_cutoff)
 
       if !person_mapping.has_key?(uri)
         p = Person.find(uri)
         name = p.human_name
 
         org = p.member_of.to_s
+        conn_array = p.sorted_email_density
 
-        person_mapping[uri] = {id: person_counter}
+        self.person_mapping[uri] = person_counter
         person_counter += 1
 
-        conn_hash["nodes"] << {
-          id: person_mapping[uri][:id],
+        self.conn_hash["nodes"] << {
+          id: self.person_mapping[uri],
           name: name,
+          uri: uri,
           group: org
         }
       end
 
-      conn_hash["links"] << {
-        source: person_mapping[uri][:id],
-        target: person_mapping[target_uri][:id],
+      self.conn_hash["links"] << {
+        source: self.person_mapping[uri],
+        target: self.person_mapping[target_uri],
         value: value
       }
 
-      return [conn_hash, person_mapping, person_counter]
-    else
-      begin
+      if bin_cutoff < 10 && !conn_array.nil?
+        filtered = self.filter_connections(conn_array, bin_cutoff)
 
-        if !person_mapping.has_key?(uri)
-          p = Person.find(uri)
-          name = p.human_name
-
-          org = p.member_of.to_s
-          conn_array = p.sorted_email_density
-
-          person_mapping[uri] = {id: person_counter, connections: conn_array}
-          person_counter += 1
-
-          conn_hash["nodes"] << {
-            id: person_mapping[uri][:id],
-            name: name,
-            group: org
-          }
-        else
-          conn_array = person_mapping[uri][:connections]
-        end
-
-        conn_hash["links"] << {
-          source: person_mapping[uri][:id],
-          target: person_mapping[target_uri][:id],
-          value: value
-        }
-
-        filtered_connections = self.filter_connections(conn_array, bin_cutoff)
-
-        filtered_connections.each do |conn|
-
-          conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], uri, conn_hash, person_mapping, person_counter, (bin_cutoff + 1))
-
-        end
-
-      rescue
-        # do not add the node
+        filtered.each { |conn| person_counter = self.add_to_hash(conn[0], conn[1], uri, person_counter, (bin_cutoff + 1)) }
       end
 
-      return [conn_hash, person_mapping, person_counter]
+      return person_counter
     end
+
   end
 
 end

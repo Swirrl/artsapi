@@ -11,8 +11,8 @@
         var color = d3.scale.category20();
 
         var force = d3.layout.force()
-            .charge(-30)
-            .linkDistance(200)
+            .charge(-300)
+            .linkDistance(180)
             .size([width, height]);
 
         var svg = d3.select("#graph-vis").append("svg")
@@ -35,7 +35,7 @@
               .data(graph.links)
             .enter().append("line")
               .attr("class", "link")
-              .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+              .style("stroke-width", function(d) { return Math.sqrt((d.value / 2)); });
 
           var node = svg.selectAll(".node")
               .data(graph.nodes)
@@ -46,7 +46,7 @@
               .call(force.drag);
 
           node.append("title")
-              .text(function(d) { return d.name; });
+              .text(function(d) { return d.name + "\n" + d.uri; });
 
           force.on("tick", function() {
             link.attr("x1", function(d) { return d.source.x; })

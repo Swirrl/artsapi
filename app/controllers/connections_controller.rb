@@ -33,17 +33,14 @@ class ConnectionsController < ApplicationController
   def visualise
     uri = params[:uri]
 
-    #respond_to do |format|
-      #format.json {
-        begin
-          person_to_visualise = Person.find(uri)
-          connections = D3.format_graph_for_d3(person_to_visualise, person_to_visualise.sorted_email_density)
-          render json: connections.to_json, status: 200
-        rescue => e
-          render json: {text: 'Resource not found.'}, status: 404
-        end
-      #}
-    #end
+    begin
+      person_to_visualise = Person.find(uri)
+      connections = D3::ConnectionsGraph.new(person_to_visualise, person_to_visualise.sorted_email_density).conn_hash
+      render json: connections.to_json, status: 200
+    rescue => e
+      render json: {text: 'Resource not found.'}, status: 404
+    end
+
   end
 
 end
