@@ -5,6 +5,10 @@ module D3
   # here be dragons!
   # construct a correctly formatted hash
   # that will be acceptable to d3
+  # on reflection this should probably be a class named Graph
+  # the method below should be the new method
+  # conn_hash, person_mapping and person_mapping should be accessible attributes
+  # stored on the class, rather than passed repeatedly as arguments
   def self.format_graph_for_d3(person, conn_array)
     conn_hash = {}
 
@@ -22,7 +26,7 @@ module D3
     conn_hash["nodes"] << {id: 0, name: person.human_name, group: person_member_of}
 
     # work out how deep the rabbit hole goes
-    initial_bin_threshold = 3
+    initial_bin_threshold = 5
     filtered_connections = self.filter_connections(conn_array, initial_bin_threshold)
 
     filtered_connections.each do |conn|
@@ -44,17 +48,16 @@ module D3
     conn_array.map { |a| a if a[1] > filter_threshold }.compact
   end
 
-  # todo: memoize so you don't need to lookup person and call sort on each
   def self.add_to_hash(uri, value, target_uri, conn_hash, person_mapping, person_counter, bin_cutoff)
 
     if bin_cutoff >= 10
 
-      p = Person.find(uri)
-      name = p.human_name
-
-      org = p.member_of.to_s
-
       if !person_mapping.has_key?(uri)
+        p = Person.find(uri)
+        name = p.human_name
+
+        org = p.member_of.to_s
+
         person_mapping[uri] = {id: person_counter}
         person_counter += 1
 
@@ -74,12 +77,12 @@ module D3
       return [conn_hash, person_mapping, person_counter]
     else
       begin
-        p = Person.find(uri)
-        name = p.human_name
-
-        org = p.member_of.to_s
 
         if !person_mapping.has_key?(uri)
+          p = Person.find(uri)
+          name = p.human_name
+
+          org = p.member_of.to_s
           conn_array = p.sorted_email_density
 
           person_mapping[uri] = {id: person_counter, connections: conn_array}
@@ -104,7 +107,7 @@ module D3
 
         filtered_connections.each do |conn|
 
-          conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], uri, conn_hash, person_mapping, person_counter, (bin_cutoff + 2))
+          conn_hash, person_mapping, person_counter = self.add_to_hash(conn[0], conn[1], uri, conn_hash, person_mapping, person_counter, (bin_cutoff + 1))
 
         end
 
