@@ -22,17 +22,13 @@ class Person < ResourceWithPresenter
   field :department, RDF::ARTS['department']
   field :possible_department, RDF::ARTS['possibleDepartment']
 
-  #linked_to :email, :made
-
-  # we may use these
-  # field :subject_area
-  # field :functional_area
-  # field :contains_keyword
-
   def human_name
-    if self.correct_name.nil? && self.name.length > 1
+    name_array = self.name
+    name_array.delete("")
+
+    if self.correct_name.nil? && name_array.length > 1
       results = {}
-      all_split = self.name.map { |n| n.downcase.split(' ') }.flatten
+      all_split = name_array.map { |n| n.downcase.split(' ') }.flatten
 
       all_split.each do |word|
 
@@ -55,7 +51,7 @@ class Person < ResourceWithPresenter
   end
 
   def sanitized_default_name
-    self.name.first.nil? ? 'No Name Available' : sanitize_name(self.name.first)
+    (self.name.first.nil? || self.name.first.blank?) ? 'No Name Available' : sanitize_name(self.name.first).titleize
   end
 
   def sanitize_name(name)
@@ -68,6 +64,7 @@ class Person < ResourceWithPresenter
       .gsub(/\"/, '')
       .gsub(/\(/, '')
       .gsub(/\)/, '')
+      .gsub(/\n/, '')
       .gsub(/\\n/, '')
   end
 

@@ -5,6 +5,11 @@
   <%= render 'person/summary' %>
   <%= render 'person/tabbed_table' %>
 
+<% elsif @presenter.organisation? %>
+
+  <%= render 'organisation/summary' %>
+  <%= render 'organisation/tabbed_table' %>
+
 <% else %>
 
   <%= render 'shared/data' %>

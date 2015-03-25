@@ -1,0 +1,18 @@
+<table class='table table-striped'>
+  <thead>
+    <th>Organisation</th>
+    <th>Members</th>
+    <th>Links</th>
+  </thead>
+  <tbody>
+    <% @presenter.linked_organisations_data.each do |org| %>
+
+      <tr>
+        <td><%= link_with_path_from org[0] %></td>
+        <td><%= org[1] %></td>
+        <td><%= org[2] %></td>
+      </tr>
+
+    <% end %>
+  </tbody>
+</table>

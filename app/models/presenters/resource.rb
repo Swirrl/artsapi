@@ -40,13 +40,7 @@ module Presenters
           if !object.empty?
             object = object.map { |item|
 
-              if item.to_s.match(/http:\/\/artsapi.com\/id.+/) # it is a uri
-                old = item
-                uri = URI(item.to_s.match(/http:\/\/artsapi.com\/id.+/)[0]).path
-                item = "<a href='#{uri}'>#{item}</a>"
-              end
-
-              item
+              Presenters::Resource.create_link_from_uri(item) if item.to_s.match(/http:\/\/artsapi.com\/id.+/) # it is a uri
 
             }.join(", ")
           end
@@ -61,6 +55,23 @@ module Presenters
 
     def person?
       !!(resource.class.name == 'Person')
+    end
+
+    def organisation?
+      !!(resource.class.name == 'Organisation')
+    end
+
+    class << self
+
+      def create_path_from_uri(uri)
+        URI(uri.to_s.match(/http:\/\/artsapi.com\/id.+/)[0]).path
+      end
+
+      def create_link_from_uri(uri)
+        path = create_path_from_uri(uri)
+        "<a href='#{path}'>#{uri}</a>"
+      end
+
     end
 
   end

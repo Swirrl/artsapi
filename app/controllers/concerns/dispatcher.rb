@@ -15,7 +15,9 @@ module Dispatcher
       when :email_accounts
         EmailAccount.find(uri).presenter
       when :organisations
-        Organisation.find(uri).presenter
+        o = Organisation.find(uri)
+        o.presenter_type = Presenters::OrganisationPresenter
+        o.presenter
       when :people
         p = Person.find(uri)
         p.presenter_type = Presenters::PersonPresenter

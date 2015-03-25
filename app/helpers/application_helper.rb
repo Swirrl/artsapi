@@ -17,4 +17,8 @@ module ApplicationHelper
     end
   end
 
+  def link_with_path_from(uri)
+    Presenters::Resource.create_link_from_uri(uri).html_safe
+  end
+
 end
