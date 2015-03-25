@@ -6,7 +6,6 @@ module D3
   # construct a correctly formatted hash
   # that will be acceptable to d3
   class ConnectionsGraph
-
     attr_accessor :person_mapping, :conn_hash
 
     def initialize(person, conn_array)
@@ -91,6 +90,46 @@ module D3
 
       return person_counter
 
+    end
+  end
+
+  class OrganisationsGraph
+    attr_accessor :organisation, :formatted_hash, :org_mapping
+
+    def initialize(org)
+      self.bootstrap_hash_and_mapping
+      self.organisation = org
+      self.collect_all_organisations
+    end
+
+    def bootstrap_hash_and_mapping
+      self.formatted_hash = {}
+      self.org_mapping = {}
+
+      self.formatted_hash["nodes"] = []
+      self.formatted_hash["links"] = []
+    end
+
+    def collect_all_organisations
+      self.organisation.linked_to.each do |other_org|
+        self.add_to_hash(other_org, type: :organisation)
+        self.collect_all_connections(other_org.to_s)
+      end
+    end
+
+    def collect_all_connections(organisation_uri)
+      members = Organisation.find(organisation_uri).has_members
+
+      members.each do |member|
+        self.add_to_hash(member, type: :member)
+      end
+    end
+
+    def add_to_hash(uri, opts={})
+      type = opts.fetch(:type, :member)
+      # if not in mapping, add to hash
+
+      # else, do nothing
     end
 
   end
