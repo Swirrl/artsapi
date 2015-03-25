@@ -21,6 +21,7 @@ module D3
       self.conn_hash["nodes"] << {id: 0, name: person.human_name, uri: person_uri, group: person_member_of}
 
       # work out how deep the rabbit hole goes
+      # 1 is a sensible setting if using naive binning, otherwise use a much higher number (e.g. 8)
       initial_bin_threshold = 1
       filtered_connections = self.filter_connections(conn_array, initial_bin_threshold)
 
@@ -39,12 +40,19 @@ module D3
       self.conn_hash["links"] = []
     end
 
-    def filter_connections(conn_array, bin_cutoff)
+    def filter_connections(conn_array, bin_cutoff, opts={})
+      use_naive = opts.fetch(:use_naive, true)
+
       highest_value = conn_array.first[1].to_f
       lowest_value = conn_array.last[1].to_f
 
-      naive_bin_size = (highest_value - lowest_value) / 10
-      filter_threshold = (naive_bin_size * bin_cutoff) + lowest_value
+      if use_naive
+        naive_bin_size = (highest_value - lowest_value) / 10
+        filter_threshold = (naive_bin_size * bin_cutoff) + lowest_value
+      else
+        bin_size_by_length = (conn_array.length / 10)
+        filter_threshold = conn_array[(bin_size_by_length * bin_cutoff).to_i][1]
+      end
 
       conn_array.map { |a| a if a[1] > filter_threshold }.compact
     end
@@ -82,6 +90,7 @@ module D3
       end
 
       return person_counter
+
     end
 
   end

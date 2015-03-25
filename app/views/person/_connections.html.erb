@@ -1,0 +1,27 @@
+<p class='lead text-center'>This Person has <%= @presenter.connections_length %> known connections.</p>
+<p class='text-center'>
+  <small>To recalculate, click below and refresh the page in a few minutes to see the results.</small>
+  <br><br>
+  <a href='#' class='btn btn-primary' data-uri='<%= @presenter.resource_uri %>' id='recalculate-connections'>
+    Recalculate and write connections
+  </a>
+</p>
+
+<table class='table table-striped'>
+  <thead>
+    <th>URI</th>
+    <th>Emails Exchanged</th>
+  </thead>
+  <tbody>
+    <% @presenter.weighted_connections.each do |connection| %>
+      <tr>
+        <td>
+          <a class='ajax-label' data-uri="<%= connection[0] %>" href="<%= URI(connection[0]).path %>">
+            <%= connection[0] %>
+          </a>
+        </td>
+        <td><%= connection[1] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

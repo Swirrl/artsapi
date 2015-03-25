@@ -55,7 +55,7 @@ class Person < ResourceWithPresenter
   end
 
   def sanitized_default_name
-    sanitize_name(self.name.first)
+    self.name.first.nil? ? 'No Name Available' : sanitize_name(self.name.first)
   end
 
   def sanitize_name(name)

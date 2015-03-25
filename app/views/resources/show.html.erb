@@ -1,45 +1,12 @@
 <% provide :title, @presenter.title %>
 
 <% if @presenter.person? %>
-  <div id='person-summary'>
-    <blockquote>
-      <ul class="list-inline">
-        <li><p><%= add_connection_advice? @presenter.connections, @presenter.resource.uri %></p></li>
-        <li><p><%= @presenter.resource.number_of_sent_emails %> Emails sent</p></li>
-        <!--
-        <li><p><%# @presenter.resource.get_recipients_of_emails.count %> Email recipients</p></li>
-        <li><p><%# @presenter.resource.get_incoming_mail_senders.count %> Incoming Email senders</p></li>
-        -->
-      </ul>
-    </blockquote>
-  </div>
 
+  <%= render 'person/summary' %>
   <%= render 'person/tabbed_table' %>
+
 <% else %>
 
-  <div>
-
-    <table class='table table-striped'>
-      <thead>
-        <th>Description</th>
-        <th>URI</th>
-        <th>Object</th>
-      </thead>
-      <tbody>
-        <% @presenter.fields.each do |field| %>
-
-          <% if !field[2].nil? && !field[2].blank? %>
-            <tr>
-              <td><%= field[0] %></td>
-              <td><%= field[1] %></td>
-              <td><%= field[2] %></td>
-            </tr>
-          <% end %>
-
-        <% end %>
-      </tbody>
-    </table>
-
-  </div>
+  <%= render 'shared/data' %>
 
 <% end %>

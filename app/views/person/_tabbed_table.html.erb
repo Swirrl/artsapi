@@ -19,100 +19,23 @@
 
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="graph">
-
-        <p id='graph-for' class='lead text-center' data-uri-for-graph='<%= @presenter.resource_uri %>'>
-          Visual representation of weighted connections for <%= @presenter.title %>
-        </p>
-        <p class='small' id='graph-legend'>
-          This graph shows connections for this Person. Their connections have been ranked, and the connections with the smallest number of exchanged emails discarded below a set threshold. At each step from the Person that generated this graph, this threshold is increased, so that only comparatively more important connections (in terms of emails exchanged) are visualised as links from People (nodes) that are further removed from the Person that generated this graph. The thickness of edges is indicative of the number of emails exchanged.
-        </p>
-        <div id='graph-vis'>
-          <div id='graph-loading-placeholder'>
-            </p><em>Loading, please be patient...</em></p>
-            <%= image_tag 'loading.gif', width: 60, height: 60 %>
-          </div>
-        </div>
-
+        <%= render 'person/graph' %>
       </div>
 
       <div role="tabpanel" class="tab-pane" id="distribution">
-
+        <%= render 'person/distribution' %>
       </div>
 
       <div role="tabpanel" class="tab-pane" id="connections">
-
-        <p class='lead text-center'>This Person has <%= @presenter.connections_length %> known connections.</p>
-        <p class='text-center'>
-          <small>To recalculate, click below and refresh the page in a few minutes to see the results.</small>
-          <br><br>
-          <a href='#' class='btn btn-primary' data-uri='<%= @presenter.resource_uri %>' id='recalculate-connections'>
-            Recalculate and write connections
-          </a>
-        </p>
-
-        <table class='table table-striped'>
-          <thead>
-            <th>URI</th>
-            <th>Emails Exchanged</th>
-          </thead>
-          <tbody>
-            <% @presenter.weighted_connections.each do |connection| %>
-              <tr>
-                <td>
-                  <a class='ajax-label' data-uri="<%= connection[0] %>" href="<%= URI(connection[0]).path %>">
-                    <%= connection[0] %>
-                  </a>
-                </td>
-                <td><%= connection[1] %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-
+        <%= render 'person/connections' %>
       </div>
 
       <div role="tabpanel" class="tab-pane" id="keywords">
-
-        <table class='table table-striped'>
-          <thead>
-            <th>Keyword</th>
-            <th>Mentions</th>
-          </thead>
-          <tbody>
-            <% @presenter.keywords.each do |kw| %>
-              <tr>
-                <td><a href="/id/keywords/keyword/<%= kw[0].downcase %>"><%= kw[0] %></a></td>
-                <td><%= kw[1] %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-
+        <%= render 'person/keywords' %>
       </div>
 
       <div role="tabpanel" class="tab-pane" id="data">
-
-        <table class='table table-striped'>
-          <thead>
-            <th>Description</th>
-            <th>URI</th>
-            <th>Object</th>
-          </thead>
-          <tbody>
-            <% @presenter.fields.each do |field| %>
-
-              <% if !field[2].nil? && !field[2].blank? %>
-                <tr>
-                  <td><%= field[0] %></td>
-                  <td><%= field[1] %></td>
-                  <td><%= "#{field[2]}".html_safe %></td>
-                </tr>
-              <% end %>
-
-            <% end %>
-          </tbody>
-        </table>
-
+        <%= render 'shared/data' %>
       </div>
     </div>
   </div>
