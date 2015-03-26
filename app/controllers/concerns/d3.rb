@@ -94,10 +94,11 @@ module D3
   end
 
   class OrganisationsGraph
-    attr_accessor :organisation, :formatted_hash, :org_mapping
+    attr_accessor :organisation, :formatted_hash, :org_mapping, :counter
 
     def initialize(org)
       self.bootstrap_hash_and_mapping
+      self.counter = 1
       self.organisation = org
       self.collect_all_organisations
     end
@@ -106,30 +107,107 @@ module D3
       self.formatted_hash = {}
       self.org_mapping = {}
 
+      self.org_mapping[:members] = {}
+      self.org_mapping[:organisations] = {}
+
       self.formatted_hash["nodes"] = []
       self.formatted_hash["links"] = []
     end
 
     def collect_all_organisations
-      self.organisation.linked_to.each do |other_org|
-        self.add_to_hash(other_org, type: :organisation)
-        self.collect_all_connections(other_org.to_s)
+      org_uri = self.organisation.uri
+      add_to_hash(org_uri, type: :organisation)
+      collect_all_connections(org_uri.to_s)
+
+      organisation_links = self.organisation.linked_to
+
+      organisation_links.each do |other_org_uri|
+        add_to_hash(other_org_uri, type: :organisation)
+        add_all_members(other_org_uri.to_s)
       end
+
+      self.add_all_links(org_uri.to_s)
+      organisation_links.each { |other_org_uri| add_all_links(other_org_uri.to_s) }
     end
 
-    def collect_all_connections(organisation_uri)
+    def add_all_members(organisation_uri)
       members = Organisation.find(organisation_uri).has_members
 
       members.each do |member|
-        self.add_to_hash(member, type: :member)
+        add_to_hash(member, type: :member)
       end
     end
 
     def add_to_hash(uri, opts={})
       type = opts.fetch(:type, :member)
-      # if not in mapping, add to hash
+      uri = uri.to_s # make sure it isn't an RDF::URI
 
-      # else, do nothing
+      if type == :member
+        if !self.org_mapping[:members].has_key?(uri)
+          m, id = lookup_and_add_member_node(uri.to_s)
+
+          m.connections.each do |conn|
+            lookup_and_add_member_node(conn.to_s)
+
+            conn_id = self.org_mapping[:members][conn.to_s]
+            add_link!(id, conn_id, 1)
+          end
+        end
+      elsif type == :organisation
+        if !self.org_mapping[:organisations].has_key?(uri)
+          id = self.counter
+          self.org_mapping[:organisations][uri] = id
+
+          add_node!(id, uri, uri, uri)
+          increment_counter!
+        end
+      end
+    end
+
+    def add_all_links(organisation_uri)
+      add_links_for(organisation_uri)
+      organisation_links.each { |other_org_uri| add_links_for(other_org_uri.to_s) }
+    end
+
+    def add_links_for(organisation_uri)
+      org = Organisation.find(organisation_uri)
+      org_id = self.org_mapping[:organisations][organisation_uri]
+
+      org.linked_to.each do |other_org_uri|
+        other_org_id = self.org_mapping[:organisations][other_org_uri.to_s]
+        add_link!(org_id, other_org_id, 1)
+      end
+    end
+
+    def lookup_and_add_member_node(uri)
+      m = Person.find(uri)
+      id = self.counter
+      self.org_mapping[:members][uri] = id
+
+      add_node!(id, m.human_name, uri, m.member_of.to_s)
+      increment_counter!
+      [m, id]
+    end
+
+    def add_node!(id, name, uri, group)
+      self.formatted_hash["nodes"] << {
+        id: id,
+        name: name,
+        uri: uri,
+        group: group
+      }
+    end
+
+    def add_link!(source, target, value)
+      self.formatted_hash["links"] << {
+        source: source,
+        target: target,
+        value: value
+      }
+    end
+
+    def increment_counter!
+      self.counter = self.counter + 1
     end
 
   end
