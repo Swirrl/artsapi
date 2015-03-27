@@ -24,7 +24,7 @@ class ConnectionsController < ApplicationController
           Person.find(uri).generate_connections_async
           render json: {text: 'Scheduled.'}, status: 202
         rescue
-          render json: {text: 'Something went wrong.'}, status: 404
+          render json: {text: 'Sorry, something went wrong. Please check the logs for details.'}, status: 404
         end
       }
     end
@@ -35,10 +35,23 @@ class ConnectionsController < ApplicationController
 
     begin
       person_to_visualise = Person.find(uri)
-      connections = D3::ConnectionsGraph.new(person_to_visualise, person_to_visualise.sorted_email_density).conn_hash
+      connections = D3::ConnectionsGraph.new(person_to_visualise).conn_hash
       render json: connections.to_json, status: 200
     rescue => e
-      render json: {text: 'Resource not found.'}, status: 404
+      render json: {text: 'Sorry, something went wrong. Please check the logs for details.'}, status: 404
+    end
+
+  end
+
+  def visualise_organisation
+    uri = params[:uri]
+
+    begin
+      org_to_visualise = Organisation.find(uri)
+      formatted_hash = D3::OrganisationsGraph.new(org_to_visualise).formatted_hash
+      render json: formatted_hash.to_json, status: 200
+    rescue => e
+      render json: {text: 'Sorry, something went wrong. Please check the logs for details.'}, status: 404
     end
 
   end

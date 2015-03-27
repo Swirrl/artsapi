@@ -76,6 +76,16 @@
     }
   }
 
+  function loadOrganisationGraph(){
+    var resourceUri = $('p#organisation-graph-for').data('uriForGraph') || null;
+
+    if(resourceUri !== null){
+      var path = '/get_organisation_graph?uri=' + resourceUri;
+      var visualisation = new window.artsapi.GraphVis(path);
+      visualisation.init();
+    }
+  }
+
   $(function(){
 
     $('a#recalculate-connections').on('click', function(e){
@@ -87,6 +97,7 @@
 
     // wait five seconds to kick off the AJAX extravaganza
     window.setTimeout(loadConnectionsGraph, 5000);
+    window.setTimeout(loadOrganisationGraph, 5000);
 
   });
 })($, window);

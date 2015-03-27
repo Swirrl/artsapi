@@ -78,6 +78,7 @@ Rails.application.routes.draw do
   # connections mini API --------------------------
 
   get '/get_connections_for_graph', to: 'connections#visualise'
+  get '/get_organisation_graph', to: 'connections#visualise_organisation'
   post '/get_connections', to: 'connections#find'
   post '/generate_connections', to: 'connections#schedule'
 

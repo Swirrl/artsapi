@@ -6,7 +6,7 @@
 
       this.init = function(){
         var width = $(window).width() - 15,
-          height = 800;
+          height = 1000;
 
         var color = d3.scale.category20();
 
@@ -23,7 +23,7 @@
           $('#graph-loading-placeholder').fadeOut('fast');
 
           if(graph.nodes.length < 100){
-            force.size([width, 500]);
+            force.size([width, 600]);
           }
 
           force
@@ -35,7 +35,7 @@
               .data(graph.links)
             .enter().append("line")
               .attr("class", "link")
-              .style("stroke-width", function(d) { return Math.sqrt((d.value / 2)); });
+              .style("stroke-width", function(d) { return Math.sqrt(Math.floor(d.value / 2)); });
 
           var node = svg.selectAll(".node")
               .data(graph.nodes)

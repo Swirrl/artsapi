@@ -1,0 +1,13 @@
+<p id='organisation-graph-for' class='lead text-center' data-uri-for-graph='<%= @presenter.resource_uri %>'>
+  Visual representation of weighted connections for <%= @presenter.title %>
+</p>
+<p class='small' id='graph-legend'>
+  I can't even...
+</p>
+
+<div id='graph-vis'>
+  <div id='graph-loading-placeholder'>
+    </p><em>Loading, please be patient...</em></p>
+    <%= image_tag 'loading.gif', width: 60, height: 60 %>
+  </div>
+</div>
