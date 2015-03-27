@@ -71,7 +71,8 @@
 
     if(resourceUri !== null){
       var path = '/get_connections_for_graph?uri=' + resourceUri;
-      var visualisation = new window.artsapi.GraphVis(path);
+      var gravity = 0.1;
+      var visualisation = new window.artsapi.GraphVis(path, gravity);
       visualisation.init();
     }
   }
@@ -81,7 +82,8 @@
 
     if(resourceUri !== null){
       var path = '/get_organisation_graph?uri=' + resourceUri;
-      var visualisation = new window.artsapi.GraphVis(path);
+      var gravity = 0.5;
+      var visualisation = new window.artsapi.GraphVis(path, gravity);
       visualisation.init();
     }
   }

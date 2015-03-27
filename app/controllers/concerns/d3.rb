@@ -3,8 +3,7 @@ module D3
   extend ActiveSupport::Concern
 
   # here be dragons!
-  # construct a correctly formatted hash
-  # that will be acceptable to d3
+
   class ConnectionsGraph
     attr_accessor :person_mapping, :conn_hash
 
@@ -137,7 +136,7 @@ module D3
         add_to_hash(member, type: :member)
 
         member_id = self.org_mapping[:members][member.to_s]
-        add_link!(org_id, member_id, 10)
+        add_link!(org_id, member_id, 1)
       end
     end
 
@@ -153,7 +152,7 @@ module D3
             lookup_and_add_member_node(conn.to_s) if !self.org_mapping[:members].has_key?(conn.to_s)
 
             conn_id = self.org_mapping[:members][conn.to_s]
-            add_link!(id, conn_id, 1)
+            add_link!(id, conn_id, 10)
           end
         end
       elsif type == :organisation
@@ -164,7 +163,7 @@ module D3
             lookup_and_add_org_node(org_uri.to_s) if !self.org_mapping[:organisations].has_key?(org_uri.to_s)
 
             link_id = self.org_mapping[:organisations][org_uri.to_s]
-            add_link!(id, link_id, 1)
+            add_link!(id, link_id, 10)
           end
         end
       end
