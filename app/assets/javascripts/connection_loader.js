@@ -66,6 +66,16 @@
     console.log(msg);
   }
 
+  function loadConnectionsChart(){
+    var resourceUri = $('p#graph-for').data('uriForGraph') || null;
+
+    if(resourceUri !== null){
+      var path = '/get_connections_for_chart?uri=' + resourceUri;
+      var visualisation = new window.artsapi.ChartVis(path);
+      visualisation.init();
+    }
+  }
+
   function loadConnectionsGraph(){
     var resourceUri = $('p#graph-for').data('uriForGraph') || null;
 
@@ -95,6 +105,12 @@
       e.preventDefault();
       var uri = $(this).data('uri');
       calculateConnectionsByAjax(uri).then(alertSuccess, logError);
+    });
+
+    $('a.trigger-chart-load').on('click', function(e){
+      // default etc should already be caught by table tabs js
+      loadConnectionsChart();
+      $(this).removeAttr('class');
     });
 
     // wait five seconds to kick off the AJAX extravaganza

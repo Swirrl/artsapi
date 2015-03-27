@@ -25,6 +25,7 @@
   function refreshLabel(label, el){
     labelText = label["text"].replace(/(\r\n|\n|\r)/gm,"");
     $(el).html(labelText);
+    $(el).removeAttr('class');
   }
 
   function logError(msg) {

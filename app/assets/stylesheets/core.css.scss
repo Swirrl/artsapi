@@ -31,6 +31,10 @@ body {
   }
 }
 
+.margin-top-10 {
+  margin-top:10;
+}
+
 /* 
 ----------------------------------------
   CONTAINERS
@@ -106,3 +110,25 @@ p#connections-notice {
   stroke-opacity: .6;
 }
 
+/* 
+----------------------------------------
+  CHART VIS
+----------------------------------------
+*/
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+// .x.axis path {
+//   display: none;
+// }
+
+.line {
+  fill: none;
+  stroke: $orange; //steelblue;
+  stroke-width: 1.5px;
+}

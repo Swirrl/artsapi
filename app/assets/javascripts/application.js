@@ -15,5 +15,6 @@
 //= require bootstrap-sprockets
 //= require jquery_ujs
 //= require graph
+//= require line_graph
 //= require label_loader
 //= require connection_loader

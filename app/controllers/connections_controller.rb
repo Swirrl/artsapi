@@ -30,6 +30,18 @@ class ConnectionsController < ApplicationController
     end
   end
 
+  def distribution
+    uri = params[:uri]
+
+    begin
+      person_to_visualise = Person.find(uri)
+      connections = D3::ConnectionsChart.new(person_to_visualise).csv
+      render text: connections, status: 200, layout: false
+    rescue => e
+      render text: 'Sorry, something went wrong. Please check the logs for details.', status: 404
+    end
+  end
+
   def visualise
     uri = params[:uri]
 
@@ -40,7 +52,6 @@ class ConnectionsController < ApplicationController
     rescue => e
       render json: {text: 'Sorry, something went wrong. Please check the logs for details.'}, status: 404
     end
-
   end
 
   def visualise_organisation
@@ -53,7 +64,6 @@ class ConnectionsController < ApplicationController
     rescue => e
       render json: {text: 'Sorry, something went wrong. Please check the logs for details.'}, status: 404
     end
-
   end
 
 end
