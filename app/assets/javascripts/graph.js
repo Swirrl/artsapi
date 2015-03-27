@@ -35,7 +35,7 @@
               .data(graph.links)
             .enter().append("line")
               .attr("class", "link")
-              .style("stroke-width", function(d) { return Math.sqrt(Math.floor(d.value / 2)); });
+              .style("stroke-width", function(d) { return Math.sqrt(d.value / 2); });
 
           var node = svg.selectAll(".node")
               .data(graph.nodes)

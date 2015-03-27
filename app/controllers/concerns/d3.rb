@@ -99,7 +99,7 @@ module D3
 
     def initialize(org)
       self.bootstrap_hash_and_mapping
-      self.counter = 1
+      self.counter = 0
       self.organisation = org
       self.collect_all_organisations
     end
@@ -137,7 +137,7 @@ module D3
         add_to_hash(member, type: :member)
 
         member_id = self.org_mapping[:members][member.to_s]
-        add_link!(org_id, member_id, 4)
+        add_link!(org_id, member_id, 10)
       end
     end
 
