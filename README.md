@@ -15,6 +15,7 @@ Foo
 
 - Fuseki
 - Redis
+- MongoDB
 
 ### Seed data
 
