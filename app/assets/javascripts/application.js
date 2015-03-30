@@ -11,5 +11,10 @@
 // about supported directives.
 //
 //= require jquery
+//= require d3.min.js
+//= require bootstrap-sprockets
 //= require jquery_ujs
-//= require_tree .
+//= require graph
+//= require line_graph
+//= require label_loader
+//= require connection_loader

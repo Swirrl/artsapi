@@ -1,19 +1,17 @@
 <% provide :title, @presenter.title %>
-<h1>Viewing <%= @presenter.title %></h1>
 
-<table>
-  <thead>
-    <th>Description</th>
-    <th>URI</th>
-    <th>Object</th>
-  </thead>
-  <tbody>
-    <% @presenter.fields.each do |field| %>
-      <tr>
-        <td><%= field[0] %></td>
-        <td><%= field[1] %></td>
-        <td><%= field[2] %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% if @presenter.person? %>
+
+  <%= render 'person/summary' %>
+  <%= render 'person/tabbed_table' %>
+
+<% elsif @presenter.organisation? %>
+
+  <%= render 'organisation/summary' %>
+  <%= render 'organisation/tabbed_table' %>
+
+<% else %>
+
+  <%= render 'shared/data' %>
+
+<% end %>

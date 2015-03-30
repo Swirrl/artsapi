@@ -15,9 +15,13 @@ module Dispatcher
       when :email_accounts
         EmailAccount.find(uri).presenter
       when :organisations
-        Organisation.find(uri).presenter
+        o = Organisation.find(uri)
+        o.presenter_type = Presenters::OrganisationPresenter
+        o.presenter
       when :people
-        Person.find(uri).presenter
+        p = Person.find(uri)
+        p.presenter_type = Presenters::PersonPresenter
+        p.presenter
       else
         self.wildcard_find(uri)
       end
@@ -34,9 +38,9 @@ module Dispatcher
         <#{uri.to_s}> ?p ?o .
       }
       LIMIT 1
-      ")
+      ")[0]["uri"]["value"] rescue nil
 
-    resource.hydrate!
+    resource.hydrate! unless resource.nil?
   end
 
 end

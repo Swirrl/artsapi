@@ -6,7 +6,7 @@ class Person < ResourceWithPresenter
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
   graph_uri 'http://artsapi.com/graph/people'
 
-  attr_accessor :all_connections
+  attr_accessor :all_connections, :correct_name
 
   field :account, RDF::FOAF['account'], is_uri: true, multivalued: true
   field :name, RDF::FOAF['name'], multivalued: true
@@ -22,27 +22,55 @@ class Person < ResourceWithPresenter
   field :department, RDF::ARTS['department']
   field :possible_department, RDF::ARTS['possibleDepartment']
 
-  #linked_to :email, :made
-
-  # we may use these
-  # field :subject_area
-  # field :functional_area
-  # field :contains_keyword
-
   def human_name
-    correct_name = nil
+    name_array = self.name
+    name_array.delete("")
 
-    self.name.each do |n| 
-      match = n.strip.match(/^[A-Z][a-z]+\b \b[A-Z][a-z]+$/)
-      correct_name = match[0] if !match.nil?
+    if self.correct_name.nil? && name_array.length > 1
+      results = {}
+      all_split = name_array.map { |n| n.downcase.split(' ') }.flatten
+
+      all_split.each do |word|
+
+        if results.has_key?(word)
+          results[word] = results[word] += 1
+        else
+          results[word] = 1
+        end
+
+      end
+
+      top_two = results.sort_by { |name, occurrences| occurrences }[-2..-1]
+      self.correct_name = sanitize_name("#{top_two.last[0]} #{top_two.first[0]}").titleize
+    else
+      match = sanitized_default_name.match(/^[A-Z][a-z]+\b +\b[A-Z][a-z]+$/)
+      self.correct_name = match[0] if !match.nil?
     end
 
-    correct_name ||= self.name.first
+    self.correct_name || self.sanitized_default_name
+  end
+
+  def sanitized_default_name
+    (self.name.first.nil? || self.name.first.blank?) ? 'No Name Available' : sanitize_name(self.name.first).titleize
+  end
+
+  def sanitize_name(name)
+    name.strip
+      .gsub(/'/, '')
+      .gsub(/\'/, '')
+      .gsub(/,/, '')
+      .gsub(/\,/, '')
+      .gsub(/"/, '')
+      .gsub(/\"/, '')
+      .gsub(/\(/, '')
+      .gsub(/\)/, '')
+      .gsub(/\n/, '')
+      .gsub(/\\n/, '')
   end
 
   def all_emails
     Email.find_by_sparql("
-      SELECT ?uri 
+      SELECT DISTINCT ?uri 
       WHERE { 
         ?uri a <http://artsapi.com/def/arts/Email> . 
         <#{self.uri.to_s}> <http://xmlns.com/foaf/0.1/made> ?uri . 
@@ -50,7 +78,16 @@ class Person < ResourceWithPresenter
   end
 
   def number_of_sent_emails
-    all_emails.count
+    query = Tripod::SparqlQuery.new("
+      #{Person.query_prefixes}
+      SELECT DISTINCT ?uri 
+      WHERE { 
+        VALUES ?self { <#{self.uri.to_s}> }
+        ?uri a arts:Email . 
+        ?self foaf:made ?uri . 
+      }
+      ")
+    Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
   end
 
   def all_keywords

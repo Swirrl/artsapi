@@ -1,0 +1,14 @@
+<table class='table table-striped'>
+  <thead>
+    <th>Keyword</th>
+    <th>Mentions</th>
+  </thead>
+  <tbody>
+    <% @presenter.keywords.each do |kw| %>
+      <tr>
+        <td><a href="/id/keywords/keyword/<%= kw[0].downcase %>"><%= kw[0] %></a></td>
+        <td><%= kw[1] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

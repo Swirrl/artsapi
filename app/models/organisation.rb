@@ -13,12 +13,12 @@ class Organisation < ResourceWithPresenter
 
   # (re)generate connections for all members of an organisation
   # takes an rdf uri or uri as a string
-  def generate_all_connections
+  def generate_all_connections!
     organisation_level_connections = []
 
     self.has_members.each do |member_uri|
       member = Person.find(member_uri)
-      organisation_level_connections << member.get_connections
+      organisation_level_connections << member.get_connections!
     end
 
     organisation_level_connections.flatten.uniq

@@ -1,0 +1,145 @@
+/* 
+----------------------------------------
+  COLOURS
+----------------------------------------
+*/
+
+$dark-red: #BF202F;
+$light-red: #EE4136;
+$orange: #F15B2A;
+$orange-yellow: #F79323;
+$green: #2CB673;
+$blue-green: #07A69C;
+$purple: #652EBD;
+
+/* 
+----------------------------------------
+  LAYOUT
+----------------------------------------
+*/
+
+body {
+  margin-top:20px;
+  padding:10px;
+
+  img {
+
+    &#main-logo {
+      display:block;
+      margin:0 auto;
+    }
+  }
+}
+
+.margin-top-10 {
+  margin-top:10px;
+}
+
+/* 
+----------------------------------------
+  CONTAINERS
+----------------------------------------
+*/
+
+.container-fluid {
+
+  .tab-content {
+    #graph, #data, #keywords, #connections {
+      padding-top:20px;
+      border:1px solid #DDD;
+      border-top:0px;
+    }
+  }
+
+  div.no-margins {
+    margin:0;
+  }
+
+  p {
+    &#graph-legend {
+      margin:0 auto;
+      width:50%;
+      text-align:justify;
+    }
+  }
+
+  div {
+    &#graph-loading-placeholder {
+      width:180px;
+      margin:40px auto 20px auto;
+      p {
+        color:$orange;
+        text-align:center;
+      }
+      img {
+        display:block;
+        margin:0 auto;
+      }
+    }
+
+    &#chart-loading-placeholder {
+      width:180px;
+      margin:40px auto 20px auto;
+      p {
+        color:$orange;
+        text-align:center;
+      }
+      img {
+        display:block;
+        margin:0 auto;
+      }
+    }
+  }
+
+}
+
+/* 
+----------------------------------------
+  NOTICES
+----------------------------------------
+*/
+
+p#connections-notice {
+  font-size:0.8em;
+  color:#666;
+}
+
+/* 
+----------------------------------------
+  GRAPH VIS
+----------------------------------------
+*/
+
+#graph-vis {
+  max-width:100%;
+  margin:0 auto;
+}
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+/* 
+----------------------------------------
+  CHART VIS
+----------------------------------------
+*/
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #222;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: $orange;
+  stroke-width: 1.5px;
+}

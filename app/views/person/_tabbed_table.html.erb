@@ -1,0 +1,42 @@
+<div>
+  <ul class="nav nav-tabs nav-justified" role="tablist" id='resource-tabs'>
+    <li role="presentation" class="active">
+      <a href="#graph" aria-controls="graph" role="tab" data-toggle="tab">Graph</a>
+    </li>
+    <li role="presentation">
+      <a href="#distribution" class='trigger-chart-load' aria-controls="distribution" role="tab" data-toggle="tab">Distribution</a>
+    </li>
+    <li role="presentation">
+      <a href="#connections" class='trigger-label-load' aria-controls="connections" role="tab" data-toggle="tab">Connections</a>
+    </li>
+    <li role="presentation">
+      <a href="#keywords" aria-controls="keywords" role="tab" data-toggle="tab">Keywords</a>
+    </li>
+    <li role="presentation">
+      <a href="#data" aria-controls="data" role="tab" data-toggle="tab">Data</a>
+    </li>
+  </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="graph">
+        <%= render 'person/graph' %>
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="distribution">
+        <%= render 'person/distribution' %>
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="connections">
+        <%= render 'person/connections' %>
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="keywords">
+        <%= render 'person/keywords' %>
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="data">
+        <%= render 'shared/data' %>
+      </div>
+    </div>
+  </div>
+</div>
