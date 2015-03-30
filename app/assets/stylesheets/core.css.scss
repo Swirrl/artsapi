@@ -32,7 +32,7 @@ body {
 }
 
 .margin-top-10 {
-  margin-top:10;
+  margin-top:10px;
 }
 
 /* 
@@ -63,16 +63,31 @@ body {
     }
   }
 
-  div#graph-loading-placeholder {
-    width:180px;
-    margin:40px auto 20px auto;
-    p {
-      color:$orange;
-      text-align:center;
+  div {
+    &#graph-loading-placeholder {
+      width:180px;
+      margin:40px auto 20px auto;
+      p {
+        color:$orange;
+        text-align:center;
+      }
+      img {
+        display:block;
+        margin:0 auto;
+      }
     }
-    img {
-      display:block;
-      margin:0 auto;
+
+    &#chart-loading-placeholder {
+      width:180px;
+      margin:40px auto 20px auto;
+      p {
+        color:$orange;
+        text-align:center;
+      }
+      img {
+        display:block;
+        margin:0 auto;
+      }
     }
   }
 
@@ -119,16 +134,12 @@ p#connections-notice {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: #222;
   shape-rendering: crispEdges;
 }
 
-// .x.axis path {
-//   display: none;
-// }
-
 .line {
   fill: none;
-  stroke: $orange; //steelblue;
+  stroke: $orange;
   stroke-width: 1.5px;
 }
