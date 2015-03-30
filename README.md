@@ -1,6 +1,6 @@
 # ArtsAPI
 
-Foo
+This is the main application for the ArtsAPI project.
 
 ## Development
 
@@ -24,3 +24,7 @@ You will need to upload the concept scheme for keywords; this is in the [ArtsAPI
 1. `cd` into your Fuseki installation directory
 2. Load the concept scheme resources `./s-put http://localhost:3030/artsapi-dev/data 'http://artsapi.com/def/arts/keywords/keywords' '/path/to/artsapi-graft/doc/keywords_concept_scheme.ttl'`
 3. Load the keyword resources `./s-put http://localhost:3030/artsapi-dev/data 'http://artsapi.com/def/arts/keywords/keywords' '/path/to/artsapi-graft/doc/keywords_resources.ttl'`
+
+## Licence
+
+MIT - see the LICENCE file.
