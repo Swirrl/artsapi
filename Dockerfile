@@ -63,10 +63,6 @@ WORKDIR /artsapi
 # Symlink node and nodejs
 RUN /bin/bash -l -c "ln -s /usr/bin/nodejs /usr/bin/node"
 
-# Bower and Bower install
-RUN /bin/bash -l -c "npm install -g bower"
-RUN bower --allow-root install
-
 # Precompile assets
 RUN /bin/bash -l -c "bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets"
 

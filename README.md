@@ -11,6 +11,10 @@ This is the main application for the ArtsAPI project.
 5. Install redis and run it.
 6. Use `bundle exec sidekiq` to bring up sidekiq for background processing.
 
+## Deployment
+
+Deploy using Docker. Setup a Redis, Mongo and Fuseki instance before linking them to this container.
+
 ## Services Required
 
 - Fuseki

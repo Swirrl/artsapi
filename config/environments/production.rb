@@ -56,7 +56,7 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
-  config.cache_store = :dalli_store, 'localhost:11211',
+  config.cache_store = :dalli_store, "#{ENV['PRODUCTION_MEMCACHED_ADDR']}:11211",
     { :namespace => 'artsapi', :expires_in => 1.year, :compress => true }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
@@ -82,7 +82,12 @@ end
 
 Tripod.configure do |config|
 
-  config.update_endpoint = nil
-  config.query_endpoint = nil
+  config.update_endpoint = "#{ENV['FUSEKI_UPDATE_ENDPOINT']}"
+  config.query_endpoint = "#{ENV['FUSEKI_QUERY_ENDPOINT']}"
+  config.tripod_cache_store = Tripod::CacheStores::MemcachedCacheStore.new("#{ENV['PRODUCTION_MEMCACHED_ADDR']}:11211")
 
+end
+
+Sidekiq.configure_server do |config|
+  config.redis = { url: "redis://#{ENV['PRODUCTION_REDIS_ADDR']}:6379", namespace: 'artsapi' }
 end
