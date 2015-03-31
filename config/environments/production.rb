@@ -59,7 +59,7 @@ Rails.application.configure do
 
   # memcached exists in this image
   #config.cache_store = :dalli_store, "http://127.0.0.1:11211",
-    #{ :namespace => 'artsapi', :expires_in => 1.year, :compress => true }
+  # { :namespace => 'artsapi', :expires_in => 1.year, :compress => true }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
@@ -88,7 +88,7 @@ Tripod.configure do |config|
   config.query_endpoint = ENV['FUSEKI_QUERY_ENDPOINT'].nil? ? "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/artsapi/sparql" : "#{ENV['FUSEKI_QUERY_ENDPOINT']}" # check if we're in staging
 
   # memcached exists in this image
-  config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new("http://127.0.0.1:11211")
+  config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new("localhost:11211")
   config.timeout_seconds = 240
 
 end
