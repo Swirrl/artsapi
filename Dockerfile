@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM phusion/baseimage:0.9.16
 
 MAINTAINER Alex Lynham "alex@swirrl.com"
 
@@ -15,6 +15,23 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common
 # Install Memcached
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libevent-dev libsasl2-2 sasl2-bin libsasl2-2 libsasl2-dev libsasl2-modules memcached
 RUN export PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+# Install Redis.
+RUN \
+  cd /tmp && \
+  wget http://download.redis.io/redis-stable.tar.gz && \
+  tar xvzf redis-stable.tar.gz && \
+  cd redis-stable && \
+  make && \
+  make install && \
+  cp -f src/redis-sentinel /usr/local/bin && \
+  mkdir -p /etc/redis && \
+  cp -f *.conf /etc/redis && \
+  rm -rf /tmp/redis-stable* && \
+  sed -i 's/^\(bind .*\)$/# \1/' /etc/redis/redis.conf && \
+  sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf && \
+  sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis/redis.conf && \
+  sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis/redis.conf
 
 # Add site conf to nginx
 ADD docker/site.conf /etc/nginx/sites-enabled/site.conf
@@ -56,6 +73,9 @@ RUN chmod +x /usr/bin/replace-mongoid-yml
 # Make a place for Unicorn pids and sockets to go
 RUN mkdir -p /artsapi/tmp/unicorn/pids
 RUN mkdir /artsapi/tmp/unicorn/sockets
+
+# Make a place for sidekiq logs
+RUN /bin/bash -l -c "touch /artsapi/log/sidekiq.log"
 
 # Set working directory
 WORKDIR /artsapi

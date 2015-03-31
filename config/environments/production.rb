@@ -56,7 +56,9 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
-  config.cache_store = :dalli_store, "#{ENV['MEMCACHED_TCP_ADDR']}:11211",
+
+  # memcached exists in this image
+  config.cache_store = :dalli_store, "http://127.0.0.1:11211",
     { :namespace => 'artsapi', :expires_in => 1.year, :compress => true }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
@@ -84,10 +86,12 @@ Tripod.configure do |config|
 
   config.update_endpoint = ENV['FUSEKI_UPDATE_ENDPOINT'].nil? ? "http://#{ARTSAPI_FUSEKI_TCP_ADDR}:3030/artsapi-dev/update" : "#{ENV['FUSEKI_UPDATE_ENDPOINT']}" # check if we're in staging
   config.query_endpoint = ENV['FUSEKI_QUERY_ENDPOINT'].nil? ? "http://#{ARTSAPI_FUSEKI_TCP_ADDR}:3030/artsapi-dev/sparql" : "#{ENV['FUSEKI_QUERY_ENDPOINT']}" # check if we're in staging
-  config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new("#{ENV['MEMCACHED_TCP_ADDR']}:11211")
+
+  # memcached exists in this image
+  config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new("http://127.0.0.1:11211")
 
 end
 
-Sidekiq.configure_server do |config|
-  config.redis = { url: "redis://#{ENV['ARTSAPI_REDIS_TCP_ADDR']}:6379", namespace: 'artsapi' }
-end
+# Sidekiq.configure_server do |config|
+#   config.redis = { url: "redis://#{ENV['ARTSAPI_REDIS_TCP_ADDR']}:6379", namespace: 'artsapi' }
+# end
