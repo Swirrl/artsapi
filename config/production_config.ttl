@@ -1,0 +1,39 @@
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+
+[] rdf:type fuseki:Server ;
+   # Services available.  Only explicitly listed services are configured.
+   # If there is a service description not linked from this list, it is ignored.
+   fuseki:services (
+     <#artsapi>
+   ) .
+
+[] ja:loadClass "com.hp.hpl.jena.tdb.TDB" .
+tdb:DatasetTDB  rdfs:subClassOf  ja:RDFDataset .
+tdb:GraphTDB    rdfs:subClassOf  ja:Model .
+
+<#artsapi> a fuseki:Service ;
+    fuseki:name "artsapi";
+    # http://host:port/artsapi
+
+    fuseki:serviceQuery "sparql";
+    # SPARQL query service  http://host:port/artsapi/sparql?query=...
+
+    fuseki:serviceUpdate "update";
+    # SPARQL update service  http://host:port/artsapi/update?query=
+
+    fuseki:serviceReadWriteGraphStore "data";
+    # SPARQL Graph store protocol (read and write)
+
+    fuseki:dataset <#dataset-artsapi>;
+    .
+
+ <#dataset-artsapi> a tdb:DatasetTDB ;
+    tdb:location "/data/artsapi" ;  # change to suit your local installation
+    # Query timeout on this dataset (1s, 1000 milliseconds)
+    ja:context [ ja:cxtName "arq:queryTimeout" ;  ja:cxtValue "60000,240000" ] ;
+    tdb:unionDefaultGraph true ;
+    .
