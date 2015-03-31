@@ -58,8 +58,8 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # memcached exists in this image
-  config.cache_store = :dalli_store, "http://127.0.0.1:11211",
-    { :namespace => 'artsapi', :expires_in => 1.year, :compress => true }
+  #config.cache_store = :dalli_store, "http://127.0.0.1:11211",
+    #{ :namespace => 'artsapi', :expires_in => 1.year, :compress => true }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
@@ -89,6 +89,7 @@ Tripod.configure do |config|
 
   # memcached exists in this image
   config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new("http://127.0.0.1:11211")
+  config.timeout_seconds = 240
 
 end
 
