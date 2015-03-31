@@ -10,7 +10,7 @@ development:
 production:
   sessions:
     default:
-      database: scotgov_pmd2_production
+      database: artsapi_production
       hosts:
         - __PRODUCTION_MONGODB_HOST__:27017
       options:
