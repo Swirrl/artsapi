@@ -84,7 +84,7 @@ Tripod.configure do |config|
 
   config.update_endpoint = "#{ENV['FUSEKI_UPDATE_ENDPOINT']}"
   config.query_endpoint = "#{ENV['FUSEKI_QUERY_ENDPOINT']}"
-  config.tripod_cache_store = Tripod::CacheStores::MemcachedCacheStore.new("#{ENV['PRODUCTION_MEMCACHED_ADDR']}:11211")
+  config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new("#{ENV['PRODUCTION_MEMCACHED_ADDR']}:11211")
 
 end
 
