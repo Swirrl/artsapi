@@ -65,6 +65,9 @@ ADD docker/replace-mongoid-yml.sh /usr/bin/replace-mongoid-yml
 # Add rails files from current directory
 ADD ./ /artsapi
 
+# Add secrets file
+ADD docker/secrets.yml /artsapi/config/secrets.yml
+
 # Permissions
 RUN chmod +x /artsapi
 RUN chmod +x /usr/bin/start-server-production
