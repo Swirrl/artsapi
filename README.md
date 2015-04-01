@@ -43,25 +43,25 @@ Deploy using Docker. Setup a Redis, Mongo and Fuseki instance before linking the
 
 4. Install Docker edge (for other installation options, see [the  Docker docs](http://docs.docker.com/installation/ubuntulinux/)):
 
-    $ curl -s https://get.docker.io/ubuntu/ | sudo sh
+    `$ curl -s https://get.docker.io/ubuntu/ | sudo sh`
 
 #### Start services
 
 1. Start a Fuseki instance. If you have any TDB data to mount, mount it internally so it sits in the `/tdb_data/artsapi` folder inside the Fuseki Docker container. You will also need to mount the config file found in this repo at `config/production_config.ttl`. Some examples:
 
-    # assuming the config file has been saved to /var/lib/fuseki-config/config.ttl and no TDB data exists
-    $ sudo docker run -d --name artsapi-fuseki -v /var/lib/fuseki-config:/opt/fuseki/config thefrey/fuseki:latest
+    // assuming the config file has been saved to /var/lib/fuseki-config/config.ttl and no TDB data exists
+    `$ sudo docker run -d --name artsapi-fuseki -v /var/lib/fuseki-config:/opt/fuseki/config thefrey/fuseki:latest`
 
-    # assuming the config file has been saved to /var/lib/fuseki-config/config.ttl and TDB data exists at /var/lib/artsapi-data/database
-    $ sudo docker run -d --name artsapi-fuseki -v /var/lib/fuseki-config:/opt/fuseki/config -v /var/lib/artsapi-data/database:/data/artsapi thefrey/fuseki:latest
+    // assuming the config file has been saved to /var/lib/fuseki-config/config.ttl and TDB data exists at /var/lib/artsapi-data/database
+    `$ sudo docker run -d --name artsapi-fuseki -v /var/lib/fuseki-config:/opt/fuseki/config -v /var/lib/artsapi-data/database:/data/artsapi thefrey/fuseki:latest`
 
 2. Start a MongoDB instance.
 
-    $ sudo docker run --name artsapi-mongo -d mongo
+    `$ sudo docker run --name artsapi-mongo -d mongo`
 
 3. Start the application
 
-    $ sudo docker run -d --name artsapi-test --link artsapi-mongo:mongodb --link artsapi-fuseki:artsapi-fuseki -p 127.0.0.1:1955:80 <artsapi-image>
+    `$ sudo docker run -d --name artsapi-test --link artsapi-mongo:mongodb --link artsapi-fuseki:artsapi-fuseki -p 127.0.0.1:1955:80 <artsapi-image>`
 
 4. Make sure you have secured your server! In the example above, you would want Nginx on the host to proxy to `http://localhost:1955`.
 
