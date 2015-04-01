@@ -1,3 +1,5 @@
+![ArtsAPI Logo](https://github.com/Swirrl/artsapi/blob/master/app/assets/images/aa-logo.png?raw=true "ArtsAPI Logo")
+
 # ArtsAPI
 
 This is the main application for the ArtsAPI project.
