@@ -23,17 +23,17 @@ Deploy using Docker. Setup a Redis, Mongo and Fuseki instance before linking the
 
     1. Log into Ubuntu as a user with sudo privileges.
 
-    2. Edit the /etc/default/grub file.
+    2. Edit the `/etc/default/grub` file.
 
-    3. Set the GRUB_CMDLINE_LINUX value as follows:
+    3. Set the `GRUB_CMDLINE_LINUX` value as follows:
 
-        GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
+        `GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"`
 
     4. Save and close the file.
 
     5. Update GRUB.
 
-        $ sudo update-grub
+        `$ sudo update-grub`
 
     6. Reboot your system.
 
@@ -49,13 +49,13 @@ Deploy using Docker. Setup a Redis, Mongo and Fuseki instance before linking the
 
 1. Start a Fuseki instance. If you have any TDB data to mount, mount it internally so it sits in the `/tdb_data/artsapi` folder inside the Fuseki Docker container. You will also need to mount the config file found in this repo at `config/production_config.ttl`. Some examples:
 
-    Assuming the config file has been saved to /var/lib/fuseki-config/config.ttl and no TDB data exists:
+    - Assuming the config file has been saved to /var/lib/fuseki-config/config.ttl and no TDB data exists:
 
-    `$ sudo docker run -d --name artsapi-fuseki -v /var/lib/fuseki-config:/opt/fuseki/config thefrey/fuseki:latest`
+      `$ sudo docker run -d --name artsapi-fuseki -v /var/lib/fuseki-config:/opt/fuseki/config thefrey/fuseki:latest`
 
-    Assuming the config file has been saved to /var/lib/fuseki-config/config.ttl and TDB data exists at /var/lib/artsapi-data/database
+    - Assuming the config file has been saved to /var/lib/fuseki-config/config.ttl and TDB data exists at /var/lib/artsapi-data/database
 
-    `$ sudo docker run -d --name artsapi-fuseki -v /var/lib/fuseki-config:/opt/fuseki/config -v /var/lib/artsapi-data/database:/data/artsapi thefrey/fuseki:latest`
+      `$ sudo docker run -d --name artsapi-fuseki -v /var/lib/fuseki-config:/opt/fuseki/config -v /var/lib/artsapi-data/database:/data/artsapi thefrey/fuseki:latest`
 
 2. Start a MongoDB instance.
 
