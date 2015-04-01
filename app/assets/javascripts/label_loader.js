@@ -40,8 +40,9 @@
   }
 
   $(function(){
-    $('a.trigger-label-load').on('click', function(e){
+    $('a.trigger-label-load').on('click.labelLoad', function(e){
       triggerLabelLoad();
+      $(this).off('click.labelLoad');
     });
   });
 })($, window);

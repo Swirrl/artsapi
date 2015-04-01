@@ -100,17 +100,17 @@
 
   $(function(){
 
-    $('a#recalculate-connections').on('click', function(e){
+    $('a#recalculate-connections').on('click.calculateConnections', function(e){
       e.stopPropagation();
       e.preventDefault();
       var uri = $(this).data('uri');
       calculateConnectionsByAjax(uri).then(alertSuccess, logError);
     });
 
-    $('a.trigger-chart-load').on('click', function(e){
+    $('a.trigger-chart-load').on('click.chartLoad', function(e){
       // default etc should already be caught by table tabs js
       loadConnectionsChart();
-      $(this).removeAttr('class');
+      $(this).off('click.chartLoad');
     });
 
     // wait five seconds to kick off the AJAX extravaganza
