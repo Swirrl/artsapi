@@ -86,9 +86,7 @@ describe 'Person' do
 
         describe "after writing" do
 
-          before do
-            jeff.get_connections!
-          end
+          before { jeff.get_connections! }
 
           it "connections field should be populated" do
             expect(jeff.connections.empty?).to be false
@@ -160,11 +158,43 @@ describe 'Person' do
       end
 
       describe "#calculate_email_density" do
-        pending
+
+        before { jeff.get_connections! }
+
+        it "should not be empty" do
+          expect(jeff.calculate_email_density).not_to be_empty
+        end
+
+        it "should return an array of values" do
+          array = jeff.calculate_email_density
+          first_positions = array.map{|i| i[0]}
+          second_positions = array.map{|i| i[1]}
+
+          expect(first_positions.length).to eq 2
+          expect(first_positions).to include "http://artsapi.com/id/people/walter-widgetcorp-org"
+          expect(first_positions).to include "http://artsapi.com/id/people/john-nyc-gov"
+
+          expect(second_positions.length).to eq 2
+          expect(second_positions.first.is_a?(Integer)).to eq true
+          expect(second_positions.second.is_a?(Integer)).to eq true
+        end
       end
 
       describe "#sorted_email_density" do
-        pending
+
+        before { jeff.get_connections! }
+
+        it "should not be empty" do
+          expect(jeff.sorted_email_density).not_to be_empty
+        end
+
+        it "should contain expected values" do
+          array = jeff.sorted_email_density
+
+          expect(array.first[0]).to eq "http://artsapi.com/id/people/walter-widgetcorp-org"
+          expect(array.last[0]).to eq "http://artsapi.com/id/people/john-nyc-gov"
+          expect(array.first[1]).to be > array.last[1]
+        end
       end
 
     end
