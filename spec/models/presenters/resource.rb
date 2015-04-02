@@ -23,6 +23,14 @@ module Presenters
 
       end
 
+      context "an initialized person" do
+
+        describe "fields should display correctly" do
+          pending
+        end
+
+      end
+
     end
 
   end
