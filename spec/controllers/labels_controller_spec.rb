@@ -5,8 +5,27 @@ describe LabelsController do
 
   it_behaves_like "given a db with two organisations" do
 
-    describe "finding labels" do
-      pending
+    context "finding labels" do
+
+      it "responds with 200" do
+        post :find, uri: 'http://artsapi.com/id/people/jeff-widgetcorp-org', format: :json
+        expect(response.status).to eq 200
+      end
+
+      it "returns the resource label" do
+        post :find, uri: 'http://artsapi.com/id/people/jeff-widgetcorp-org', format: :json
+        expect(!!(response.body.match(/Jeff Lebowsk[a-z]+/)[0])).to eq true
+      end
+
+    end
+
+    context 'showing a non-existent resource' do
+
+      it "responds with 404" do
+        post :find, uri: 'http://artsapi.com/id/people/darth-vader', format: :json
+        expect(response.status).to eq 404
+      end
+
     end
 
   end
