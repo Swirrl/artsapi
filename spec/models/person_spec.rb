@@ -6,14 +6,14 @@ describe 'Person' do
     let(:domain) { FactoryGirl.create(:domain) }
 
     let(:keyword_two) { FactoryGirl.create(:keyword, 
-      uri: RDF::URI('http://artsapi.com/id/keywords/keyword/planning'), 
+      uri: RDF::URI('http://data.artsapi.com/id/keywords/keyword/planning'), 
       label: 'Planning', 
-      in_sub_category: RDF::URI('http://artsapi.com/id/keywords/subcategory/operational')) }
+      in_sub_category: RDF::URI('http://data.artsapi.com/id/keywords/subcategory/operational')) }
 
     context "validations" do
 
       it "should have a uri" do
-        expect(walter.uri.to_s).to eq("http://artsapi.com/id/people/walter-widgetcorp-org")
+        expect(walter.uri.to_s).to eq("http://data.artsapi.com/id/people/walter-widgetcorp-org")
       end
 
       it "should have an rdf type" do
@@ -21,7 +21,7 @@ describe 'Person' do
       end
 
       it "should have a named graph" do
-        expect(walter.graph_uri).to eq(RDF::URI("http://artsapi.com/graph/people"))
+        expect(walter.graph_uri).to eq(RDF::URI("http://data.artsapi.com/graph/people"))
       end
 
     end
@@ -61,13 +61,13 @@ describe 'Person' do
 
       describe "#get_uri_from_email" do
 
-        it { expect(Person.get_uri_from_email("kaneda@capsules.jp")).to eq "http://artsapi.com/id/people/kaneda-capsules-jp" }
-        it { expect(Person.get_uri_from_email("kaneda@capsules.jp ")).to eq "http://artsapi.com/id/people/kaneda-capsules-jp" }
-        it { expect(Person.get_uri_from_email(" kaneda@capsules.jp ")).to eq "http://artsapi.com/id/people/kaneda-capsules-jp" }
+        it { expect(Person.get_uri_from_email("kaneda@capsules.jp")).to eq "http://data.artsapi.com/id/people/kaneda-capsules-jp" }
+        it { expect(Person.get_uri_from_email("kaneda@capsules.jp ")).to eq "http://data.artsapi.com/id/people/kaneda-capsules-jp" }
+        it { expect(Person.get_uri_from_email(" kaneda@capsules.jp ")).to eq "http://data.artsapi.com/id/people/kaneda-capsules-jp" }
       end
 
       describe "#get_rdf_uri_from_email" do
-        it { expect(Person.get_rdf_uri_from_email("kaneda@capsules.jp")).to eq RDF::URI("http://artsapi.com/id/people/kaneda-capsules-jp") }
+        it { expect(Person.get_rdf_uri_from_email("kaneda@capsules.jp")).to eq RDF::URI("http://data.artsapi.com/id/people/kaneda-capsules-jp") }
       end
 
       # this actually uses methods in the Connections concern
@@ -171,8 +171,8 @@ describe 'Person' do
           second_positions = array.map{|i| i[1]}
 
           expect(first_positions.length).to eq 2
-          expect(first_positions).to include "http://artsapi.com/id/people/walter-widgetcorp-org"
-          expect(first_positions).to include "http://artsapi.com/id/people/john-nyc-gov"
+          expect(first_positions).to include "http://data.artsapi.com/id/people/walter-widgetcorp-org"
+          expect(first_positions).to include "http://data.artsapi.com/id/people/john-nyc-gov"
 
           expect(second_positions.length).to eq 2
           expect(second_positions.first.is_a?(Integer)).to eq true
@@ -191,8 +191,8 @@ describe 'Person' do
         it "should contain expected values" do
           array = jeff.sorted_email_density
 
-          expect(array.first[0]).to eq "http://artsapi.com/id/people/walter-widgetcorp-org"
-          expect(array.last[0]).to eq "http://artsapi.com/id/people/john-nyc-gov"
+          expect(array.first[0]).to eq "http://data.artsapi.com/id/people/walter-widgetcorp-org"
+          expect(array.last[0]).to eq "http://data.artsapi.com/id/people/john-nyc-gov"
           expect(array.first[1]).to be > array.last[1]
         end
       end

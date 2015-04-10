@@ -68,7 +68,7 @@ module Presenters
     class << self
 
       def create_path_from_uri(uri)
-        URI(uri.to_s.match(/http:\/\/artsapi.com\/id.+/)[0]).path
+        URI(uri.to_s.match(/http:\/\/data\.artsapi\.com\/id.+/)[0]).path
       end
 
       def create_link_from_uri(uri)

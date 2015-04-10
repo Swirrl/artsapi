@@ -50,8 +50,8 @@ module Presenters
         end
 
         it "#create_link_from_uri should be able to create a uri" do
-          link = Presenters::Resource.create_link_from_uri(URI("http://artsapi.com/id/people/jeff-widgetcorp-org"))
-          expect(link).to eq "<a href='/id/people/jeff-widgetcorp-org'>http://artsapi.com/id/people/jeff-widgetcorp-org</a>"
+          link = Presenters::Resource.create_link_from_uri(URI("http://data.artsapi.com/id/people/jeff-widgetcorp-org"))
+          expect(link).to eq "<a href='/id/people/jeff-widgetcorp-org'>http://data.artsapi.com/id/people/jeff-widgetcorp-org</a>"
         end
 
       end

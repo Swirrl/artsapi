@@ -4,7 +4,7 @@ class Person < ResourceWithPresenter
   include Connections
 
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
-  graph_uri 'http://artsapi.com/graph/people'
+  graph_uri 'http://data.artsapi.com/graph/people'
 
   attr_accessor :all_connections, :correct_name
 
@@ -72,7 +72,7 @@ class Person < ResourceWithPresenter
     Email.find_by_sparql("
       SELECT DISTINCT ?uri 
       WHERE { 
-        ?uri a <http://artsapi.com/def/arts/Email> . 
+        ?uri a <http://data.artsapi.com/def/arts/Email> . 
         <#{self.uri.to_s}> <http://xmlns.com/foaf/0.1/made> ?uri . 
       }")
   end
@@ -146,7 +146,7 @@ class Person < ResourceWithPresenter
 
     def query_prefixes
       "PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-      PREFIX arts: <http://artsapi.com/def/arts/>"
+      PREFIX arts: <http://data.artsapi.com/def/arts/>"
     end
 
     # write connections for arrays or single strings

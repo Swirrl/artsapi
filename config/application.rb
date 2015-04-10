@@ -34,7 +34,7 @@ module ArtsAPI
     # config.active_record.raise_in_transactional_callbacks = true
   end
 
-  HOST = "http://artsapi.com"
+  HOST = "http://data.artsapi.com"
 end
 
 Tripod.configure do |config|

@@ -3,15 +3,15 @@ FactoryGirl.define do
 
     initialize_with { new(uri, graph_uri) }
 
-    rdf_type { [RDF::URI('http://artsapi.com/def/arts/keywords/Keyword')] }
+    rdf_type { [RDF::URI('http://data.artsapi.com/def/arts/keywords/Keyword')] }
 
     transient do 
-      uri { RDF::URI('http://artsapi.com/id/keywords/keyword/ask') }
-      graph_uri { RDF::URI('http://artsapi.com/def/arts/keywords/keywords') }
+      uri { RDF::URI('http://data.artsapi.com/id/keywords/keyword/ask') }
+      graph_uri { RDF::URI('http://data.artsapi.com/def/arts/keywords/keywords') }
     end
 
     label 'Ask'
-    in_sub_category { RDF::URI('http://artsapi.com/id/keywords/subcategory/research') }
+    in_sub_category { RDF::URI('http://data.artsapi.com/id/keywords/subcategory/research') }
 
   end
 end

@@ -28,7 +28,7 @@ module Connections
       WHERE {
         VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
 
-        GRAPH <http://artsapi.com/graph/emails> {
+        GRAPH <http://data.artsapi.com/graph/emails> {
           ?email arts:emailRecipient ?person
         }
       }
@@ -42,7 +42,7 @@ module Connections
       SELECT DISTINCT ?person
       WHERE {
 
-        GRAPH <http://artsapi.com/graph/emails> {
+        GRAPH <http://data.artsapi.com/graph/emails> {
           ?email arts:emailRecipient <#{self.uri}>.
           ?email arts:emailSender ?person .
         }
@@ -61,7 +61,7 @@ module Connections
       WHERE {
         VALUES ?person { <#{recipients.join("> <")}> }
 
-        GRAPH <http://artsapi.com/graph/emails> {
+        GRAPH <http://data.artsapi.com/graph/emails> {
           ?email arts:emailRecipient <#{self.uri}>.
           ?email arts:emailSender ?person .
         }
@@ -84,7 +84,7 @@ module Connections
         WHERE {
           VALUES ?other_person { <#{conn.to_s}> }
 
-          GRAPH <http://artsapi.com/graph/emails> {
+          GRAPH <http://data.artsapi.com/graph/emails> {
             {
               ?email arts:emailRecipient ?other_person .
               ?email arts:emailSender <#{self.uri}> .
