@@ -67,8 +67,8 @@ Rails.application.routes.draw do
 
   # linked data resources -------------------------
 
-  # e.g. http://artsapi.com/id/people/jeff-widgetcorp-org
-  # e.g. http://artsapi.com/id/emails/email-hash-here>
+  # e.g. http://data.artsapi.com/id/people/jeff-widgetcorp-org
+  # e.g. http://data.artsapi.com/id/emails/email-hash-here>
   get 'id/:resource_type/:slug', to: 'resources#show'
 
   # label mini API --------------------------------

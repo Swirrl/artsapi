@@ -2,8 +2,8 @@ class Email < ResourceWithPresenter
 
   include Tripod::Resource
 
-  rdf_type 'http://artsapi.com/def/arts/Email'
-  graph_uri 'http://artsapi.com/graph/emails'
+  rdf_type 'http://data.artsapi.com/def/arts/Email'
+  graph_uri 'http://data.artsapi.com/graph/emails'
 
   field :sender, RDF::ARTS['emailSender'], is_uri: true
   field :recipient, RDF::ARTS['emailRecipient'], is_uri: true, multivalued: true

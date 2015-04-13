@@ -7,8 +7,8 @@ FactoryGirl.define do
 
     transient do
       email "jeff@widgetcorp.org"
-      uri { RDF::URI("http://artsapi.com/id/people/#{email.gsub(/@/, '-').gsub(/\./, '-')}") }
-      graph_uri { RDF::URI('http://artsapi.com/graph/people') }
+      uri { RDF::URI("http://data.artsapi.com/id/people/#{email.gsub(/@/, '-').gsub(/\./, '-')}") }
+      graph_uri { RDF::URI('http://data.artsapi.com/graph/people') }
     end
 
     sequence(:name, 'i') { |n| "Jeff Lebowsk#{n}" }
@@ -17,7 +17,7 @@ FactoryGirl.define do
 
     has_email { email }
     mbox { email }
-    member_of { RDF::URI("http://artsapi.com/id/organisations/#{email.match(/@.+/)[0][1..-1].gsub(/\./, '-')}") }
+    member_of { RDF::URI("http://data.artsapi.com/id/organisations/#{email.match(/@.+/)[0][1..-1].gsub(/\./, '-')}") }
 
     connections {[]}
 

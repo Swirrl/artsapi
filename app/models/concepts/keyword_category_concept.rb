@@ -4,7 +4,7 @@ class KeywordCategoryConcept
   include Tripod::Resource
   include Concept
 
-  graph_uri 'http://artsapi.com/def/arts/keywords/keywords'
+  graph_uri 'http://data.artsapi.com/graph/keywords'
 
 end
 end

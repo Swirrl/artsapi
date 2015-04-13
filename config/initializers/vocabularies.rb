@@ -1,7 +1,7 @@
 module RDF
   #SITE = RDF::Vocabulary.new("#{ARTSAPI_VOCAB_ROOT}/def/")
-  ARTS = RDF::Vocabulary.new("http://artsapi.com/def/arts/")
-  KEYWORDS = RDF::Vocabulary.new("http://artsapi.com/def/arts/keywords/")
+  ARTS = RDF::Vocabulary.new("http://data.artsapi.com/def/arts/")
+  KEYWORDS = RDF::Vocabulary.new("http://data.artsapi.com/def/arts/keywords/")
   ORG = RDF::Vocabulary.new("http://www.w3.org/ns/org#")
   DCAT = RDF::Vocabulary.new("http://www.w3.org/ns/dcat#")
   VOID = RDF::Vocabulary.new("http://rdfs.org/ns/void#")
