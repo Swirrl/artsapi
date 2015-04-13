@@ -5,7 +5,7 @@ class Keyword
   # @prefix keywordresource: <http://data.artsapi.com/id/keywords/keyword/> .
 
   rdf_type 'http://data.artsapi.com/def/arts/keywords/Keyword'
-  graph_uri 'http://data.artsapi.com/def/arts/keywords/keywords'
+  graph_uri 'http://data.artsapi.com/graph/keywords'
 
   field :label, RDF::RDFS.label
   field :in_sub_category, 'http://data.artsapi.com/def/arts/keywords/inSubCategory', is_uri: true
