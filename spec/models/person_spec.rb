@@ -197,6 +197,12 @@ describe 'Person' do
         end
       end
 
+      describe "#total_count" do
+
+        it { expect(Person.total_count).to eq 3 }
+
+      end
+
     end
 
   end

@@ -149,6 +149,20 @@ class Person < ResourceWithPresenter
       PREFIX arts: <http://data.artsapi.com/def/arts/>"
     end
 
+    def total_count
+
+      # get unhydrated uris
+      all_people_query = "
+        SELECT DISTINCT ?uri
+        WHERE {
+          GRAPH <http://data.artsapi.com/graph/people> {
+            ?uri a <http://xmlns.com/foaf/0.1/Person> .
+          }
+        }"
+
+      Tripod::SparqlClient::Query.select(all_people_query).count
+    end
+
     # write connections for arrays or single strings
     # we check and avoid writing self <-> self as a connection
     def write_connections_on(person, conns)
