@@ -71,7 +71,7 @@ describe D3 do
       end
 
       it "should appear structurally correct" do
-        expect(!!(@connections.match(/occurrences,emails\n[1-9]+\,[1-9]+\n[1-9]+\,[1-9]+\n/)[0])).to eq true # should look like "occurrences,emails\n1,12\n1,8\n"
+        expect(!!(@connections.match(/occurrences,emails\n[0-9]+\,[0-9]+\n[0-9]+\,[0-9]+\n/)[0])).to eq true # should look like "occurrences,emails\n1,12\n1,8\n"
       end
 
       it "should contain no nils" do
