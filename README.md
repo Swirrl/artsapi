@@ -87,6 +87,8 @@ You will need to upload the concept scheme for keywords; this is in the [ArtsAPI
 1. `cd` into your Fuseki installation directory
 2. Load the concept scheme resources `./s-put http://localhost:3030/artsapi-dev/data 'http://data.artsapi.com/graph/keywords' '/path/to/artsapi-graft/doc/keywords_concept_scheme.ttl'`
 3. Load the keyword resources `./s-put http://localhost:3030/artsapi-dev/data 'http://data.artsapi.com/graph/keywords' '/path/to/artsapi-graft/doc/keywords_resources.ttl'`
+4. Load the SIC resources `./s-put http://localhost:3030/artsapi-dev/data 'http://data.artsapi.com/graph/sic' '/path/to/artsapi-graft/doc/sic2007.ttl'`
+5. Load the SIC extensions `./s-put http://localhost:3030/artsapi-dev/data 'http://data.artsapi.com/graph/sic' '/path/to/artsapi-graft/doc/sic_extensions.ttl'`
 
 ## Licence
 
