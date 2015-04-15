@@ -22,6 +22,10 @@ class Person < ResourceWithPresenter
   field :department, RDF::ARTS['department']
   field :possible_department, RDF::ARTS['possibleDepartment']
 
+  field :sent_emails, RDF::ARTS['sentEmails']
+  field :incoming_emails, RDF::ARTS['incomingEmails']
+  field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
+
   def human_name
     name_array = self.name
     name_array.delete("")
@@ -78,19 +82,32 @@ class Person < ResourceWithPresenter
   end
 
   def number_of_sent_emails
-    query = Tripod::SparqlQuery.new("
-      #{Person.query_prefixes}
-      SELECT DISTINCT ?uri 
-      WHERE { 
-        VALUES ?self { <#{self.uri.to_s}> }
-        ?uri a arts:Email . 
-        ?self foaf:made ?uri . 
-      }
-      ")
-    Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+    if self.sent_emails.nil?
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+        SELECT DISTINCT ?uri 
+        WHERE { 
+          VALUES ?self { <#{self.uri.to_s}> }
+          ?uri a arts:Email . 
+          ?self foaf:made ?uri . 
+        }
+        ")
+
+      number_of_emails =  Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+
+      self.sent_emails = number_of_emails
+      self.save
+
+      number_of_emails
+    else
+      self.sent_emails
+    end
   end
 
-  def all_keywords
+  def number_of_incoming_emails
+  end
+
+  def all_keywords_from_emails
     kw_hash = {}
 
     all_emails.each do |e| 
@@ -111,7 +128,7 @@ class Person < ResourceWithPresenter
 
   def sorted_keywords
     sorted = []
-    ak = all_keywords
+    ak = all_keywords_from_emails
     ak.sort { |a, b| ak[b[0]][1] <=> ak[a[0]][1] }.each { |h| sorted << [ak[h[0]][0], ak[h[0]][1]] }
     sorted
   end
