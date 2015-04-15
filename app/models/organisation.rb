@@ -18,7 +18,7 @@ class Organisation < ResourceWithPresenter
 
     self.has_members.each do |member_uri|
       member = Person.find(member_uri)
-      organisation_level_connections << member.get_connections!
+      organisation_level_connections << member.generate_connections_async
     end
 
     organisation_level_connections.flatten.uniq
