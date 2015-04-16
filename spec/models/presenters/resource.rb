@@ -27,6 +27,7 @@ module Presenters
 
         before do
           @jeff = jeff
+          @emails = jeff.number_of_sent_emails
           @jeff.presenter_type = Presenters::PersonPresenter
         end
 
@@ -46,7 +47,7 @@ module Presenters
 
         it "fields should have number of emails" do
           email_field = @jeff.presenter.fields.map { |f| f if f[0] == "Made" }.compact.flatten
-          expect(email_field[2]).to eq "3 Emails"
+          expect(email_field[2]).to eq "#{@emails} Emails"
         end
 
         it "#create_link_from_uri should be able to create a uri" do

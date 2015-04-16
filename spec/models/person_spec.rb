@@ -32,7 +32,14 @@ describe 'Person' do
       let(:bad_name) { FactoryGirl.create(:person, name: ["The \n dude", "Jeff Lebowski", "jeff"]) }
       let(:bad_name_two) { FactoryGirl.create(:person, name: ["jeff \n Lebowski"]) }
 
-      before { organisation }
+      before do 
+        organisation
+
+        # let's ape what the grafter pipeline does
+        emails = jeff.made.map { |uri| Email.find(uri) }
+        keywords = emails.map(&:contains_keywords)
+        jeff.mentioned_keywords = keywords.flatten.map(&:to_s)
+      end
 
       it "should have a presenter" do
         expect(jeff.presenter).not_to be nil
