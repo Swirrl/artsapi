@@ -190,7 +190,8 @@ class Person < ResourceWithPresenter
 
     def query_prefixes
       "PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-      PREFIX arts: <http://data.artsapi.com/def/arts/>"
+      PREFIX arts: <http://data.artsapi.com/def/arts/>
+      PREFIX org: <http://www.w3.org/ns/org#>"
     end
 
     def total_count
