@@ -46,7 +46,7 @@ RSpec.configure do |config|
   # TODO: database cleaner
   # TODO: seed concept schemes
 
-  config.before(:suite) do
+  config.before(:each) do
     #Tripod.cache_store.clear!
     #delete everything from fuseki
     Tripod::SparqlClient::Update.update('

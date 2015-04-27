@@ -22,6 +22,10 @@ class Person < ResourceWithPresenter
   field :department, RDF::ARTS['department']
   field :possible_department, RDF::ARTS['possibleDepartment']
 
+  field :sent_emails, RDF::ARTS['sentEmails']
+  field :incoming_emails, RDF::ARTS['incomingEmails']
+  field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
+
   def human_name
     name_array = self.name
     name_array.delete("")
@@ -72,38 +76,78 @@ class Person < ResourceWithPresenter
     Email.find_by_sparql("
       SELECT DISTINCT ?uri 
       WHERE { 
-        ?uri a <http://data.artsapi.com/def/arts/Email> . 
-        <#{self.uri.to_s}> <http://xmlns.com/foaf/0.1/made> ?uri . 
+        ?uri a <http://data.artsapi.com/def/arts/Email> .
+        <#{self.uri.to_s}> <http://xmlns.com/foaf/0.1/made> ?uri .
       }")
   end
 
   def number_of_sent_emails
-    query = Tripod::SparqlQuery.new("
-      #{Person.query_prefixes}
-      SELECT DISTINCT ?uri 
-      WHERE { 
-        VALUES ?self { <#{self.uri.to_s}> }
-        ?uri a arts:Email . 
-        ?self foaf:made ?uri . 
-      }
-      ")
-    Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+    if self.sent_emails.nil?
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+        SELECT DISTINCT ?uri 
+        WHERE {
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?uri arts:emailSender <#{self.uri.to_s}> .
+          } 
+        }
+        ")
+
+      number_of_emails =  Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+
+      self.sent_emails = number_of_emails
+      self.save
+
+      number_of_emails
+    else
+      self.sent_emails
+    end
   end
 
-  def all_keywords
+  def number_of_incoming_emails
+    if self.incoming_emails.nil?
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+        SELECT DISTINCT ?uri 
+        WHERE { 
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?uri arts:emailRecipient <#{self.uri.to_s}> .
+          } 
+        }
+        ")
+
+      number_of_emails =  Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+
+      self.incoming_emails = number_of_emails
+      self.save
+
+      number_of_emails
+    else
+      self.incoming_emails
+    end
+  end
+
+  def all_keywords_from_emails
     kw_hash = {}
 
-    all_emails.each do |e| 
-      e.contains_keywords.each do |kw|
+    self.mentioned_keywords.each do |keyword|
+      kw = keyword.to_s
 
-        if kw_hash.has_key?(kw.to_s)
-          kw_hash[(kw.to_s)][1] = kw_hash[(kw.to_s)][1] += 1
-        else
-          label = Keyword.find(kw.to_s).label rescue Keyword.label_from_uri(kw)
-          kw_hash[(kw.to_s)] = [label, 1]
-        end
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+        SELECT ?email
+        WHERE {
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?email arts:emailSender <#{self.uri.to_s}> .
+            ?email arts:containsKeyword <#{kw}> .
+          }
+        }
+      ")
 
-      end
+      mentions = Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+
+      label = Keyword.label_from_uri(kw)
+      kw_hash[kw] = [label, mentions]
     end
 
     kw_hash
@@ -111,7 +155,7 @@ class Person < ResourceWithPresenter
 
   def sorted_keywords
     sorted = []
-    ak = all_keywords
+    ak = all_keywords_from_emails
     ak.sort { |a, b| ak[b[0]][1] <=> ak[a[0]][1] }.each { |h| sorted << [ak[h[0]][0], ak[h[0]][1]] }
     sorted
   end
@@ -146,7 +190,8 @@ class Person < ResourceWithPresenter
 
     def query_prefixes
       "PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-      PREFIX arts: <http://data.artsapi.com/def/arts/>"
+      PREFIX arts: <http://data.artsapi.com/def/arts/>
+      PREFIX org: <http://www.w3.org/ns/org#>"
     end
 
     def total_count

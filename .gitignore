@@ -19,3 +19,6 @@
 
 # Ignore app secret
 /config/secrets.yml
+
+# Ignore data artist rakefile
+/lib/tasks/dataartist.rake

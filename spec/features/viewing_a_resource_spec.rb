@@ -40,7 +40,10 @@ describe "Viewing a resource" do
     end
 
     context "resource page for an Email" do
-      before { visit '/id/emails/email-1' }
+      before do
+        path = URI(email.uri).path
+        visit path
+      end
 
       it "should still render the page" do
         expect(page).to have_content('Viewing Resource')

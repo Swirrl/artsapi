@@ -41,6 +41,7 @@ module Connections
 
       SELECT DISTINCT ?person
       WHERE {
+        VALUES ?person { <#{self.connections.map(&:to_s).join("> <")}> }
 
         GRAPH <http://data.artsapi.com/graph/emails> {
           ?email arts:emailRecipient <#{self.uri}>.
