@@ -14,6 +14,7 @@ NB: Every time `$` is seen in a code snippet, you should type this into a termin
 4. Add `alias fuseki_artsapi="cd $HOME/jena-fuseki-1.0.1 ; ./fuseki-server --config=fuseki_config.ttl"` to your shell to start Fuseki using `$ fuseki-artsapi`. Change `jena-fuseki-1.0.1` in the previous command to the version and folder of your installed version of Fuseki.
 5. Install redis and run it.
 6. Use `bundle exec sidekiq` to bring up sidekiq for background processing.
+7. Use `rake db:seed` to generate a user.
 
 ## Deployment
 

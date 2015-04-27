@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -87,6 +88,10 @@ Rails.application.routes.draw do
 
   get '/about' => 'static#about', as: :about
   get '/contact' => 'static#contact', as: :contact
+  get '/home' => 'static#home', as: :home
 
-  root to: 'static#home'
+  devise_scope :user do
+    root to: 'devise/sessions#new'
+  end
+
 end
