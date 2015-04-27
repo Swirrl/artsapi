@@ -7,6 +7,8 @@ describe ConnectionsController do
 
     describe "generating connections with correct params" do
 
+      before { sign_in user }
+
       it "responds with 202" do
         post :schedule, uri: 'http://data.artsapi.com/id/people/jeff-widgetcorp-org', format: :json
         expect(response.status).to eq 202
@@ -15,6 +17,8 @@ describe ConnectionsController do
     end
 
     describe "generating connections with incorrect params" do
+
+      before { sign_in user }
 
       it "responds with 404" do
         post :schedule, uri: 'http://data.artsapi.com/id/people/darth-vader', format: :json
@@ -25,6 +29,8 @@ describe ConnectionsController do
 
     describe "#find with correct params" do
 
+      before { sign_in user }
+
       it "responds with 200" do
         post :find, uri: 'http://data.artsapi.com/id/people/jeff-widgetcorp-org', format: :json
         expect(response.status).to eq 200
@@ -34,6 +40,8 @@ describe ConnectionsController do
     end
 
     describe "#distribution with correct params" do
+
+      before { sign_in user }
 
       it "responds with 200" do
         post :distribution, uri: 'http://data.artsapi.com/id/people/jeff-widgetcorp-org'
@@ -53,6 +61,8 @@ describe ConnectionsController do
     end
 
     describe "#visualise with correct params" do
+
+      before { sign_in user }
 
       before { jeff.get_connections! }
 

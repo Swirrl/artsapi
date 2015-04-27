@@ -1,4 +1,11 @@
 shared_examples_for "given a db with two organisations" do
+  let!(:user) { User.create(
+    email: 'jeff@example.com',
+    password: 'password',
+    name: 'Jeff Vader',
+    organisation: 'http://data.artsapi.com/id/organisations/jeff-widgetcorp-org'
+  ) }
+
   let(:jeff_uri) { RDF::URI("http://data.artsapi.com/id/people/jeff-widgetcorp-org") }
   let(:walter_uri) { RDF::URI("http://data.artsapi.com/id/people/walter-widgetcorp-org") }
 

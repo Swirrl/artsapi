@@ -7,6 +7,8 @@ describe LabelsController do
 
     context "finding labels" do
 
+      before { sign_in user }
+
       it "responds with 200" do
         post :find, uri: 'http://data.artsapi.com/id/people/jeff-widgetcorp-org', format: :json
         expect(response.status).to eq 200
@@ -20,6 +22,8 @@ describe LabelsController do
     end
 
     context 'showing a non-existent resource' do
+
+      before { sign_in user }
 
       it "responds with 404" do
         post :find, uri: 'http://data.artsapi.com/id/people/darth-vader', format: :json

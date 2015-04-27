@@ -3,59 +3,146 @@ require "rails_helper"
 describe "Viewing a resource" do
 
   it_behaves_like "given a db with two organisations" do
-    before { visit '/id/people/jeff-widgetcorp-org' }
 
-    context "resource page for a Person" do
+    describe "when not signed in" do
 
-      it { expect(page).to have_content("Viewing #{jeff.human_name}") }
+      before { visit '/id/people/jeff-widgetcorp-org' }
 
-      it { expect(page).to have_content("Graph") }
-      it { expect(page).to have_content("Distribution") }
-      it { expect(page).to have_content("Connections") }
-      it { expect(page).to have_content("Keywords") }
-      it { expect(page).to have_content("Data") }
+      context "resource page for a Person" do
 
-      it { expect(page).to have_content("3 Emails sent") }
+        it "should prompt to log in" do
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+        end
+
+      end
+
+      context "resource page for an Organisation" do
+
+        before do
+          jeff.get_connections!
+          visit '/id/organisations/widgetcorp-org'
+        end
+
+        it "should prompt to log in" do
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+        end
+
+      end
+
+      context "resource page for an Email" do
+        before do
+          path = URI(email.uri).path
+          visit path
+        end
+
+        it "should prompt to log in" do
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+        end
+      end
+
+      context "an invalid uri" do
+        before { visit '/id/people/darth-vader' }
+
+        it "should prompt to log in" do
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+        end
+      end
+
+      context "visiting the root" do
+        before { visit root_path }
+
+        it "should prompt to log in" do
+          expect(page).to have_content("Log in Email Password Remember me Sign up Forgot your password?")
+        end
+      end
+
+      context "visiting the home page" do
+        before { visit home_path }
+
+        it "should prompt to log in" do
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+        end
+      end
+
+      context "visiting the about page" do
+        before { visit about_path }
+
+        it { expect(page).to have_content("About") }
+      end
+
+      context "visiting the contact page" do
+        before { visit contact_path }
+
+        it { expect(page).to have_content("Contact") }
+      end
+
     end
 
-    context "resource page for an Organisation" do
+    describe "when signed in" do
 
-      before do
-        jeff.get_connections!
-        visit '/id/organisations/widgetcorp-org'
+      context "resource page for a Person" do
+
+        before do
+          AuthHelpers.sign_in user
+          visit '/id/people/jeff-widgetcorp-org'
+        end
+
+        it { expect(page).to have_content("Viewing #{jeff.human_name}") }
+
+        it { expect(page).to have_content("Graph") }
+        it { expect(page).to have_content("Distribution") }
+        it { expect(page).to have_content("Connections") }
+        it { expect(page).to have_content("Keywords") }
+        it { expect(page).to have_content("Data") }
+
+        it { expect(page).to have_content("3 Emails sent") }
       end
 
-      it "should use the label" do
-        expect(page).to have_content('Viewing widgetcorp.org')
+      context "resource page for an Organisation" do
+
+        before do
+          AuthHelpers.sign_in user
+          jeff.get_connections!
+          visit '/id/organisations/widgetcorp-org'
+        end
+
+        it "should use the label" do
+          expect(page).to have_content('Viewing widgetcorp.org')
+        end
+
+        it { expect(page).to have_content("Graph") }
+        it { expect(page).to have_content("Members") }
+        it { expect(page).to have_content("Links") }
+        it { expect(page).to have_content("Data") }
+
+        it { expect(page).to have_content("2 Members") }
+        it { expect(page).to have_content("1 Linked Organisation") }
+        it { expect(page).to have_content("Jeff") }
       end
 
-      it { expect(page).to have_content("Graph") }
-      it { expect(page).to have_content("Members") }
-      it { expect(page).to have_content("Links") }
-      it { expect(page).to have_content("Data") }
+      context "resource page for an Email" do
+        before do
+          AuthHelpers.sign_in user
+          path = URI(email.uri).path
+          visit path
+        end
 
-      it { expect(page).to have_content("2 Members") }
-      it { expect(page).to have_content("1 Linked Organisation") }
-      it { expect(page).to have_content("Jeff") }
-    end
-
-    context "resource page for an Email" do
-      before do
-        path = URI(email.uri).path
-        visit path
+        it "should still render the page" do
+          expect(page).to have_content('Viewing Resource')
+        end
       end
 
-      it "should still render the page" do
-        expect(page).to have_content('Viewing Resource')
-      end
-    end
+      context "an invalid uri" do
+        before do
+          AuthHelpers.sign_in user
+          visit '/id/people/darth-vader'
+        end
 
-    context "an invalid uri" do
-      before { visit '/id/people/darth-vader' }
-
-      it "should 404" do
-        expect(page).to have_content('404')
+        it "should 404" do
+          expect(page).to have_content('404')
+        end
       end
+
     end
 
   end

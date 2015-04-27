@@ -7,6 +7,8 @@ describe ResourcesController do
 
     context 'showing a valid resource' do
 
+      before { sign_in user }
+
       it "responds with 200" do
         get :show, resource_type: 'people', slug: 'jeff-widgetcorp-org', format: 'html'
         expect(response.status).to eq 200
@@ -15,6 +17,8 @@ describe ResourcesController do
     end
 
     context 'showing a non-existent resource' do
+
+      before { sign_in user }
 
       it "responds with 404" do
         get :show, resource_type: 'people', slug: 'slug', format: 'html'
