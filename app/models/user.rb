@@ -54,10 +54,24 @@ class User
   end
 
   class << self
+
+    # make mongoid and mongo play nice
     def serialize_from_session(key, salt)
       record = to_adapter.get(key[0]["$oid"])
       record if record && record.authenticatable_salt == salt
     end
+
+    # we need to be able to call User.current_user
+    # so that we can call the .within {} method above
+    # this looks terrifying, but it's an rbates special
+    def current_user=(user)
+      Thread.current[:current_user] = user
+    end
+
+    def current_user
+      Thread.current[:current_user]
+    end
+
   end
 
 end
