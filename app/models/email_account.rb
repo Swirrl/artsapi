@@ -8,4 +8,11 @@ class EmailAccount < ResourceWithPresenter
   field :account_name, RDF::FOAF['accountName']
   field :has_email, RDF::VCARD['hasEmail']
 
+  # override to use correct db
+  def find(uri, opts={})
+    User.current_user.within do
+      super(uri, opts)
+    end
+  end
+
 end

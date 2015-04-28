@@ -11,6 +11,13 @@ class Organisation < ResourceWithPresenter
   field :owns_domain, RDF::ARTS['ownsDomain'], is_uri: true
   field :works_on, RDF::ARTS['worksOn'], is_uri: true, multivalued: true
 
+  # override to use correct db
+  def find(uri, opts={})
+    User.current_user.within do
+      super(uri, opts)
+    end
+  end
+
   # (re)generate connections for all members of an organisation
   def generate_all_connections!
     organisation_level_connections = []

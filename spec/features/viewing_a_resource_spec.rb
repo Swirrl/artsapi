@@ -4,6 +4,9 @@ describe "Viewing a resource" do
 
   it_behaves_like "given a db with two organisations" do
 
+    # mock a signed-in user for DB queries
+    before { User.current_user = user }
+
     describe "when not signed in" do
 
       before { visit '/id/people/jeff-widgetcorp-org' }
@@ -19,7 +22,6 @@ describe "Viewing a resource" do
       context "resource page for an Organisation" do
 
         before do
-          jeff.get_connections!
           visit '/id/organisations/widgetcorp-org'
         end
 

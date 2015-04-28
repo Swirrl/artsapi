@@ -13,6 +13,13 @@ class Email < ResourceWithPresenter
   field :contains_keywords, RDF::ARTS['containsKeyword'], is_uri:true, multivalued: true
   field :sent_at, RDF::ARTS['sentAt'], :datatype => RDF::XSD.datetime
 
+  # override to use correct db
+  def find(uri, opts={})
+    User.current_user.within do
+      super(uri, opts)
+    end
+  end
+
   class << self
 
     def total_count

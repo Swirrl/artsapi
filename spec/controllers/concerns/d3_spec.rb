@@ -4,6 +4,9 @@ describe D3 do
 
   it_behaves_like "given a db with two organisations" do
 
+    # mock a signed-in user for DB queries
+    before { User.current_user = user }
+
     before { jeff.get_connections! }
 
     describe "generating a graph for a person" do

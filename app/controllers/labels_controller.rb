@@ -23,15 +23,17 @@ class LabelsController < ApplicationController
   # try and return label
   # or try and return name
   def find_resource_label_by_uri(uri)
-    Tripod::SparqlClient::Query.select("
-      SELECT DISTINCT ?label
-      WHERE {
-        { <#{uri}> <http://www.w3.org/2000/01/rdf-schema#label> ?label }
-        UNION
-        { <#{uri}> <http://xmlns.com/foaf/0.1/name> ?label}
-      }
-      LIMIT 1
-      ")[0]["label"]["value"]
+    User.current_user.within {
+      Tripod::SparqlClient::Query.select("
+        SELECT DISTINCT ?label
+        WHERE {
+          { <#{uri}> <http://www.w3.org/2000/01/rdf-schema#label> ?label }
+          UNION
+          { <#{uri}> <http://xmlns.com/foaf/0.1/name> ?label}
+        }
+        LIMIT 1
+        ")[0]["label"]["value"]
+    }
   end
 
 end

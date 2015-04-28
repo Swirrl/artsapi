@@ -21,41 +21,46 @@ module Connections
   end
 
   def get_recipients_of_emails
-    Tripod::SparqlClient::Query.select("
-      #{Person.query_prefixes}
+    User.current_user.within {
+      Tripod::SparqlClient::Query.select("
+        #{Person.query_prefixes}
 
-      SELECT DISTINCT ?person
-      WHERE {
-        VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
+        SELECT DISTINCT ?person
+        WHERE {
+          VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
 
-        GRAPH <http://data.artsapi.com/graph/emails> {
-          ?email arts:emailRecipient ?person
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?email arts:emailRecipient ?person
+          }
         }
-      }
-    ").map { |r| r["person"]["value"] }
+      ").map { |r| r["person"]["value"] }
+    }
   end
 
   def get_incoming_mail_senders
-    Tripod::SparqlClient::Query.select("
-      #{Person.query_prefixes}
+    User.current_user.within {
+      Tripod::SparqlClient::Query.select("
+        #{Person.query_prefixes}
 
-      SELECT DISTINCT ?person
-      WHERE {
-        VALUES ?person { <#{self.connections.map(&:to_s).join("> <")}> }
+        SELECT DISTINCT ?person
+        WHERE {
+          VALUES ?person { <#{self.connections.map(&:to_s).join("> <")}> }
 
-        GRAPH <http://data.artsapi.com/graph/emails> {
-          ?email arts:emailRecipient <#{self.uri}>.
-          ?email arts:emailSender ?person .
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?email arts:emailRecipient <#{self.uri}>.
+            ?email arts:emailSender ?person .
+          }
         }
-      }
-      ").map { |r| r["person"]["value"] }
+        ").map { |r| r["person"]["value"] }
+    }
   end
 
   def calculate_connections
     connection_set = []
     recipients = self.get_recipients_of_emails
 
-    filtered = Tripod::SparqlClient::Query.select("
+    filtered =  User.current_user.within { 
+      Tripod::SparqlClient::Query.select("
       #{Person.query_prefixes}
 
       SELECT DISTINCT ?person
@@ -68,7 +73,8 @@ module Connections
         }
 
       }
-      ").map { |r| r["person"]["value"] }
+      ").map { |r| r["person"]["value"] } 
+    }
 
     filtered
   end
@@ -98,7 +104,10 @@ module Connections
           }
         }
         ")
-      count = Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+
+      count = User.current_user.within {
+        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      }
 
       results << [conn.to_s, count]
     end

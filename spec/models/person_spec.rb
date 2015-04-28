@@ -3,6 +3,9 @@ require 'rails_helper'
 describe 'Person' do
   it_behaves_like "given a db with two organisations" do
 
+    # mock a signed-in user for DB queries
+    before { User.current_user = user }
+
     let(:domain) { FactoryGirl.create(:domain) }
 
     let(:keyword_two) { FactoryGirl.create(:keyword, 

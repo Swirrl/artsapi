@@ -16,6 +16,8 @@ NB: Every time `$` is seen in a code snippet, you should type this into a termin
 6. Use `bundle exec sidekiq` to bring up sidekiq for background processing.
 7. Use `rake db:seed` to generate a user.
 
+NB: You *must* be running Fuseki on port 3030 if you do not want to modify the multiple tenancy code.
+
 ## Deployment
 
 Deploy using Docker. Setup a Redis, Mongo and Fuseki instance before linking them to this container.

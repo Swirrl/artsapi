@@ -3,6 +3,9 @@ require 'rails_helper'
 describe 'Organisation' do
   it_behaves_like "given a db with two organisations" do
 
+    # mock a signed-in user for DB queries
+    before { User.current_user = user }
+
     context "instance methods" do
 
       describe "#generate_all_connections" do

@@ -10,6 +10,13 @@ class Keyword
   field :label, RDF::RDFS.label
   field :in_sub_category, 'http://data.artsapi.com/def/arts/keywords/inSubCategory', is_uri: true
 
+  # override to use correct db
+  def find(uri, opts={})
+    User.current_user.within do
+      super(uri, opts)
+    end
+  end
+
   class << self
 
     def label_from_uri(uri)

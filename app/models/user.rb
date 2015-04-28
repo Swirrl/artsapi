@@ -39,7 +39,7 @@ class User
   field :name, type: String
   field :ds_name_slug, type: String
 
-  # we want to be able to do current_user.within {} to issue DB queries
+  # We want to be able to do current_user.within {} to issue DB queries
   def within(&block)
     return unless block_given?
     set_tripod_endpoints
@@ -49,19 +49,25 @@ class User
 
   def set_tripod_endpoints
     name_slug = self.ds_name_slug # dataset name in the fuseki config
-    Tripod.query_endpoint = "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/#{name_slug}/sparql"
-    Tripod.update_endpoint = "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/#{name_slug}/update"
+
+    if Rails.env.production?
+      Tripod.query_endpoint = "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/#{name_slug}/sparql"
+      Tripod.update_endpoint = "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/#{name_slug}/update"
+    else
+      Tripod.query_endpoint = "http://localhost:3030/#{name_slug}/sparql"
+      Tripod.update_endpoint = "http://localhost:3030/#{name_slug}/update"
+    end
   end
 
   class << self
 
-    # make mongoid and mongo play nice
+    # Make mongoid and mongo play nice
     def serialize_from_session(key, salt)
       record = to_adapter.get(key[0]["$oid"])
       record if record && record.authenticatable_salt == salt
     end
 
-    # we need to be able to call User.current_user
+    # We need to be able to call User.current_user
     # so that we can call the .within {} method above
     # this looks terrifying, but it's an rbates special
     def current_user=(user)
