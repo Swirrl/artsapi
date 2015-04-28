@@ -1,6 +1,7 @@
 class Email < ResourceWithPresenter
 
   include Tripod::Resource
+  include TripodOverrides
 
   rdf_type 'http://data.artsapi.com/def/arts/Email'
   graph_uri 'http://data.artsapi.com/graph/emails'
@@ -12,13 +13,6 @@ class Email < ResourceWithPresenter
   field :has_domain, RDF::ARTS['hasDomain'], is_uri: true
   field :contains_keywords, RDF::ARTS['containsKeyword'], is_uri:true, multivalued: true
   field :sent_at, RDF::ARTS['sentAt'], :datatype => RDF::XSD.datetime
-
-  # override to use correct db
-  def find(uri, opts={})
-    User.current_user.within do
-      super(uri, opts)
-    end
-  end
 
   class << self
 
@@ -33,7 +27,7 @@ class Email < ResourceWithPresenter
           } 
         }"
 
-      Tripod::SparqlClient::Query.select(all_emails_sparql).count
+      User.current_user.within { Tripod::SparqlClient::Query.select(all_emails_sparql).count }
     end
 
   end

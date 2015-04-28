@@ -1,6 +1,7 @@
 class Organisation < ResourceWithPresenter
 
   include Tripod::Resource
+  include TripodOverrides
 
   rdf_type 'http://www.w3.org/ns/org#Organization'
   graph_uri 'http://data.artsapi.com/graph/organisations'
@@ -10,13 +11,6 @@ class Organisation < ResourceWithPresenter
   field :linked_to, RDF::ORG['linkedTo'], is_uri: true, multivalued: true
   field :owns_domain, RDF::ARTS['ownsDomain'], is_uri: true
   field :works_on, RDF::ARTS['worksOn'], is_uri: true, multivalued: true
-
-  # override to use correct db
-  def find(uri, opts={})
-    User.current_user.within do
-      super(uri, opts)
-    end
-  end
 
   # (re)generate connections for all members of an organisation
   def generate_all_connections!

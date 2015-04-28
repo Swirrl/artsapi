@@ -2,6 +2,7 @@ class Person < ResourceWithPresenter
 
   include Tripod::Resource
   include Connections
+  include TripodOverrides
 
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
   graph_uri 'http://data.artsapi.com/graph/people'
@@ -25,13 +26,6 @@ class Person < ResourceWithPresenter
   field :sent_emails, RDF::ARTS['sentEmails']
   field :incoming_emails, RDF::ARTS['incomingEmails']
   field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
-
-  # override to use correct db
-  def find(uri, opts={})
-    User.current_user.within do
-      super(uri, opts)
-    end
-  end
 
   def human_name
     name_array = self.name
