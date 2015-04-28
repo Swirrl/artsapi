@@ -3,7 +3,7 @@ shared_examples_for "given a db with two organisations" do
     email: 'jeff@example.com',
     password: 'password',
     name: 'Jeff Vader',
-    organisation: 'http://data.artsapi.com/id/organisations/jeff-widgetcorp-org'
+    ds_name_slug: 'artsapi-test'
   ) }
 
   let(:jeff_uri) { RDF::URI("http://data.artsapi.com/id/people/jeff-widgetcorp-org") }

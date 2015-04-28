@@ -6,7 +6,7 @@ describe User do
     pending
   end
 
-  describe 'URI validation' do
+  describe 'within method' do
     pending
   end
 

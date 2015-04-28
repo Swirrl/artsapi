@@ -10,5 +10,5 @@ test_user = User.create(
   email: 'jeff@example.com',
   password: 'password',
   name: 'Jeff Vader',
-  organisation: 'http://data.artsapi.com/id/organisations/futureeverything-org'
+  ds_name_slug: 'artsapi-dev'
 )

@@ -37,7 +37,21 @@ class User
 
   # ArtsAPI fields
   field :name, type: String
-  field :organisation, type: String # this needs to be a valid URI
+  field :ds_name_slug, type: String
+
+  # we want to be able to do current_user.within {} to issue DB queries
+  def within(&block)
+    return unless block_given?
+    set_tripod_endpoints
+
+    yield
+  end
+
+  def set_tripod_endpoints
+    name_slug = self.ds_name_slug # dataset name in the fuseki config
+    Tripod.query_endpoint = "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/#{name_slug}/sparql"
+    Tripod.update_endpoint = "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/#{name_slug}/update"
+  end
 
   class << self
     def serialize_from_session(key, salt)
