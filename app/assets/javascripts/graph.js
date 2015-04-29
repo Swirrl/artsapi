@@ -12,8 +12,8 @@
 
       var force = d3.layout.force()
           .gravity(gravityValue)
-          .charge(-300)
-          .linkDistance(150)
+          .charge(-600)
+          .linkDistance(120)
           .size([width, height]);
 
       var svg = d3.select("#graph-vis").append("svg")
@@ -36,13 +36,13 @@
             .data(graph.links)
           .enter().append("line")
             .attr("class", "link")
-            .style("stroke-width", function(d) { return Math.sqrt(d.value / 2); });
+            .style("stroke-width", function(d) { return Math.sqrt(d.value / 4); });
 
         var node = svg.selectAll(".node")
             .data(graph.nodes)
           .enter().append("circle")
             .attr("class", "node")
-            .attr("r", 5)
+            .attr("r", function(d) { return (d.org === undefined) ? 5 : 8; })//5)
             .style("fill", function(d) { return color(d.group); })
             .call(force.drag);
 

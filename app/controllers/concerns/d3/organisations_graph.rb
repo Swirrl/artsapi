@@ -26,27 +26,62 @@ module D3
     def collect_all_organisations
       org_uri = self.organisation.uri
       add_to_hash(org_uri, type: :organisation)
-      add_all_members(org_uri.to_s)
+
+      org = Organisation.find(org_uri)
+      members = org.has_members
+      add_all_members(org, members)
 
       organisation_links = self.organisation.linked_to
 
       organisation_links.each do |other_org_uri|
-        add_to_hash(other_org_uri, type: :organisation)
-        add_all_members(other_org_uri.to_s)
+        add_org_and_members_if_relevant(other_org_uri)
       end
     end
 
-    def add_all_members(organisation_uri)
-      org = Organisation.find(organisation_uri)
-      members = org.has_members
-      org_id = self.org_mapping[:organisations][org.uri.to_s]
+    # we want to get rid of gmail, hotmail etc
+    def is_red_herring?(uri)
+      org_data_root = "http://data.artsapi.com/id/organisations/"
+
+      !!([
+        "#{org_data_root}hotmail-com",
+        "#{org_data_root}hotmail-co-uk",
+        "#{org_data_root}live-com",
+        "#{org_data_root}live-co-uk",
+        "#{org_data_root}outlook-com",
+        "#{org_data_root}outlook-co-uk",
+        "#{org_data_root}gmail-com",
+        "#{org_data_root}gmail-co-uk",
+        "#{org_data_root}googlemail-com",
+        "#{org_data_root}googlemail-co-uk"
+        ].include?(uri))
+    end
+
+    def add_org_and_members_if_relevant(other_org_uri)
+      if !is_red_herring?(other_org_uri)
+        organisation_object = Organisation.find(other_org_uri)
+
+        # only hammer through members if org has a few
+        members = organisation_object.has_members
+
+        if members.length > 1
+          add_to_hash(other_org_uri, type: :organisation)
+          add_all_members(organisation_object, members)
+        end
+      end
+    end
+
+    def add_all_members(organisation_object, members)
+      org_id = self.org_mapping[:organisations][organisation_object.uri.to_s]
 
       members.each do |member|
-        add_to_hash(member, type: :member)
+        if Person.find(member).connections.length > 0
+          add_to_hash(member, type: :member)
 
-        member_id = self.org_mapping[:members][member.to_s]
-        add_link!(org_id, member_id, 1)
+          member_id = self.org_mapping[:members][member.to_s]
+          add_link!(org_id, member_id, 1)
+        end
       end
+
     end
 
     def add_to_hash(uri, opts={})
@@ -55,13 +90,45 @@ module D3
 
       if type == :member
         if !self.org_mapping[:members].has_key?(uri)
+
           m, id = lookup_and_add_member_node(uri.to_s)
 
           m.connections.each do |conn|
-            lookup_and_add_member_node(conn.to_s) if !self.org_mapping[:members].has_key?(conn.to_s)
 
-            conn_id = self.org_mapping[:members][conn.to_s]
-            add_link!(id, conn_id, 10)
+            if !member_in_org_mapping?(conn.to_s)
+              p = Person.find(conn.to_s)
+              if relevant?(p)
+                lookup_and_add_member_node(conn.to_s, person: p) 
+
+                conn_id = self.org_mapping[:members][conn.to_s]
+                add_link!(id, conn_id, 10)
+              end
+            else
+              conn_id = self.org_mapping[:members][conn.to_s]
+              add_link!(id, conn_id, 10)
+            end
+
+          end
+        else # they might be in the mapping, but are their connections?
+
+          m = Person.find(uri)
+          id = self.org_mapping[:members][uri]
+
+          m.connections.each do |conn|
+
+            if !member_in_org_mapping?(conn.to_s)
+              p = Person.find(conn.to_s) 
+              if relevant?(p)
+                lookup_and_add_member_node(conn.to_s, person: p)
+
+                conn_id = self.org_mapping[:members][conn.to_s]
+                add_link!(id, conn_id, 10)
+              end
+            else
+              conn_id = self.org_mapping[:members][conn.to_s]
+              add_link!(id, conn_id, 10)
+            end
+
           end
         end
       elsif type == :organisation
@@ -78,8 +145,19 @@ module D3
       end
     end
 
-    def lookup_and_add_member_node(uri)
-      m = Person.find(uri)
+    def member_in_org_mapping?(member)
+      !!(self.org_mapping[:members].has_key?(member.to_s))
+    end
+
+    def relevant?(person_object)
+      linked_orgs = self.organisation.linked_to
+
+      !!(person_object.connections.length > 1 && linked_orgs.include?(person_object.member_of.to_s) && !is_red_herring?(person_object.member_of.to_s))
+    end
+
+    def lookup_and_add_member_node(uri, opts={})
+      m = opts.fetch(:person, nil)
+      m = Person.find(uri) if m.nil?
       id = self.counter
       self.org_mapping[:members][uri] = id
 
@@ -93,18 +171,23 @@ module D3
       id = self.counter
       self.org_mapping[:organisations][uri] = id
 
-      add_node!(id, uri, uri, uri)
+      add_node!(id, uri, uri, uri, is_org: true)
       increment_counter!
       [o, id]
     end
 
-    def add_node!(id, name, uri, group)
-      self.formatted_hash["nodes"] << {
+    def add_node!(id, name, uri, group, opts={})
+      is_org = opts.fetch(:is_org, false)
+
+      node = {
         id: id,
         name: name,
         uri: uri,
         group: group
       }
+
+      node[:org] = true if is_org
+      self.formatted_hash["nodes"] << node
     end
 
     def add_link!(source, target, value)

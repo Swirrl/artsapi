@@ -36,9 +36,6 @@ describe User do
       test_user.save
 
       test_user.within {}
-
-      #Tripod.update_endpoint = 'http://127.0.0.1:3030/artsapi-test/update'
-      #Tripod.query_endpoint = 'http://127.0.0.1:3030/artsapi-test/sparql'
     end
 
     it "should modify Tripod query endpoint" do
