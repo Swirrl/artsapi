@@ -7,6 +7,14 @@ module D3
 
     # what are the thresholds we want for connection length on a person node
     # and the threshold we want in terms of members of an org?
+
+    # the difficulty here is that the triggering organisation might add nodes
+    # which have no organisation as the check for organisation is to map
+    # over and check members have conns; I think the later check is
+    # for raw members instead which would mean a member with > 1 connection from
+    # an org with many members that have no connections might be added on the
+    # first pass and their organisation will not be added later
+    # naturally this is a massive code smell; we will have to refactor later.
     MIN_CONNECTION_LENGTH = 2
     MIN_MEMBER_NUMBER = 3
 
@@ -66,8 +74,7 @@ module D3
         organisation_object = Organisation.find(other_org_uri)
 
         # only hammer through members if org has a few
-        members = organisation_object.has_members
-        members = members.map { |m| m if Person.find(m).connections.length > MIN_CONNECTION_LENGTH }.compact
+        members = organisation_object.members_with_more_than_x_connections(MIN_CONNECTION_LENGTH)
 
         if members.length > MIN_MEMBER_NUMBER
           add_to_hash(other_org_uri, type: :organisation)
@@ -164,7 +171,7 @@ module D3
     def relevant?(person_object)
       linked_orgs = self.organisation.linked_to.map(&:to_s)
 
-      !!(person_object.connections.length > MIN_CONNECTION_LENGTH && linked_orgs.include?(person_object.member_of.to_s) && !is_red_herring?(person_object.member_of.to_s) && Organisation.find(person_object.member_of).has_members.length > MIN_MEMBER_NUMBER)
+      !!(person_object.connections.length > MIN_CONNECTION_LENGTH && linked_orgs.include?(person_object.member_of.to_s) && !is_red_herring?(person_object.member_of.to_s) && Organisation.find(person_object.member_of).members_with_more_than_x_connections(MIN_CONNECTION_LENGTH).length > MIN_MEMBER_NUMBER)
     end
 
     def lookup_and_add_member_node(uri, opts={})

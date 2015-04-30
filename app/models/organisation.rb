@@ -35,6 +35,10 @@ class Organisation < ResourceWithPresenter
     job_ids
   end
 
+  def members_with_more_than_x_connections(x)
+    self.has_members.map { |m| m if Person.find(m).connections.length > x }.compact
+  end
+
   class << self
 
     # takes a uri object or string
