@@ -5,6 +5,11 @@ module D3
   class OrganisationsGraph
     attr_accessor :organisation, :formatted_hash, :org_mapping, :counter
 
+    # what are the thresholds we want for connection length on a person node
+    # and the threshold we want in terms of members of an org?
+    MIN_CONNECTION_LENGTH = 2
+    MIN_MEMBER_NUMBER = 3
+
     def initialize(org)
       self.bootstrap_hash_and_mapping
       self.counter = 0
@@ -25,7 +30,7 @@ module D3
 
     def collect_all_organisations
       org_uri = self.organisation.uri
-      add_to_hash(org_uri, type: :organisation)
+      add_to_hash(org_uri, type: :organisation, add_connections: false)
 
       org = Organisation.find(org_uri)
       members = org.has_members
@@ -62,8 +67,9 @@ module D3
 
         # only hammer through members if org has a few
         members = organisation_object.has_members
+        members = members.map { |m| m if Person.find(m).connections.length > MIN_CONNECTION_LENGTH }.compact
 
-        if members.length > 1
+        if members.length > MIN_MEMBER_NUMBER
           add_to_hash(other_org_uri, type: :organisation)
           add_all_members(organisation_object, members)
         end
@@ -74,18 +80,17 @@ module D3
       org_id = self.org_mapping[:organisations][organisation_object.uri.to_s]
 
       members.each do |member|
-        if Person.find(member).connections.length > 0
-          add_to_hash(member, type: :member)
+        add_to_hash(member, type: :member)
 
-          member_id = self.org_mapping[:members][member.to_s]
-          add_link!(org_id, member_id, 1)
-        end
+        member_id = self.org_mapping[:members][member.to_s]
+        add_link!(org_id, member_id, 1)
       end
 
     end
 
     def add_to_hash(uri, opts={})
       type = opts.fetch(:type, :member)
+      add_connections = opts.fetch(:add_connections, true)
       uri = uri.to_s # make sure it isn't an RDF::URI
 
       if type == :member
@@ -133,13 +138,20 @@ module D3
         end
       elsif type == :organisation
         if !self.org_mapping[:organisations].has_key?(uri)
+          linked_orgs = self.organisation.linked_to.map(&:to_s)
           o, id = lookup_and_add_org_node(uri.to_s)
 
-          o.linked_to.each do |org_uri|
-            lookup_and_add_org_node(org_uri.to_s) if !self.org_mapping[:organisations].has_key?(org_uri.to_s)
+          if add_connections
+            o.linked_to.each do |org_uri|
 
-            link_id = self.org_mapping[:organisations][org_uri.to_s]
-            add_link!(id, link_id, 10)
+              if linked_orgs.include?(org_uri.to_s)
+                lookup_and_add_org_node(org_uri.to_s) if !self.org_mapping[:organisations].has_key?(org_uri.to_s)
+
+                link_id = self.org_mapping[:organisations][org_uri.to_s]
+                add_link!(id, link_id, 10)
+              end
+
+            end
           end
         end
       end
@@ -150,9 +162,9 @@ module D3
     end
 
     def relevant?(person_object)
-      linked_orgs = self.organisation.linked_to
+      linked_orgs = self.organisation.linked_to.map(&:to_s)
 
-      !!(person_object.connections.length > 1 && linked_orgs.include?(person_object.member_of.to_s) && !is_red_herring?(person_object.member_of.to_s))
+      !!(person_object.connections.length > MIN_CONNECTION_LENGTH && linked_orgs.include?(person_object.member_of.to_s) && !is_red_herring?(person_object.member_of.to_s) && Organisation.find(person_object.member_of).has_members.length > MIN_MEMBER_NUMBER)
     end
 
     def lookup_and_add_member_node(uri, opts={})
