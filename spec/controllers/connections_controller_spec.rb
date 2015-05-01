@@ -62,9 +62,10 @@ describe ConnectionsController do
 
     describe "#visualise with correct params" do
 
-      before { sign_in user }
-
-      before { jeff.get_connections! }
+      before do
+        jeff.get_connections!
+        sign_in user
+      end
 
       it "responds with 200" do
         post :visualise, uri: 'http://data.artsapi.com/id/people/jeff-widgetcorp-org'
