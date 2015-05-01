@@ -28,7 +28,7 @@
         }
 
         // cribbed example to do collision
-        var padding = 1, // separation between circles
+        var padding = 1,
             radius = 8;
 
         function collide(alpha) {
@@ -58,21 +58,17 @@
         }
 
         // cribbed example to do node and link highlighting
-        // Toggle stores whether the highlighting is on
         var toggle = 0;
-        // Create an array logging what is connected to what
         var linkedByIndex = {};
 
         for (i = 0; i < graph.nodes.length; i++) {
           linkedByIndex[i + "," + i] = 1;
         };
 
-        // build link index
         graph.links.forEach(function (d) {
           linkedByIndex[d.source.index + "," + d.target.index] = 1;
         });
 
-        // This function looks up whether a pair are neighbours
         function neighboring(a, b) {
           return linkedByIndex[a.index + "," + b.index];
         }
@@ -90,14 +86,14 @@
               }
             });
 
+            console.log(d);
+
             link.style("opacity", function(o) {
               return (d.index === o.source.index || d.index === o.target.index) ? 1 : 0.1;
             });
 
-            // Reduce the opacity
             toggle = 1;
           } else {
-            // Put them back to opacity = 1
             node.style("opacity", 1);
             link.style("opacity", 1);
             toggle = 0;
@@ -125,7 +121,7 @@
             .on('dblclick', connectedNodes);
 
         node.append("title")
-            .text(function(d) { return d.name + "\n" + d.uri + "\n" + "Weight: " + ((d.connections === undefined) ? d.weight : d.connections); });
+            .text(function(d) { return d.name + "\n" + d.uri + "\n" + "Weight: " + d.weight + ((d.connections === undefined) ? '' : "\n" + "Connections: " + d.connections); });
 
         force.on("tick", function() {
           link.attr("x1", function(d) { return d.source.x; })

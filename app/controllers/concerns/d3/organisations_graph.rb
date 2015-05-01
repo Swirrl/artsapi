@@ -1,8 +1,11 @@
+require 'memoist'
+
 module D3
 
   extend ActiveSupport::Concern
 
   class OrganisationsGraph
+    extend Memoist
     attr_accessor :organisation, :formatted_hash, :org_mapping, :counter
 
     # what are the thresholds we want for connection length on a person node
@@ -24,6 +27,7 @@ module D3
       self.organisation = org
       self.collect_all_organisations
     end
+    memoize :initialize
 
     def bootstrap_hash_and_mapping
       self.formatted_hash = {}

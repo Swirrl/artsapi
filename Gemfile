@@ -47,6 +47,9 @@ gem 'bootstrap-sass', '~> 3.3.3'
 # background processing
 gem 'sidekiq'
 
+# add memoization
+gem 'memoist', '~> 0.12.0'
+
 group :development, :test do
   gem "rspec-rails", "~> 3.0.0"
   gem "factory_girl_rails", "~> 4.5.0"

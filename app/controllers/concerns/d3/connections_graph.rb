@@ -1,9 +1,12 @@
+require 'memoist'
+
 module D3
 
   extend ActiveSupport::Concern
 
   # here be dragons!
   class ConnectionsGraph
+    extend Memoist
     attr_accessor :person_mapping, :conn_hash
 
     def initialize(person)
@@ -29,6 +32,7 @@ module D3
 
       end
     end
+    memoize :initialize
 
     def bootstrap_hash_and_mapping
       self.conn_hash = {}
