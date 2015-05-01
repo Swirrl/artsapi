@@ -27,6 +27,83 @@
           force.size([width, 600]);
         }
 
+        // cribbed example to do collision
+        var padding = 1, // separation between circles
+            radius = 8;
+
+        function collide(alpha) {
+          var quadtree = d3.geom.quadtree(graph.nodes);
+          return function(d) {
+            var rb = 2 * radius + padding,
+                nx1 = d.x - rb,
+                nx2 = d.x + rb,
+                ny1 = d.y - rb,
+                ny2 = d.y + rb;
+            quadtree.visit(function(quad, x1, y1, x2, y2) {
+              if (quad.point && (quad.point !== d)) {
+                var x = d.x - quad.point.x,
+                    y = d.y - quad.point.y,
+                    l = Math.sqrt(x * x + y * y);
+                  if (l < rb) {
+                  l = (l - rb) / l * alpha;
+                  d.x -= x *= l;
+                  d.y -= y *= l;
+                  quad.point.x += x;
+                  quad.point.y += y;
+                }
+              }
+              return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+            });
+          };
+        }
+
+        // cribbed example to do node and link highlighting
+        // Toggle stores whether the highlighting is on
+        var toggle = 0;
+        // Create an array logging what is connected to what
+        var linkedByIndex = {};
+
+        for (i = 0; i < graph.nodes.length; i++) {
+          linkedByIndex[i + "," + i] = 1;
+        };
+
+        // build link index
+        graph.links.forEach(function (d) {
+          linkedByIndex[d.source.index + "," + d.target.index] = 1;
+        });
+
+        // This function looks up whether a pair are neighbours
+        function neighboring(a, b) {
+          return linkedByIndex[a.index + "," + b.index];
+        }
+
+        function connectedNodes() {
+          if (toggle == 0) {
+
+            d = d3.select(this).node().__data__;
+
+            node.style("opacity", function(o) {
+              if(neighboring(d, o) || neighboring(o, d)){
+                return 1;
+              } else {
+                return 0.1;
+              }
+            });
+
+            link.style("opacity", function(o) {
+              return (d.index === o.source.index || d.index === o.target.index) ? 1 : 0.1;
+            });
+
+            // Reduce the opacity
+            toggle = 1;
+          } else {
+            // Put them back to opacity = 1
+            node.style("opacity", 1);
+            link.style("opacity", 1);
+            toggle = 0;
+          }
+        }
+
         force
             .nodes(graph.nodes)
             .links(graph.links)
@@ -44,10 +121,11 @@
             .attr("class", "node")
             .attr("r", function(d) { return (d.org === undefined) ? 5 : 8; })//5)
             .style("fill", function(d) { return color(d.group); })
-            .call(force.drag);
+            .call(force.drag)
+            .on('dblclick', connectedNodes);
 
         node.append("title")
-            .text(function(d) { return d.name + "\n" + d.uri; });
+            .text(function(d) { return d.name + "\n" + d.uri + "\n" + "Weight: " + ((d.connections === undefined) ? d.weight : d.connections); });
 
         force.on("tick", function() {
           link.attr("x1", function(d) { return d.source.x; })
@@ -57,6 +135,7 @@
 
           node.attr("cx", function(d) { return d.x; })
               .attr("cy", function(d) { return d.y; });
+          node.each(collide(0.5));
         });
       }).header("Content-Type", "application/json");
     };

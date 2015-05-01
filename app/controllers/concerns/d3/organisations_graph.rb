@@ -38,7 +38,7 @@ module D3
 
     def collect_all_organisations
       org_uri = self.organisation.uri
-      add_to_hash(org_uri, type: :organisation, add_connections: false)
+      #add_to_hash(org_uri, type: :organisation, add_connections: false)
 
       org = Organisation.find(org_uri)
       members = org.has_members
@@ -77,7 +77,7 @@ module D3
         members = organisation_object.members_with_more_than_x_connections(MIN_CONNECTION_LENGTH)
 
         if members.length > MIN_MEMBER_NUMBER
-          add_to_hash(other_org_uri, type: :organisation)
+          #add_to_hash(other_org_uri, type: :organisation)
           add_all_members(organisation_object, members)
         end
       end
@@ -90,7 +90,7 @@ module D3
         add_to_hash(member, type: :member)
 
         member_id = self.org_mapping[:members][member.to_s]
-        add_link!(org_id, member_id, 1)
+        #add_link!(org_id, member_id, 1)
       end
 
     end
@@ -180,7 +180,7 @@ module D3
       id = self.counter
       self.org_mapping[:members][uri] = id
 
-      add_node!(id, m.human_name, uri, m.member_of.to_s)
+      add_node!(id, m.human_name, uri, m.member_of.to_s, no_of_conns: m.connections.count)
       increment_counter!
       [m, id]
     end
@@ -197,6 +197,7 @@ module D3
 
     def add_node!(id, name, uri, group, opts={})
       is_org = opts.fetch(:is_org, false)
+      no_of_conns = opts.fetch(:no_of_conns, nil)
 
       node = {
         id: id,
@@ -205,6 +206,7 @@ module D3
         group: group
       }
 
+      node[:connections] = no_of_conns if !no_of_conns.nil?
       node[:org] = true if is_org
       self.formatted_hash["nodes"] << node
     end
