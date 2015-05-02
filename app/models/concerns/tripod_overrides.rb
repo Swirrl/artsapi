@@ -1,6 +1,8 @@
+require 'memoist'
 module TripodOverrides
 
   extend ActiveSupport::Concern
+  extend Memoist
 
   # override to use correct db
   def find(uri, opts={})
@@ -8,5 +10,6 @@ module TripodOverrides
       super(uri, opts)
     end
   end
+  memoize :find
 
 end

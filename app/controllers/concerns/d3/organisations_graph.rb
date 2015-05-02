@@ -109,7 +109,7 @@ module D3
 
           m, id = lookup_and_add_member_node(uri.to_s)
 
-          m.connections.each do |conn|
+          m.memoized_connections.each do |conn|
 
             if !member_in_org_mapping?(conn.to_s)
               p = Person.find(conn.to_s)
@@ -130,7 +130,7 @@ module D3
           m = Person.find(uri)
           id = self.org_mapping[:members][uri]
 
-          m.connections.each do |conn|
+          m.memoized_connections.each do |conn|
 
             if !member_in_org_mapping?(conn.to_s)
               p = Person.find(conn.to_s) 
@@ -175,7 +175,7 @@ module D3
     def relevant?(person_object)
       linked_orgs = self.organisation.linked_to.map(&:to_s)
 
-      !!(person_object.connections.length > MIN_CONNECTION_LENGTH && linked_orgs.include?(person_object.member_of.to_s) && !is_red_herring?(person_object.member_of.to_s) && Organisation.find(person_object.member_of).members_with_more_than_x_connections(MIN_CONNECTION_LENGTH).length > MIN_MEMBER_NUMBER)
+      !!(person_object.memoized_connections.length > MIN_CONNECTION_LENGTH && linked_orgs.include?(person_object.member_of.to_s) && !is_red_herring?(person_object.member_of.to_s) && Organisation.find(person_object.member_of).members_with_more_than_x_connections(MIN_CONNECTION_LENGTH).length > MIN_MEMBER_NUMBER)
     end
 
     def lookup_and_add_member_node(uri, opts={})
@@ -184,7 +184,7 @@ module D3
       id = self.counter
       self.org_mapping[:members][uri] = id
 
-      add_node!(id, m.human_name, uri, m.member_of.to_s, no_of_conns: m.connections.count)
+      add_node!(id, m.human_name, uri, m.member_of.to_s, no_of_conns: m.memoized_connections.count)
       increment_counter!
       [m, id]
     end

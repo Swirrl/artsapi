@@ -1,6 +1,8 @@
+require 'memoist'
 module Connections
 
   extend ActiveSupport::Concern
+  extend Memoist
 
   # writes to db
   def get_connections!
@@ -14,6 +16,7 @@ module Connections
   def get_connections
     calculate_connections
   end
+  memoize :get_connections
 
   # async
   def generate_connections_async
@@ -36,6 +39,7 @@ module Connections
       ").map { |r| r["person"]["value"] }
     }
   end
+  memoize :get_recipients_of_emails
 
   def get_incoming_mail_senders
     User.current_user.within {
@@ -78,6 +82,7 @@ module Connections
 
     filtered
   end
+  memoize :calculate_connections
 
   # requires you to know the connections in advance
   def calculate_email_density

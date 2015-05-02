@@ -1,8 +1,10 @@
+require 'memoist'
 class Person < ResourceWithPresenter
 
   include Tripod::Resource
   include Connections
   include TripodOverrides
+  extend Memoist
 
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
   graph_uri 'http://data.artsapi.com/graph/people'
@@ -26,6 +28,11 @@ class Person < ResourceWithPresenter
   field :sent_emails, RDF::ARTS['sentEmails']
   field :incoming_emails, RDF::ARTS['incomingEmails']
   field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
+
+  def memoized_connections
+    self.connections
+  end
+  memoize :memoized_connections
 
   def human_name
     name_array = self.name
