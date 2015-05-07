@@ -84,6 +84,12 @@ Rails.application.routes.draw do
   post '/get_connections', to: 'connections#find'
   post '/generate_connections', to: 'connections#schedule'
 
+  # uploads mini API ------------------------------
+
+  get '/upload', to: 'uploads#index'
+  post '/authorize_dropbox', to: 'uploads#authorize'
+  post '/create_client_and_fetch_file', to: 'uploads#create_client_and_fetch_file'
+
   # static pages ----------------------------------
 
   get '/about' => 'static#about', as: :about

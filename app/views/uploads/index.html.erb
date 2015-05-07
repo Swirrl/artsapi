@@ -1,0 +1,15 @@
+<% provide :title, 'Upload' %>
+
+<h1>Upload Data to ArtsAPI</h1>
+<p class='small'>
+  If you have already allowed access to your Dropbox account, you can simply specify a path to the file location within your Dropbox account.
+  <br>
+  If you have not yet connected your Dropbox account, you will be given a unique URL to connect your account to ArtsAPI. Click the link, or copy and paste this into your address bar, then log in to Dropbox and click 'Allow'. Once this has been completed, you will be given a code to insert into the form below.
+</p>
+
+<% if @upload_client.current_user_has_auth_code? %>
+  <%= render 'file_location_form' %>
+<% else %>
+  <%= render 'authorization_form' %>
+  <%= render 'file_location_form' %>
+<% end %>
