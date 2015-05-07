@@ -50,6 +50,9 @@ gem 'sidekiq'
 # add memoization
 gem 'memoist', '~> 0.12.0'
 
+# dropbox gem for uploads etc
+gem 'dropbox-sdk', '~> 1.6.4'
+
 group :development, :test do
   gem "rspec-rails", "~> 3.0.0"
   gem "factory_girl_rails", "~> 4.5.0"

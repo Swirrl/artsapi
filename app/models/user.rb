@@ -38,6 +38,7 @@ class User
   # ArtsAPI fields
   field :name, type: String
   field :ds_name_slug, type: String
+  field :dropbox_auth_token, type: String, default: nil
 
   # We want to be able to do current_user.within {} to issue DB queries
   def within(&block)
