@@ -11,7 +11,7 @@ module GrafterAPI
 
     # Okay, this is gnarly. I am genuinely sorry about that
     if Rails.env.production?
-      `cd /grafter; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint}`
+      `cd /artsapi-email-processing-tool; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint}`
     else
       `cd ~/grafter; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint}`
     end

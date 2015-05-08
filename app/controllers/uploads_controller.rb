@@ -34,7 +34,7 @@ class UploadsController < ApplicationController
     current_user.save
 
     session.delete :dropbox_session
-    flash[:success] = "You have successfully authorized with dropbox."
+    flash[:success] = "You have successfully authorized your Dropbox."
 
     redirect_to uploads_path
   end

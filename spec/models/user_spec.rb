@@ -47,4 +47,8 @@ describe User do
     end
   end
 
+  describe '#within method, multiple users with different dbs' do
+    pending
+  end
+
 end
