@@ -2,9 +2,22 @@ module GrafterAPI
 
   extend ActiveSupport::Concern
 
-  # Give this a file stream and it will have a crack at uploading it
+  # Creates a tempfile and Grafter will have a crack at uploading it
   def self.send_to_grafter!(contents)
-    
+    hash = Digest::MD5.new.to_s
+    filename = "/artsapi/tmp/#{hash}.mbox"
+    file = Tempfile.new(filename)
+    file.write(contents)
+
+    # Okay, this is gnarly. I am genuinely sorry about that
+    if Rails.env.production?
+      `cd /grafter; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint}`
+    else
+      `cd ~/grafter; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint}`
+    end
+
+    file.close
+    file.unlink
   end
 
 end
