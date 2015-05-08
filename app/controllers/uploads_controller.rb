@@ -5,6 +5,8 @@ class UploadsController < ApplicationController
   # this controller is effectively a wizard-like flow for authing with Dropbox.
 
   # step 1: we give the user an auth url
+  # if a user already has an access token, it will be set
+  # on line 11 and used in the conditional in the view.
   def index
     @upload_client = UploadClient.new
   end
@@ -17,6 +19,7 @@ class UploadsController < ApplicationController
     redirect_to dbsession.get_authorize_url url_for(:action => 'dropbox_callback')
   end
 
+  # step 2: we are redirected here after auth
   def dropbox_callback
     dbsession = DropboxSession.deserialize(session[:dropbox_session])
     access_token = dbsession.get_access_token
@@ -36,13 +39,15 @@ class UploadsController < ApplicationController
     redirect_to uploads_path
   end
 
-  private
   # NB: we skip step 1 & 2 if the current_user already has
   # a dropbox_auth_token field populated
   # step 3: create a dropbox client using the auth code
   # then fetch the file from the location passed in params
   def create_client_and_fetch_file
+    location = params[:location]
 
+    @upload_client = UploadClient.new
+    @upload_client.upload!(file_location_string)
   end
 
 end
