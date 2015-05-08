@@ -85,6 +85,10 @@ Rails.application.configure do
   # config.active_record.dump_schema_after_migration = false
 end
 
+# dropbox stuff
+ArtsAPI.dropbox_app_key = "#{ENV['DROPBOX_APP_KEY']}" # put creds here
+ArtsAPI.dropbox_app_secret = "#{ENV['DROPBOX_APP_SECRET']}" # put creds here
+
 Tripod.configure do |config|
 
   config.update_endpoint = ENV['FUSEKI_UPDATE_ENDPOINT'].nil? ? "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/artsapi/update" : "#{ENV['FUSEKI_UPDATE_ENDPOINT']}" # check if we're in staging

@@ -34,6 +34,8 @@ module ArtsAPI
     # config.active_record.raise_in_transactional_callbacks = true
   end
 
+  mattr_accessor :dropbox_app_key, :dropbox_app_secret
+
   HOST = "http://data.artsapi.com"
 end
 

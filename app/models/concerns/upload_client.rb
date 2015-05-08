@@ -9,7 +9,8 @@ class UploadClient
   def initialize
     self.app_key = ArtsAPI.dropbox_app_key
     self.app_secret = ArtsAPI.dropbox_app_secret
-    self.flow = DropboxOAuth2FlowNoRedirect.new(self.app_key, self.app_secret)
+    self.access_token = User.current_user.dropbox_auth_token if current_user_has_auth_code?
+    # self.flow = DropboxOAuth2FlowNoRedirect.new(self.app_key, self.app_secret)
   end
 
   # Check if the signed in user already has an auth code
@@ -23,16 +24,16 @@ class UploadClient
     current_user.save
   end
 
-  # Give the user a url to auth at
-  def get_auth_url
-    self.flow.start
-  end
+  # # Give the user a url to auth at
+  # def get_auth_url
+  #   self.flow.start
+  # end
 
-  # The user returns their auth code
-  def authenticate_with(code)
-    self.access_token, self.user_id = self.flow.finish(code)
-    save_current_user_auth_code! if !current_user_has_auth_code?
-  end
+  # # The user returns their auth code
+  # def authenticate_with(code)
+  #   self.access_token, self.user_id = self.flow.finish(code)
+  #   save_current_user_auth_code! if !current_user_has_auth_code?
+  # end
 
   # Create a Dropbox client
   def create_client

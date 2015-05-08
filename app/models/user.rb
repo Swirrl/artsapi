@@ -39,6 +39,7 @@ class User
   field :name, type: String
   field :ds_name_slug, type: String
   field :dropbox_auth_token, type: String, default: nil
+  field :dropbox_session, type: String
 
   # We want to be able to do current_user.within {} to issue DB queries
   def within(&block)

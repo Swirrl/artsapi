@@ -86,7 +86,7 @@ Rails.application.routes.draw do
 
   # uploads mini API ------------------------------
 
-  get '/upload', to: 'uploads#index'
+  get '/upload', to: 'uploads#index', as: :uploads
   post '/authorize_dropbox', to: 'uploads#authorize'
   post '/create_client_and_fetch_file', to: 'uploads#create_client_and_fetch_file'
 
