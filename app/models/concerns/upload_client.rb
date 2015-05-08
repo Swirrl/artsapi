@@ -41,7 +41,7 @@ class UploadClient
   end
 
   # Using a file location string, download the file and send to Grafter
-  def upload!
+  def upload!(file_location_string)
     contents, metadata = self.client.get_file_and_metadata(file_location_string)
 
     begin
