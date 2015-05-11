@@ -22,7 +22,6 @@ class UploadClient
 
   # Using a file location string, download the file and send to Grafter
   def upload!(file_location_string)
-    binding.pry
     contents, metadata = self.client.get_file_and_metadata(file_location_string)
 
     begin
