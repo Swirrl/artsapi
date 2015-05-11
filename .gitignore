@@ -22,3 +22,6 @@
 
 # Ignore data artist rakefile
 /lib/tasks/dataartist.rake
+
+# Ignore dropbox development creds
+/config/initializers/dropbox.rb
