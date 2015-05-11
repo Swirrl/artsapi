@@ -1,2 +1,5 @@
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
+<% if !flash.empty? %>
+  <% flash.each do |key, value| %>
+    <%= content_tag(:div, value, class: "margin-top-10 alert alert-#{flash_style_for(key)}") %>
+  <% end %>
+<% end %>

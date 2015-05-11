@@ -1,3 +1,5 @@
+require 'dropbox_sdk'
+
 class UploadsController < ApplicationController
 
   before_filter :authenticate_user!
@@ -6,32 +8,24 @@ class UploadsController < ApplicationController
 
   # step 1: the user will be sent to dropbox to auth
   def index
-    @upload_client = UploadClient.new
   end
 
   # step 2: create session and auth
   def authorize
-    db_session = DropboxSession.new(ArtsAPI.dropbox_app_key, ArtsAPI.dropbox_app_secret)
-    session[:dropbox_session] = dbsession.serialize
+    db_session = UploadClient.create_dropbox_session
+    session[:dropbox_session] = db_session.serialize
 
-    redirect_to dbsession.get_authorize_url url_for(:action => 'dropbox_callback')
+    redirect_to db_session.get_authorize_url url_for(:action => 'dropbox_callback')
   end
 
   # step 2: we are redirected here after auth
   def dropbox_callback
-    dbsession = DropboxSession.deserialize(session[:dropbox_session])
-    access_token = dbsession.get_access_token
-    session[:dropbox_session] = dbsession.serialize
+    db_session = DropboxSession.deserialize(session[:dropbox_session])
 
-    upload_client = UploadClient.new
-    upload_client.access_token = access_token
-    upload_client.save_current_user_auth_code!
+    # get an oauth access token
+    access_token = db_session.get_access_token
+    UploadClient.save_current_user_auth_code!(access_token)
 
-    current_user = User.current_user
-    current_user.dropbox_session = session[:dropbox_session]
-    current_user.save
-
-    session.delete :dropbox_session
     flash[:success] = "You have successfully authorized your Dropbox."
 
     redirect_to uploads_path
@@ -42,7 +36,7 @@ class UploadsController < ApplicationController
   # step 3: create a dropbox client using the auth code
   # then fetch the file from the location passed in params
   def create_client_and_fetch_file
-    location = params[:location]
+    file_location_string = params[:location].chomp
 
     @upload_client = UploadClient.new
     @upload_client.upload!(file_location_string)

@@ -10,6 +10,7 @@ module GrafterAPI
     file.write(contents)
 
     # Okay, this is gnarly. I am genuinely sorry about that
+    User.current_user.set_tripod_endpoints!
     if Rails.env.production?
       `cd /artsapi-email-processing-tool; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint}`
     else
