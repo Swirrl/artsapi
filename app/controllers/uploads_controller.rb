@@ -4,9 +4,7 @@ class UploadsController < ApplicationController
 
   # this controller is effectively a wizard-like flow for authing with Dropbox.
 
-  # step 1: we give the user an auth url
-  # if a user already has an access token, it will be set
-  # on line 11 and used in the conditional in the view.
+  # step 1: the user will be sent to dropbox to auth
   def index
     @upload_client = UploadClient.new
   end
