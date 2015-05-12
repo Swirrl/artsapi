@@ -37,9 +37,10 @@ class UploadsController < ApplicationController
   # then fetch the file from the location passed in params
   def create_client_and_fetch_file
     file_location_string = params[:location].chomp
+    mine_keywords = !!(params[:mine_keywords])
 
     @upload_client = UploadClient.new
-    @upload_client.upload!(file_location_string)
+    @upload_client.upload!(file_location_string, mine_keywords)
   end
 
 end

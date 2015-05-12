@@ -3,7 +3,7 @@ module GrafterAPI
   extend ActiveSupport::Concern
 
   # Creates a tempfile and Grafter will have a crack at uploading it
-  def self.send_to_grafter!(contents)
+  def self.send_to_grafter!(contents, mine_keywords)
     hash = Digest::MD5.new.to_s
 
     # work out where the tmp folder is relative to the app
@@ -15,9 +15,9 @@ module GrafterAPI
     # Okay, this is gnarly. I am genuinely sorry about that
     User.current_user.set_tripod_endpoints!
     if Rails.env.production?
-      `cd /artsapi-email-processing-tool; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint}`
+      `cd /artsapi-email-processing-tool; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint} #{'no-convert' unless mine_keywords}`
     else
-      `cd ~/grafter; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint}`
+      `cd ~/grafter; lein run #{filename} #{Tripod.query_endpoint} #{Tripod.update_endpoint} #{'no-convert' unless mine_keywords}`
     end
 
     file.unlink

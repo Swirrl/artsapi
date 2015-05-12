@@ -21,11 +21,11 @@ class UploadClient
   end
 
   # Using a file location string, download the file and send to Grafter
-  def upload!(file_location_string)
+  def upload!(file_location_string, mine_keywords=true)
     contents, metadata = self.client.get_file_and_metadata(file_location_string)
 
     begin
-      GrafterAPI.send_to_grafter!(contents)
+      GrafterAPI.send_to_grafter!(contents, mine_keywords)
     rescue Exception => e
       if Rails.env.production?
         Rails.logger.debug "Error: #{e.message}\n\nStack:\n#{e.backtrace}"
