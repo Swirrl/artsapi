@@ -35,7 +35,7 @@ module ArtsAPI
     config.encoding = "utf-8"
   end
 
-  mattr_accessor :dropbox_app_key, :dropbox_app_secret
+  mattr_accessor :dropbox_app_key, :dropbox_app_secret, :grafter_location
 
   HOST = "http://data.artsapi.com"
 end

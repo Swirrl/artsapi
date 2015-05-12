@@ -20,7 +20,8 @@ module Connections
 
   # async
   def generate_connections_async
-    ::ConnectionsWorker.perform_in(50.seconds, self.uri.to_s)
+    current_user_id = User.current_user.id.to_s
+    ::ConnectionsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
   end
 
   def get_recipients_of_emails
