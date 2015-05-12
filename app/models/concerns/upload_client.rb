@@ -26,8 +26,14 @@ class UploadClient
 
     begin
       GrafterAPI.send_to_grafter!(contents)
-    rescue
-      raise ThatDidntWorkError
+    rescue Exception => e
+      if Rails.env.production?
+        Rails.logger.debug "Error: #{e.message}\n\nStack:\n#{e.backtrace}"
+      else
+        puts "Error: #{e.message}\n\nStack:\n#{e.backtrace}"
+      end
+
+      raise GrafterAPI::ImportError
     end
   end
 
