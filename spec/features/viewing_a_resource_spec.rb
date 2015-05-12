@@ -7,6 +7,12 @@ describe "Viewing a resource" do
     # mock a signed-in user for DB queries
     before { User.current_user = user }
 
+    describe "visiting the sign_up route" do
+
+      pending
+
+    end
+
     describe "when not signed in" do
 
       before { visit '/id/people/jeff-widgetcorp-org' }
@@ -14,7 +20,11 @@ describe "Viewing a resource" do
       context "resource page for a Person" do
 
         it "should prompt to log in" do
-          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Forgot your password?")
+        end
+
+        it "login page should not prompt to sign up" do
+          expect(page).not_to have_link("Sign up")
         end
 
       end
@@ -26,7 +36,7 @@ describe "Viewing a resource" do
         end
 
         it "should prompt to log in" do
-          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Forgot your password?")
         end
 
       end
@@ -38,7 +48,7 @@ describe "Viewing a resource" do
         end
 
         it "should prompt to log in" do
-          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Forgot your password?")
         end
       end
 
@@ -46,7 +56,7 @@ describe "Viewing a resource" do
         before { visit '/id/people/darth-vader' }
 
         it "should prompt to log in" do
-          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Forgot your password?")
         end
       end
 
@@ -54,7 +64,7 @@ describe "Viewing a resource" do
         before { visit root_path }
 
         it "should prompt to log in" do
-          expect(page).to have_content("Log in Email Password Remember me Sign up Forgot your password?")
+          expect(page).to have_content("Log in Email Password Remember me Forgot your password?")
         end
       end
 
@@ -62,7 +72,7 @@ describe "Viewing a resource" do
         before { visit home_path }
 
         it "should prompt to log in" do
-          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Sign up Forgot your password?")
+          expect(page).to have_content("You need to sign in or sign up before continuing. Log in Email Password Remember me Forgot your password?")
         end
       end
 
