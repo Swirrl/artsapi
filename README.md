@@ -16,7 +16,7 @@ NB: Every time `$` is seen in a code snippet, you should type this into a termin
 6. Use `bundle exec sidekiq` to bring up sidekiq for background processing.
 7. Use `rake db:seed` to generate a user.
 
-NB: You *must* be running Fuseki on port 3030 if you do not want to modify the multiple tenancy code. If you want to use the Dropbox upload features, you will also need a copy of the [ArtsAPI Grafter project](https://github.com/Swirrl/artsapi-email-processing-tool) at the location `~/grafter` so that the Rails app can call leiningen to run pipelines.
+NB: You *must* be running Fuseki on port 3030 if you do not want to modify the multiple tenancy code. If you want to use the Dropbox upload features, you will also need a copy of the [ArtsAPI Grafter project](https://github.com/Swirrl/artsapi-email-processing-tool) on your hard drive so that the Rails app can call leiningen to run pipelines. Put the absolute path to this directory (e.g. `/Users/jeff/artsapi-email-processing-tool`) in the `grafter_config.example` file and then rename it `grafter_config.rb`.
 
 In production, you will use env vars to declare dropbox credentials. In development, you will need to find the file in `/config/initializers` called `dropbox.example` - add your credentials for Dropbox in here and rename it `dropbox.rb`. Make sure you do not commit this, as you will have to change `production.rb` to not expect env vars with the locations provided (see the Docker/Deployment) section below.
 

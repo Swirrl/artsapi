@@ -39,8 +39,14 @@ class UploadsController < ApplicationController
     file_location_string = params[:location].chomp
     mine_keywords = !!(params[:mine_keywords])
 
-    @upload_client = UploadClient.new
-    @upload_client.upload!(file_location_string, mine_keywords)
+    begin
+      @upload_client = UploadClient.new
+      @upload_client.upload!(file_location_string, mine_keywords)
+
+      render nothing: true, status: 200
+    rescue
+      render nothing: true, status: 500
+    end
   end
 
 end

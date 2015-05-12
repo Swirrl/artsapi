@@ -23,5 +23,6 @@
 # Ignore data artist rakefile
 /lib/tasks/dataartist.rake
 
-# Ignore dropbox development creds
+# Ignore dropbox development creds and grafter location
 /config/initializers/dropbox.rb
+/config/initializers/grafter_config.rb
