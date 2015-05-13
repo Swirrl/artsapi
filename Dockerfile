@@ -51,7 +51,7 @@ RUN echo "gem: --no-ri --no-rdoc" > ~/.gemrc
 RUN /bin/bash -l -c 'gem install bundler --no-ri --no-rdoc'
 
 # Grafter please
-RUN /bin/bash -l -c 'git clone git@github.com:Swirrl/artsapi-email-processing-tool.git'
+RUN /bin/bash -l -c 'git clone https://github.com/Swirrl/artsapi-email-processing-tool.git'
 
 # Copy the Gemfile and Gemfile.lock into the image.
 # Temporarily set the working directory to where they are.
