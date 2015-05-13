@@ -76,7 +76,6 @@ RUN chmod +x /artsapi
 RUN chmod +x /artsapi-email-processing-tool
 RUN chmod +x /usr/bin/start-server-production
 RUN chmod +x /usr/bin/replace-mongoid-yml
-RUN chmod +rwx /artsapi/tmp
 
 # Make a place for Unicorn pids and sockets to go
 RUN mkdir -p /artsapi/tmp/unicorn/pids
