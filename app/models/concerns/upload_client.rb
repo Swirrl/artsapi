@@ -30,9 +30,8 @@ class UploadClient
       if Rails.env.production?
         Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n#{e.backtrace.map { |line| line }}"
       else
-        binding.pry
-        puts "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
-        e.backtrace.map { |line| puts line }
+        Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
+        e.backtrace.map { |line| Rails.logger.debug(line) }
       end
 
       raise GrafterAPI::ImportError
