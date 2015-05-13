@@ -91,7 +91,7 @@ WORKDIR /artsapi
 RUN /bin/bash -l -c "ln -s /usr/bin/nodejs /usr/bin/node"
 
 # Precompile assets
-RUN /bin/bash -l -c "bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets"
+RUN "bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets"
 
 # Mount nginx volumes
 VOLUME ["/data", "/etc/nginx/sites-enabled", "/var/log/nginx", "/artsapi/log"]
