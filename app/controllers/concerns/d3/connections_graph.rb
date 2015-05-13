@@ -1,9 +1,12 @@
+require 'memoist'
+
 module D3
 
   extend ActiveSupport::Concern
 
   # here be dragons!
   class ConnectionsGraph
+    extend Memoist
     attr_accessor :person_mapping, :conn_hash
 
     def initialize(person)
@@ -29,6 +32,7 @@ module D3
 
       end
     end
+    memoize :initialize
 
     def bootstrap_hash_and_mapping
       self.conn_hash = {}
@@ -45,10 +49,10 @@ module D3
       lowest_value = conn_array.last[1].to_f
 
       if use_naive
-        naive_bin_size = (highest_value - lowest_value) / 10
+        naive_bin_size = (highest_value - lowest_value) / 20
         filter_threshold = (naive_bin_size * bin_cutoff) + lowest_value
       else
-        bin_size_by_length = (conn_array.length / 10)
+        bin_size_by_length = (conn_array.length / 20)
         filter_threshold = conn_array[(bin_size_by_length * bin_cutoff).to_i][1]
       end
 
@@ -81,10 +85,10 @@ module D3
         value: value
       }
 
-      if bin_cutoff < 10 && !conn_array.nil?
+      if bin_cutoff < 20 && !conn_array.nil?
         filtered = self.filter_connections(conn_array, bin_cutoff)
 
-        filtered.each { |conn| person_counter = self.add_to_hash(conn[0], conn[1], uri, person_counter, (bin_cutoff + 1)) }
+        filtered.each { |conn| person_counter = self.add_to_hash(conn[0], conn[1], uri, person_counter, (bin_cutoff + 2)) }
       end
 
       return person_counter

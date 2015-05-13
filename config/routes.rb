@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  devise_for :users
+  as :user do
+    get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'
+    put 'users' => 'devise/registrations#update', :as => 'user_registration'
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -83,10 +88,21 @@ Rails.application.routes.draw do
   post '/get_connections', to: 'connections#find'
   post '/generate_connections', to: 'connections#schedule'
 
+  # uploads mini API ------------------------------
+
+  get '/upload', to: 'uploads#index', as: :uploads
+  get '/authorize_dropbox', to: 'uploads#authorize', as: :authorize_dropbox
+  get '/dropbox_callback', to: 'uploads#dropbox_callback', as: :dropbox_callback
+  post '/create_client_and_fetch_file', to: 'uploads#create_client_and_fetch_file', as: :fetch_file
+
   # static pages ----------------------------------
 
   get '/about' => 'static#about', as: :about
   get '/contact' => 'static#contact', as: :contact
+  get '/home' => 'static#home', as: :home
 
-  root to: 'static#home'
+  devise_scope :user do
+    root to: 'devise/sessions#new'
+  end
+
 end

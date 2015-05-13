@@ -32,7 +32,10 @@ module ArtsAPI
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     # config.active_record.raise_in_transactional_callbacks = true
+    config.encoding = "utf-8"
   end
+
+  mattr_accessor :dropbox_app_key, :dropbox_app_secret, :grafter_location
 
   HOST = "http://data.artsapi.com"
 end

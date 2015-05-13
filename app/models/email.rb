@@ -1,6 +1,7 @@
 class Email < ResourceWithPresenter
 
   include Tripod::Resource
+  include TripodOverrides
 
   rdf_type 'http://data.artsapi.com/def/arts/Email'
   graph_uri 'http://data.artsapi.com/graph/emails'
@@ -26,7 +27,7 @@ class Email < ResourceWithPresenter
           } 
         }"
 
-      Tripod::SparqlClient::Query.select(all_emails_sparql).count
+      User.current_user.within { Tripod::SparqlClient::Query.select(all_emails_sparql).count }
     end
 
   end

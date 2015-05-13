@@ -32,13 +32,15 @@ module Dispatcher
   end
 
   def self.wildcard_find(uri)
-    resource = Tripod::SparqlClient::Query.select("
+    resource = User.current_user.within {
+      Tripod::SparqlClient::Query.select("
       SELECT DISTINCT ?uri
       WHERE {
         <#{uri.to_s}> ?p ?o .
       }
       LIMIT 1
       ")[0]["uri"]["value"] rescue nil
+    }
 
     resource.hydrate! unless resource.nil?
   end

@@ -1,5 +1,7 @@
 class ResourcesController < ApplicationController
 
+  before_filter :authenticate_user!
+
   def show
 
     @presenter = Dispatcher.load_presenter_with(params)

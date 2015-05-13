@@ -1,7 +1,10 @@
+require 'memoist'
 class Person < ResourceWithPresenter
 
   include Tripod::Resource
   include Connections
+  include TripodOverrides
+  extend Memoist
 
   rdf_type 'http://xmlns.com/foaf/0.1/Person'
   graph_uri 'http://data.artsapi.com/graph/people'
@@ -25,6 +28,11 @@ class Person < ResourceWithPresenter
   field :sent_emails, RDF::ARTS['sentEmails']
   field :incoming_emails, RDF::ARTS['incomingEmails']
   field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
+
+  def memoized_connections
+    self.connections
+  end
+  memoize :memoized_connections
 
   def human_name
     name_array = self.name
@@ -73,12 +81,14 @@ class Person < ResourceWithPresenter
   end
 
   def all_emails
-    Email.find_by_sparql("
-      SELECT DISTINCT ?uri 
-      WHERE { 
-        ?uri a <http://data.artsapi.com/def/arts/Email> .
-        <#{self.uri.to_s}> <http://xmlns.com/foaf/0.1/made> ?uri .
-      }")
+    User.current_user.within {
+      Email.find_by_sparql("
+        SELECT DISTINCT ?uri 
+        WHERE { 
+          ?uri a <http://data.artsapi.com/def/arts/Email> .
+          <#{self.uri.to_s}> <http://xmlns.com/foaf/0.1/made> ?uri .
+        }")
+    }
   end
 
   def number_of_sent_emails
@@ -93,7 +103,9 @@ class Person < ResourceWithPresenter
         }
         ")
 
-      number_of_emails =  Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      number_of_emails = User.current_user.within {
+        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      }
 
       self.sent_emails = number_of_emails
       self.save
@@ -116,7 +128,9 @@ class Person < ResourceWithPresenter
         }
         ")
 
-      number_of_emails =  Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      number_of_emails = User.current_user.within {
+        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      }
 
       self.incoming_emails = number_of_emails
       self.save
@@ -144,7 +158,9 @@ class Person < ResourceWithPresenter
         }
       ")
 
-      mentions = Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      mentions = User.current_user.within {
+        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      }
 
       label = Keyword.label_from_uri(kw)
       kw_hash[kw] = [label, mentions]
@@ -205,7 +221,7 @@ class Person < ResourceWithPresenter
           }
         }"
 
-      Tripod::SparqlClient::Query.select(all_people_query).count
+      User.current_user.within { Tripod::SparqlClient::Query.select(all_people_query).count }
     end
 
     # write connections for arrays or single strings

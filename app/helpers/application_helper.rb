@@ -4,6 +4,19 @@ module ApplicationHelper
     "| #{title}".html_safe if !title.nil?
   end
 
+  def flash_style_for(key)
+    case key.to_s
+    when 'alert'
+      key = 'warning'
+    when 'notice'
+      key = 'info'
+    else
+      key = key.to_s
+    end
+
+    key
+  end
+
   def add_connection_advice?(connections, uri)
     if connections.nil?
       html = "<p id='connections-notice'>"

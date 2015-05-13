@@ -4,8 +4,12 @@ class ConnectionsWorker
 
   sidekiq_options :retry => 3
 
-  def perform(uri)
+  def perform(uri, current_user_id)
+
+    # set the current_user so we can look up the person
+    User.current_user = User.find(current_user_id)
     person = Person.find(uri)
+
     person.get_connections!
   end
 

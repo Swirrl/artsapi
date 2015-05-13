@@ -1,6 +1,9 @@
+require 'memoist'
 class Organisation < ResourceWithPresenter
 
   include Tripod::Resource
+  include TripodOverrides
+  extend Memoist
 
   rdf_type 'http://www.w3.org/ns/org#Organization'
   graph_uri 'http://data.artsapi.com/graph/organisations'
@@ -33,6 +36,11 @@ class Organisation < ResourceWithPresenter
 
     job_ids
   end
+
+  def members_with_more_than_x_connections(x)
+    self.has_members.map { |m| m if Person.find(m).connections.length > x }.compact
+  end
+  memoize :members_with_more_than_x_connections
 
   class << self
 

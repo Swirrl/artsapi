@@ -14,10 +14,20 @@ NB: Every time `$` is seen in a code snippet, you should type this into a termin
 4. Add `alias fuseki_artsapi="cd $HOME/jena-fuseki-1.0.1 ; ./fuseki-server --config=fuseki_config.ttl"` to your shell to start Fuseki using `$ fuseki-artsapi`. Change `jena-fuseki-1.0.1` in the previous command to the version and folder of your installed version of Fuseki.
 5. Install redis and run it.
 6. Use `bundle exec sidekiq` to bring up sidekiq for background processing.
+7. Use `rake db:seed` to generate a user.
+
+NB: You *must* be running Fuseki on port 3030 if you do not want to modify the multiple tenancy code. If you want to use the Dropbox upload features, you will also need a copy of the [ArtsAPI Grafter project](https://github.com/Swirrl/artsapi-email-processing-tool) on your hard drive so that the Rails app can call leiningen to run pipelines. Put the absolute path to this directory (e.g. `/Users/jeff/artsapi-email-processing-tool`) in the `grafter_config.example` file and then rename it `grafter_config.rb`.
+
+In production, you will use env vars to declare dropbox credentials. In development, you will need to find the file in `/config/initializers` called `dropbox.example` - add your credentials for Dropbox in here and rename it `dropbox.rb`. Make sure you do not commit this, as you will have to change `production.rb` to not expect env vars with the locations provided (see the Docker/Deployment) section below.
 
 ## Deployment
 
 Deploy using Docker. Setup a Redis, Mongo and Fuseki instance before linking them to this container.
+
+
+### Dropbox
+
+In order to run the application and create uploads, the env vars `DROPBOX_APP_KEY` and `DROPBOX_APP_SECRET` need to be set. Pass these in when running the container using the `-e` Docker flag. You will need to make sure you have registered for the Dropbox API in order to get these. 
 
 #### Set up server for Docker
 
@@ -65,7 +75,13 @@ Deploy using Docker. Setup a Redis, Mongo and Fuseki instance before linking the
 
 3. Start the application
 
-    `$ sudo docker run -d --name artsapi-test --link artsapi-mongo:mongodb --link artsapi-fuseki:artsapi-fuseki -p 127.0.0.1:1955:80 <artsapi-image>`
+    `$ sudo docker run -d --name artsapi-test \
+        --link artsapi-mongo:mongodb \
+        --link artsapi-fuseki:artsapi-fuseki \
+        -p 127.0.0.1:1955:80 \
+        -e DROPBOX_APP_KEY=<dropbox-app-key> \
+        -e DROPBOX_APP_SECRET=<dropbox-app-secret> \
+        <artsapi-image>`
 
 4. Make sure you have secured your server! In the example above, you would want Nginx on the host to proxy to `http://localhost:1955`.
 

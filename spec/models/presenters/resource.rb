@@ -5,6 +5,9 @@ module Presenters
 
     it_behaves_like "given a db with two organisations" do
 
+      # mock a signed-in user for DB queries
+      before { User.current_user = user }
+
       context "a resource type" do
 
         it "should have a presenter" do

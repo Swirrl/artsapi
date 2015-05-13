@@ -4,6 +4,9 @@ describe Dispatcher do
 
   it_behaves_like "given a db with two organisations" do
 
+    # mock a signed-in user for DB queries
+    before { User.current_user = user }
+
     describe "a person presenter" do
       it "should be possible to set" do
         jeff.presenter_type = Presenters::PersonPresenter

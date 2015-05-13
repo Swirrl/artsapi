@@ -1,6 +1,7 @@
 class Keyword
 
   include Tripod::Resource
+  include TripodOverrides
 
   # @prefix keywordresource: <http://data.artsapi.com/id/keywords/keyword/> .
 

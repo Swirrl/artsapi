@@ -1,6 +1,8 @@
+require 'memoist'
 module Connections
 
   extend ActiveSupport::Concern
+  extend Memoist
 
   # writes to db
   def get_connections!
@@ -14,48 +16,56 @@ module Connections
   def get_connections
     calculate_connections
   end
+  memoize :get_connections
 
   # async
   def generate_connections_async
-    ::ConnectionsWorker.perform_in(50.seconds, self.uri.to_s)
+    current_user_id = User.current_user.id.to_s
+    ::ConnectionsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
   end
 
   def get_recipients_of_emails
-    Tripod::SparqlClient::Query.select("
-      #{Person.query_prefixes}
+    User.current_user.within {
+      Tripod::SparqlClient::Query.select("
+        #{Person.query_prefixes}
 
-      SELECT DISTINCT ?person
-      WHERE {
-        VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
+        SELECT DISTINCT ?person
+        WHERE {
+          VALUES ?email { <#{self.all_emails.map(&:uri).join("> <")}> }
 
-        GRAPH <http://data.artsapi.com/graph/emails> {
-          ?email arts:emailRecipient ?person
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?email arts:emailRecipient ?person
+          }
         }
-      }
-    ").map { |r| r["person"]["value"] }
+      ").map { |r| r["person"]["value"] }
+    }
   end
+  memoize :get_recipients_of_emails
 
   def get_incoming_mail_senders
-    Tripod::SparqlClient::Query.select("
-      #{Person.query_prefixes}
+    User.current_user.within {
+      Tripod::SparqlClient::Query.select("
+        #{Person.query_prefixes}
 
-      SELECT DISTINCT ?person
-      WHERE {
-        VALUES ?person { <#{self.connections.map(&:to_s).join("> <")}> }
+        SELECT DISTINCT ?person
+        WHERE {
+          VALUES ?person { <#{self.connections.map(&:to_s).join("> <")}> }
 
-        GRAPH <http://data.artsapi.com/graph/emails> {
-          ?email arts:emailRecipient <#{self.uri}>.
-          ?email arts:emailSender ?person .
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?email arts:emailRecipient <#{self.uri}>.
+            ?email arts:emailSender ?person .
+          }
         }
-      }
-      ").map { |r| r["person"]["value"] }
+        ").map { |r| r["person"]["value"] }
+    }
   end
 
   def calculate_connections
     connection_set = []
     recipients = self.get_recipients_of_emails
 
-    filtered = Tripod::SparqlClient::Query.select("
+    filtered =  User.current_user.within { 
+      Tripod::SparqlClient::Query.select("
       #{Person.query_prefixes}
 
       SELECT DISTINCT ?person
@@ -68,10 +78,12 @@ module Connections
         }
 
       }
-      ").map { |r| r["person"]["value"] }
+      ").map { |r| r["person"]["value"] } 
+    }
 
     filtered
   end
+  memoize :calculate_connections
 
   # requires you to know the connections in advance
   def calculate_email_density
@@ -98,7 +110,10 @@ module Connections
           }
         }
         ")
-      count = Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+
+      count = User.current_user.within {
+        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      }
 
       results << [conn.to_s, count]
     end

@@ -8,7 +8,7 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
   add-apt-repository -y ppa:nginx/stable && \
   apt-get update && \
-  apt-get install -y nginx tar wget curl nano git nodejs npm automake bison && \
+  apt-get install -y nginx tar wget curl nano git nodejs npm automake bison openjdk-7-jre-headless && \
   echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
   chown -R www-data:www-data /var/lib/nginx
 
@@ -50,6 +50,9 @@ RUN echo "gem: --no-ri --no-rdoc" > ~/.gemrc
 # Bundler please
 RUN /bin/bash -l -c 'gem install bundler --no-ri --no-rdoc'
 
+# Grafter please
+RUN /bin/bash -l -c 'git clone git@github.com:Swirrl/artsapi-email-processing-tool.git'
+
 # Copy the Gemfile and Gemfile.lock into the image.
 # Temporarily set the working directory to where they are.
 RUN mkdir /artsapi
@@ -70,8 +73,10 @@ ADD docker/secrets.yml /artsapi/config/secrets.yml
 
 # Permissions
 RUN chmod +x /artsapi
+RUN chmod +x /artsapi-email-processing-tool
 RUN chmod +x /usr/bin/start-server-production
 RUN chmod +x /usr/bin/replace-mongoid-yml
+RUN chmod +rwx /artsapi/tmp
 
 # Make a place for Unicorn pids and sockets to go
 RUN mkdir -p /artsapi/tmp/unicorn/pids
