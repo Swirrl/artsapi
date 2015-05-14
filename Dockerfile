@@ -90,8 +90,9 @@ WORKDIR /artsapi
 # Symlink node and nodejs
 RUN /bin/bash -l -c "ln -s /usr/bin/nodejs /usr/bin/node"
 
-# Precompile assets
-RUN "bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets"
+# Precompile assets, setting secret key first
+RUN export SECRET_KEY_BASE=$(/bin/bash -c 'bundle exec rake secret')
+RUN /bin/bash -l -c "bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets"
 
 # Mount nginx volumes
 VOLUME ["/data", "/etc/nginx/sites-enabled", "/var/log/nginx", "/artsapi/log"]
