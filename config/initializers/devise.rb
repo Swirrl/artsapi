@@ -1,3 +1,4 @@
+require 'securerandom'
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -5,6 +6,7 @@ Devise.setup do |config|
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
   # config.secret_key = '8abf6c33b418a8cc8cf0de20a9b660c8e9e6b32d6bee6d8955f2a599ff69dc64e4859bd8635fd1eb32633b8113128e3df4bbe680b6e5f803117ccc7946e93779' if Rails.env.production?
+  config.secret_key = (Devise.secret_key || "#{SecureRandom.hex(64)}") if Rails.env.production?
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
