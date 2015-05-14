@@ -40,7 +40,7 @@ module Presenters
           if !object.empty?
             object = object.map { |item|
 
-              if item.to_s.match(/http:\/\/artsapi.com\/id.+/) # it is a uri
+              if item.to_s.match(/http:\/\/data.artsapi.com\/id.+/) # it is a uri
                 Presenters::Resource.create_link_from_uri(item)
               else
                 item unless item.nil? || item.blank?

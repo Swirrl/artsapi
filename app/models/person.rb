@@ -11,6 +11,7 @@ class Person < ResourceWithPresenter
 
   attr_accessor :all_connections, :correct_name
 
+  field :label, RDF::RDFS.label
   field :account, RDF::FOAF['account'], is_uri: true, multivalued: true
   field :name, RDF::FOAF['name'], multivalued: true
   field :given_name, RDF::FOAF['givenName']
@@ -35,6 +36,9 @@ class Person < ResourceWithPresenter
   memoize :memoized_connections
 
   def human_name
+    # label can only be set via the UI so it should always take precedence
+    return self.label if !self.label.nil?
+
     name_array = self.name
     name_array.delete("")
 

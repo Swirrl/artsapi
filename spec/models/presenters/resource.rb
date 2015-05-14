@@ -44,8 +44,8 @@ module Presenters
 
         it "should be able to join arrays on multivalued fields" do
           fields = @jeff.presenter.fields
-          expect(fields[2][0]).to eq "Name"
-          expect(!!(fields[2][2].match(/Jeff Lebowsk[a-z]+/)[0])).to eq true
+          expect(fields[3][0]).to eq "Name"
+          expect(!!(fields[3][2].match(/Jeff Lebowsk[a-z]+/)[0])).to eq true
         end
 
         it "fields should have number of emails" do

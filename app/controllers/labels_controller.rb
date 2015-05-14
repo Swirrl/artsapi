@@ -18,6 +18,23 @@ class LabelsController < ApplicationController
     
   end
 
+  def replace
+    resource_uri = params[:uri]
+    new_label = params[:label]
+
+    begin
+      resource = Dispatcher.find_and_cast(resource_uri)
+
+      resource.label = new_label
+      resource.save
+
+      render text: new_label, status: 200
+    rescue
+      render text: 'New label saving failed', status: 500
+    end
+
+  end
+
   private
 
   # try and return label

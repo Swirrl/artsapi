@@ -1,5 +1,7 @@
 <% provide :title, @presenter.title %>
 
+<div id='resource_uri' data-resource-uri='<%= @presenter.resource_uri %>'></div>
+
 <% if @presenter.person? %>
 
   <%= render 'person/summary' %>
