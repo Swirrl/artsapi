@@ -15,7 +15,7 @@ rm /etc/redis/redis.conf.bak
 redis-server /etc/redis/redis.conf
 
 # set secret key
-# export SECRET_KEY_BASE=$(/bin/bash -c 'bundle exec rake secret')
+export SECRET_KEY_BASE=$(/bin/bash -c 'bundle exec rake secret')
 
 # start sidekiq
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production
