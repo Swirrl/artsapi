@@ -18,7 +18,7 @@ class LabelsController < ApplicationController
     
   end
 
-  def replace
+  def edit
     resource_uri = params[:uri]
     new_label = params[:label]
 

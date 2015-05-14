@@ -79,6 +79,7 @@ Rails.application.routes.draw do
   # label mini API --------------------------------
 
   post '/label', to: 'labels#find'
+  post '/edit_label', to: 'labels#edit'
 
   # connections mini API --------------------------
 
