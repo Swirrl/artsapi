@@ -91,7 +91,7 @@ WORKDIR /artsapi
 RUN /bin/bash -l -c "ln -s /usr/bin/nodejs /usr/bin/node"
 
 # Precompile assets, setting secret key first
-RUN export SECRET_KEY_BASE=$(/bin/bash -c 'bundle exec rake secret')
+RUN export SECRET_KEY_BASE=$(/bin/bash -c 'source /etc/profile.d/rvm.sh && bundle exec rake secret')
 RUN /bin/bash -l -c "bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets"
 
 # Mount nginx volumes
