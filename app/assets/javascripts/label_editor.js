@@ -26,13 +26,18 @@
   }
 
   function refreshLabel(label, el){
-    $(el).html(label);
+    $(el).parent().html(label);
   }
 
   function logError(msg) {
     console.log(msg);
   }
 
+  /* 
+    so the thinking behind this is you add an anchor tag
+    of class .edit-label with a uri data attribute to a UI element
+    that shows a resource label. The parent's HTML
+  */
   $(function(){
     $('a.edit-label').on('click', function(e){
       e.preventDefault();
