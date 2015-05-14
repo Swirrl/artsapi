@@ -91,7 +91,7 @@ WORKDIR /artsapi
 RUN /bin/bash -l -c "ln -s /usr/bin/nodejs /usr/bin/node"
 
 # Precompile assets, setting secret key first
-RUN SECRET=$(/bin/bash -c 'source /etc/profile.d/rvm.sh && bundle exec rake secret') && echo '\nDevise.secret_key = "'$SECRET'"' > /artsapi/config/initializers/devise.rb
+RUN echo '\nDevise.secret_key = "'$(/bin/bash -c 'source /etc/profile.d/rvm.sh && bundle exec rake secret')'"' > /artsapi/config/initializers/devise.rb
 RUN /bin/bash -l -c "bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets"
 
 # Mount nginx volumes
