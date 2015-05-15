@@ -14,9 +14,13 @@ module Presenters
     end
 
     def get_fields_hash
-      fields_hash = resource.fields
-      fields_hash.delete(:graph_visualisation)
-      fields_hash
+      if Rails.env.test?
+        super
+      else
+        fields_hash = resource.fields
+        fields_hash.delete(:graph_visualisation)
+        fields_hash
+      end
     end
 
     def connections_length

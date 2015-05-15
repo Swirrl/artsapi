@@ -38,5 +38,17 @@ module Presenters
       }
     end
 
+    def get_fields_hash
+      if Rails.env.test?
+        super
+      else
+        fields_hash = resource.fields
+        fields_hash.delete(:graph_visualisation)
+        fields_hash.delete(:has_members)
+        fields_hash.delete(:linked_to)
+        fields_hash
+      end
+    end
+
   end
 end
