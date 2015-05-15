@@ -70,7 +70,6 @@ describe ConnectionsController do
       it "responds with 200" do
         post :visualise, uri: 'http://data.artsapi.com/id/people/jeff-widgetcorp-org'
         expect(response.status).to eq 200
-        
       end
 
       it "body is not empty" do

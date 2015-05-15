@@ -17,4 +17,5 @@
 //= require graph
 //= require line_graph
 //= require label_loader
+//= require label_editor
 //= require connection_loader

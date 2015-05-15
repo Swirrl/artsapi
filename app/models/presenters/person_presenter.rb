@@ -13,6 +13,12 @@ module Presenters
       end
     end
 
+    def get_fields_hash
+      fields_hash = resource.fields
+      fields_hash.delete(:graph_visualisation)
+      fields_hash
+    end
+
     def connections_length
       resource.connections.length
     end

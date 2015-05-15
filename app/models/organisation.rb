@@ -14,6 +14,39 @@ class Organisation < ResourceWithPresenter
   field :owns_domain, RDF::ARTS['ownsDomain'], is_uri: true
   field :works_on, RDF::ARTS['worksOn'], is_uri: true, multivalued: true
 
+  field :graph_visualisation, RDF::ARTS['visualisation']
+
+  def get_visualisation_graph
+    if !self.graph_visualisation.nil?
+      set_visualisation_graph_async
+      JSON.parse(sanitize_json(self.graph_visualisation))
+    else
+      graph_json = D3::OrganisationsGraph.new(self).formatted_hash
+      set_visualisation_graph(graph_json)
+      graph_json
+    end
+  end
+
+  def set_visualisation_graph(hash)
+    self.graph_visualisation = hash.to_json
+    self.save
+  end
+
+  def set_visualisation_graph_async
+    current_user_id = User.current_user.id.to_s
+    ::OrganisationsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+  end
+
+  def sanitize_json(string)
+    string.strip
+      .gsub(/(?:\\n)/, '')
+      .gsub(/(?:\\r)/, '')
+      .gsub(/\r/, '')
+      .gsub(/\n/, '')
+      .gsub(/\\n/, '')
+      .gsub(/\\/, '')
+  end
+
   # (re)generate connections for all members of an organisation
   def generate_all_connections!
     organisation_level_connections = []

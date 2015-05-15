@@ -49,9 +49,11 @@ class ConnectionsController < ApplicationController
 
     begin
       person_to_visualise = Person.find(uri)
-      connections = D3::ConnectionsGraph.new(person_to_visualise).conn_hash
+      connections = person_to_visualise.get_visualisation_graph
       render json: connections.to_json, status: 200
     rescue => e
+      Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
+      e.backtrace.map.with_index(1) { |line, i| Rails.logger.debug("#{i}: #{line}") }
       render json: {text: 'Sorry, something went wrong. Please check the logs for details.'}, status: 404
     end
   end
@@ -61,7 +63,7 @@ class ConnectionsController < ApplicationController
 
     begin
       org_to_visualise = Organisation.find(uri)
-      formatted_hash = D3::OrganisationsGraph.new(org_to_visualise).formatted_hash
+      formatted_hash = org_to_visualise.get_visualisation_graph
       render json: formatted_hash.to_json, status: 200
     rescue => e
       render json: {text: 'Sorry, something went wrong. Please check the logs for details.'}, status: 404

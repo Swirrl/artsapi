@@ -30,6 +30,40 @@ class Person < ResourceWithPresenter
   field :incoming_emails, RDF::ARTS['incomingEmails']
   field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
 
+  field :graph_visualisation, RDF::ARTS['visualisation']
+
+  def get_visualisation_graph
+    if !self.graph_visualisation.nil?
+      set_visualisation_graph_async
+      JSON.parse(sanitize_json(self.graph_visualisation))
+    else
+      graph_json = D3::ConnectionsGraph.new(self).conn_hash
+      set_visualisation_graph(graph_json)
+      graph_json
+    end
+  end
+
+  def set_visualisation_graph(hash)
+    self.graph_visualisation = hash.to_json
+    self.save
+  end
+
+  def set_visualisation_graph_async
+    current_user_id = User.current_user.id.to_s
+    ::PeopleWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+  end
+
+  def sanitize_json(string)
+    string.strip
+      .gsub(/\\r/, '')
+      .gsub(/\r/, '')
+      .gsub(/\n/, '')
+      .gsub(/\\n/, '')
+      .gsub(/\\/, '')
+      .gsub(/\\xC3\\xB5/, '')
+  end
+
+
   def memoized_connections
     self.connections
   end
@@ -57,7 +91,7 @@ class Person < ResourceWithPresenter
       end
 
       top_two = results.sort_by { |name, occurrences| occurrences }[-2..-1]
-      self.correct_name = sanitize_name("#{top_two.last[0]} #{top_two.first[0]}").titleize
+      self.correct_name = sanitize_string("#{top_two.last[0]} #{top_two.first[0]}").titleize
     else
       match = sanitized_default_name.match(/^[A-Z][a-z]+\b +\b[A-Z][a-z]+$/)
       self.correct_name = match[0] if !match.nil?
@@ -67,11 +101,11 @@ class Person < ResourceWithPresenter
   end
 
   def sanitized_default_name
-    (self.name.first.nil? || self.name.first.blank?) ? 'No Name Available' : sanitize_name(self.name.first).titleize
+    (self.name.first.nil? || self.name.first.blank?) ? 'No Name Available' : sanitize_string(self.name.first).titleize
   end
 
-  def sanitize_name(name)
-    name.strip
+  def sanitize_string(string)
+    string.strip
       .gsub(/'/, '')
       .gsub(/\'/, '')
       .gsub(/,/, '')
@@ -80,8 +114,10 @@ class Person < ResourceWithPresenter
       .gsub(/\"/, '')
       .gsub(/\(/, '')
       .gsub(/\)/, '')
+      .gsub(/(?:\\n)/, '')
       .gsub(/\n/, '')
       .gsub(/\\n/, '')
+      .gsub(/\\/, '')
   end
 
   def all_emails

@@ -1,6 +1,9 @@
 <div class='row no-margins'>
   <div class='col-md-8'>
-    <h1>Viewing <%= yield(:title) %></h1>
+    <h1>
+      <%= yield(:title) %>
+      <%= inline_edit_link_for(@presenter.resource_uri) if @presenter && :title_editable %>
+    </h1>
   </div>
 
   <div class='col-md-4'>

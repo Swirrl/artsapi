@@ -28,9 +28,10 @@ class LabelsController < ApplicationController
       resource.label = new_label
       resource.save
 
-      render text: new_label, status: 200
-    rescue
-      render text: 'New label saving failed', status: 500
+      render json: {text: new_label}, status: 200
+    rescue Exception => e
+      Rails.logger.debug "#{e}, #{e.message}, #{e.backtrace}"
+      render json: {text: 'New label saving failed'}, status: 500
     end
 
   end

@@ -36,15 +36,15 @@ module Dispatcher
 
     case type_string
     when "domains"
-      Domain.find(uri)
+      Domain.find(resource_uri)
     when "emails"
-      Emails.find(uri)
+      Emails.find(resource_uri)
     when "email_accounts"
-      EmailAccount.find(uri)
+      EmailAccount.find(resource_uri)
     when "organisations"
-      Organisation.find(uri)
+      Organisation.find(resource_uri)
     when "people"
-      Person.find(uri)
+      Person.find(resource_uri)
     else # it is nil or malformed
       raise Tripod::Errors::ResourceNotFound
     end
