@@ -6,7 +6,8 @@
     <p>If you've already uploaded data, then you can start browsing right away!</p>
     <p>Otherwise, you'll want to <%= link_to 'upload some', uploads_path %>.</p>
     <p>If all the data from your organisation has already been uploaded into the system, then you can click the button below to run the initial analysis required to view your data in the ArtsAPI tool. Please note, this will take some time, so you may want to leave it running over a lunch break or overnight.</p>
-    <%= button_to 'Process uploaded data', process_data_path, remote: true, data: { disable_with: "Upload scheduled" }, class: 'btn btn-success' %>
-    <p>If you have any questions, consult the user guides.</p>
+    <%= button_to 'Process uploaded data', process_data_path, remote: true, data: { disable_with: "Processing...", confirm: "Are you sure all data imports have finished?" }, class: 'btn btn-success' %>
+    <hr>
+    <p>If you have any further questions, please consult the user guides.</p>
   </div>
 </div>

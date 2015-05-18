@@ -34,6 +34,7 @@ class User
 
   # background jobs
   field :job_ids, type: Array, default: []
+  field :uploads_in_progress, type: Integer, default: 0
 
   def active_jobs
     sidekiq_queue = Sidekiq::Queue.new
@@ -41,12 +42,20 @@ class User
     current_jobs = self.job_ids
     sidekiq_jids = sidekiq_queue.map(&:jid)
 
-    active = current_jobs.map { |job| job if !sidekiq_jids.include?(job) }
+    active = current_jobs.map { |job| job if sidekiq_jids.include?(job) }.compact
 
     self.job_ids = active
     self.save
 
     active
+  end
+
+  def increment_uploads_in_progress!
+    self.uploads_in_progress = self.uploads_in_progress + 1
+  end
+
+  def decrement_uploads_in_progress!
+    self.uploads_in_progress = self.uploads_in_progress - 1
   end
 
   # We want to be able to do current_user.within {} to issue DB queries

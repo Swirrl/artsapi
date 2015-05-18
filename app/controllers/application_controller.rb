@@ -19,8 +19,10 @@ class ApplicationController < ActionController::Base
   end
 
   def check_active_jobs
-    job_list = current_user.active_jobs
-    flash.now[:info] = "There are #{job_list.count} jobs in progress."
+    job_count = current_user.active_jobs.count
+    upload_count = current_user.uploads_in_progress
+    total_count = job_count + upload_count
+    flash.now[:info] = "There are #{total_count} jobs in progress." if total_count > 0
   end
 
   def set_current_user_and_check_jobs

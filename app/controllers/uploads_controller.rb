@@ -40,6 +40,7 @@ class UploadsController < ApplicationController
     mine_keywords = !!(params[:mine_keywords])
 
     begin
+      current_user.increment_uploads_in_progress!
       @upload_client = UploadClient.new
       @upload_client.upload!(file_location_string, mine_keywords)
 
@@ -49,14 +50,18 @@ class UploadsController < ApplicationController
         flash[:success] = "Upload of file '#{file_location_string}' succeeded"
       end
 
+      current_user.decrement_uploads_in_progress!
+
       render nothing: true, status: 200
     rescue
 
-      if flash.has_key? :danger
+      if flash[:danger]
         flash[:danger] << ", upload of file '#{file_location_string}' failed"
       else
         flash[:danger] = "Upload of file '#{file_location_string}' failed, please try again"
       end
+
+      current_user.decrement_uploads_in_progress!
 
       render nothing: true, status: 500
     end

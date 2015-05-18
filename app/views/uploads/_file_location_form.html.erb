@@ -1,8 +1,13 @@
 <p>
   Please provide the path to the file you wish to upload. This should be relative to the root of your Dropbox folder. 
-  <br>
-  e.g. For a file named 'your-file-name.mbox', in the folder 'artsapi-uploads' located at the root of your dropbox, the location will be: '/artsapi-uploads/your-file-name.mbox'. Note that ArtsAPI expects files in the <a href="https://en.wikipedia.org/wiki/Mbox" target='_blank'>mbox</a> format, so your file should have an .mbox extension.
 </p>
+<p>
+  e.g. For a file named <strong>'your-file-name.mbox'</strong>, in the folder <strong>'artsapi-uploads'</strong> located at the root of your dropbox, the location will be: <strong>'/artsapi-uploads/your-file-name.mbox'</strong>. 
+  <br>
+  Note that ArtsAPI expects files in the <a href="https://en.wikipedia.org/wiki/Mbox" target='_blank'>mbox</a> format, so your file should have an .mbox extension, or be called <strong>mbox</strong> within a containing folder, i.e. <strong>'/containing-folder/mbox'</strong>. Different email clients will export to mbox in different ways, so make sure your upload follows one of the two patterns.
+</p>
+
+<hr>
 
 <%= form_tag('/create_client_and_fetch_file', method: :post, class: 'width-50', remote: true) do %>
 
