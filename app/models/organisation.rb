@@ -108,6 +108,17 @@ class Organisation < ResourceWithPresenter
       end
     end
 
+    # from a form
+    def bootstrap_connections_and_vis_for(uri)
+      organisation = Organisation.find(uri)
+
+      job_ids = []
+      job_ids << organisation.generate_connections_async!
+      job_ids << organisation.generate_visualisations_async!
+
+      job_ids
+    end
+
   end
 
 end
