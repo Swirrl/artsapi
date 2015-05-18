@@ -1,7 +1,7 @@
 (function($, window){
   function getLabelByAjax(uri, el){
     var promise = $.Deferred();
-    var url = '/label';
+    var url = '/get_label';
 
     $.ajax({
       url: url,

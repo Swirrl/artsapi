@@ -17,7 +17,7 @@ class ConnectionsController < ApplicationController
     end
   end
 
-  def schedule
+  def generate
     uri = params[:uri]
 
     respond_to do |format|
@@ -44,7 +44,7 @@ class ConnectionsController < ApplicationController
     end
   end
 
-  def visualise
+  def visualise_person
     uri = params[:uri]
 
     begin
