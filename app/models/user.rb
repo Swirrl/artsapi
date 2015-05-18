@@ -1,3 +1,5 @@
+require 'sidekiq/api'
+
 class User
   include Mongoid::Document
   # Include default devise modules. Others available are:
@@ -84,6 +86,12 @@ class User
 
     def current_user
       Thread.current[:current_user]
+    end
+
+    def add_job_for_current_user(job_id)
+      user = Thread.current[:current_user]
+      user.job_ids << job_id
+      user.save
     end
 
   end
