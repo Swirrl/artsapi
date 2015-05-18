@@ -37,10 +37,14 @@ class User
   field :uploads_in_progress, type: Integer, default: 0
 
   def active_jobs
+    # THIS IS WRONG!!
+    raise StandardError
     sidekiq_queue = Sidekiq::Queue.new
 
     current_jobs = self.job_ids
     sidekiq_jids = sidekiq_queue.map(&:jid)
+
+    Rails.logger.debug "> Sidekiq jids: #{sidekiq_jids.inspect}"
 
     active = current_jobs.map { |job| job if sidekiq_jids.include?(job) }.compact
 
@@ -52,10 +56,12 @@ class User
 
   def increment_uploads_in_progress!
     self.uploads_in_progress = self.uploads_in_progress + 1
+    self.save
   end
 
   def decrement_uploads_in_progress!
     self.uploads_in_progress = self.uploads_in_progress - 1
+    self.save
   end
 
   # We want to be able to do current_user.within {} to issue DB queries

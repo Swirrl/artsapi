@@ -10,6 +10,7 @@ class OrganisationsWorker
     User.current_user = User.find(current_user_id)
     organisation = Organisation.find(uri)
 
+    logger.debug "> Sidekiq: Generating graph for #{uri}"
     graph_json = D3::OrganisationsGraph.new(organisation).formatted_hash
     organisation.set_visualisation_graph(graph_json)
   end
