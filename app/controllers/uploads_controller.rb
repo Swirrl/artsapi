@@ -62,4 +62,21 @@ class UploadsController < ApplicationController
     end
   end
 
+  # this method should be triggered by the user 
+  # once they've uploaded all their data
+  # I feel pretty sorry for Fuseki, this will be big
+  def process_data
+
+    begin
+      job_ids = Organisation.bootstrap_all!
+
+      flash[:success] = "Success! #{job_ids.count} data tasks scheduled."
+      render nothing: true, status: 202
+    rescue
+      flash[:danger] = "There was an error, please try scheduling later."
+      render nothing: true, status: 500
+    end
+
+  end
+
 end

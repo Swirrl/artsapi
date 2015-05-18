@@ -3,14 +3,20 @@
 <div class='row no-margins'>
   <div class='col-md-8 col-md-offset-2'>
     <h1>Upload Data to ArtsAPI</h1>
-    <p class='small'>
+<!--     <p class='small'>
       If you have already allowed access to your Dropbox account, you can simply specify a path to the file location within your Dropbox account.
       <br>
       If you have not yet connected your Dropbox account, you will need to authorize the connection. Click the link, then log in to Dropbox and click 'Allow'.
-    </p>
+    </p> -->
 
     <% if UploadClient.current_user_has_auth_code? %>
       <%= render 'file_location_form' %>
+
+      <hr>
+      <p>
+        <em>Finished uploading all your data? Then it's time to run the initial analysis. Please note, this will take some time, so you may want to leave it running over a lunch break or overnight.</em>
+      </p>
+      <%= button_to 'Process uploaded data', process_data_path, remote: true, data: { disable_with: "Upload scheduled" }, class: 'btn btn-success' %>
     <% else %>
       <%= render 'authorization_form' %>
     <% end %>

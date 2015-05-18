@@ -95,6 +95,7 @@ Rails.application.routes.draw do
   get '/authorize_dropbox', to: 'uploads#authorize', as: :authorize_dropbox
   get '/dropbox_callback', to: 'uploads#dropbox_callback', as: :dropbox_callback
   post '/create_client_and_fetch_file', to: 'uploads#create_client_and_fetch_file', as: :fetch_file
+  post '/process_data', to: 'uploads#process_data', as: :process_data
 
   # static pages ----------------------------------
 

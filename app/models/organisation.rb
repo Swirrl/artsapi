@@ -34,7 +34,12 @@ class Organisation < ResourceWithPresenter
 
   def set_visualisation_graph_async
     current_user_id = User.current_user.id.to_s
-    ::OrganisationsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+    job_id = ::OrganisationsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+
+    User.current_user.job_ids << job_id
+    User.current_user.save
+
+    job_id
   end
 
   def sanitize_json(string)
@@ -115,6 +120,19 @@ class Organisation < ResourceWithPresenter
       job_ids = []
       job_ids << organisation.generate_connections_async!
       job_ids << organisation.generate_visualisations_async!
+
+      job_ids
+    end
+
+    # for when you absolutely, positively need to process every dataset in the room
+    def bootstrap_all!
+      organisations = Organisation.all.resources
+
+      job_ids = []
+
+      organisations.each do |org|
+        job_ids << bootstrap_connections_and_vis_for(org.uri)
+      end
 
       job_ids
     end
