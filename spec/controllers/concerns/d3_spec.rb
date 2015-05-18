@@ -11,7 +11,7 @@ describe D3 do
 
     describe "generating a graph for a person" do
 
-      before { @connections = D3::ConnectionsGraph.new(jeff).conn_hash }
+      before { @connections = D3::ConnectionsGraph.new(jeff).formatted_hash }
 
       it "should not be empty" do
         expect(@connections).not_to be_empty

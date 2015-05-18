@@ -37,7 +37,7 @@ class Person < ResourceWithPresenter
       set_visualisation_graph_async
       JSON.parse(sanitize_json(self.graph_visualisation))
     else
-      graph_json = D3::ConnectionsGraph.new(self).conn_hash
+      graph_json = D3::ConnectionsGraph.new(self).formatted_hash
       set_visualisation_graph(graph_json)
       graph_json
     end

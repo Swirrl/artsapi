@@ -10,7 +10,7 @@ class PeopleWorker
     User.current_user = User.find(current_user_id)
     person = Person.find(uri)
 
-    graph_json = D3::ConnectionsGraph.new(self).conn_hash
+    graph_json = D3::ConnectionsGraph.new(person).formatted_hash
     person.set_visualisation_graph(graph_json)
   end
 
