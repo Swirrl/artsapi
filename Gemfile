@@ -46,6 +46,7 @@ gem 'bootstrap-sass', '~> 3.3.3'
 
 # background processing
 gem 'sidekiq'
+gem 'sidekiq-status'
 
 # add memoization
 gem 'memoist', '~> 0.12.0'

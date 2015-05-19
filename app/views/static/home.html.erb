@@ -3,7 +3,7 @@
 <div class='row no-margins'>
   <div class='col-md-6 col-md-offset-3'>
     <h3>Welcome to ArtsAPI</h3>
-    <p>If you've already uploaded data, then you can start browsing right away!</p>
+    <p>If you've already uploaded and processed all your organisation's data, then you can start browsing right away!</p>
     <p>Otherwise, you'll want to <%= link_to 'upload some', uploads_path %>.</p>
     <p>If all the data from your organisation has already been uploaded into the system, then you can click the button below to run the initial analysis required to view your data in the ArtsAPI tool. Please note, this will take some time, so you may want to leave it running over a lunch break or overnight.</p>
     <%= button_to 'Process uploaded data', process_data_path, remote: true, data: { disable_with: "Processing...", confirm: "Are you sure all data imports have finished?" }, class: 'btn btn-success' %>

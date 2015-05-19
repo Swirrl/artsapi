@@ -37,16 +37,11 @@ class User
   field :uploads_in_progress, type: Integer, default: 0
 
   def active_jobs
-    # THIS IS WRONG!!
-    raise StandardError
     sidekiq_queue = Sidekiq::Queue.new
 
     current_jobs = self.job_ids
-    sidekiq_jids = sidekiq_queue.map(&:jid)
 
-    Rails.logger.debug "> Sidekiq jids: #{sidekiq_jids.inspect}"
-
-    active = current_jobs.map { |job| job if sidekiq_jids.include?(job) }.compact
+    active = current_jobs.map { |job| job if (Sidekiq::Status::queued?(job) || Sidekiq::Status::working?(job)) }.compact
 
     self.job_ids = active
     self.save
