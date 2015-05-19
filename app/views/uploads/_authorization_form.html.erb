@@ -1,2 +1,21 @@
-<p>You have not yet linked your Dropbox account, please click below to do so.</p>
-<%= link_to image_tag("upload_white.png", width: 40, height: 40, class: 'margin-bottom-5') + ' Authorize Dropbox', authorize_dropbox_path, class: 'btn btn-lg btn-primary' %>
+<div class='row no-margin'>
+  <div class='col-md-7'>
+    <p class='text-justify'>
+      In order to provide as consistent an experience for uploading and working with large files, we use Dropbox to import data from a linked Dropbox account that you own.
+    </p>
+    <p class='text-justify'>
+      If you have not yet, you will need to upload your email dumps (in mbox format) to the Dropbox account that you link to ArtsAPI.
+    </p>
+    <p class='text-justify'>
+      Only files that you select will be imported into ArtsAPI, and once they have been processed you may delete them from your Dropbox.
+    </p>
+    <p class='text-justify'>
+      You have not yet linked your Dropbox account, please click on the button to do so.
+    </p>
+  </div>
+  <div class='col-md-1'>
+  </div>
+  <div class='col-md-4'>
+    <%= link_to image_tag("upload_white.png", width: 40, height: 40, class: 'margin-bottom-5') + ' Authorize Dropbox', authorize_dropbox_path, class: 'btn btn-lg btn-primary' %>
+  </div>
+</div>
