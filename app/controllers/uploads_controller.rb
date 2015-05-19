@@ -40,23 +40,18 @@ class UploadsController < ApplicationController
     mine_keywords = !!(params[:mine_keywords])
 
     begin
-      current_user.increment_uploads_in_progress!
-      @upload_client = UploadClient.new
-      @upload_client.upload!(file_location_string, mine_keywords)
 
-      flash[:success] = "Upload of file '#{file_location_string}' succeeded"
+      upload_file_async(file_location_string, mine_keywords)
 
-      current_user.decrement_uploads_in_progress!
+      flash[:success] = "Upload of file '#{file_location_string}' queued."
 
       render nothing: true, status: 200
     rescue Exception => e
 
-      puts "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
-      e.backtrace.map { |line| puts line }
+      Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
+      e.backtrace.map { |line| Rails.logger.debug(line) }
 
       flash[:danger] = "Upload of file '#{file_location_string}' failed, please try again"
-
-      current_user.decrement_uploads_in_progress!
 
       render nothing: true, status: 500
     end
@@ -77,6 +72,17 @@ class UploadsController < ApplicationController
       render nothing: true, status: 500
     end
 
+  end
+
+  private
+
+  def upload_file_async(file_location_string, mine_keywords)
+    current_user_id = User.current_user.id.to_s
+    job_id = ::UploadsWorker.perform_in(10.seconds, current_user_id, file_location_string, mine_keywords)
+
+    User.add_job_for_current_user(job_id)
+
+    job_id
   end
 
 end

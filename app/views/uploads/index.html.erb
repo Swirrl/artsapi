@@ -6,7 +6,7 @@
 
     <% if UploadClient.current_user_has_auth_code? %>
       <%= render 'file_location_form' %>
-      <%= render 'process_data_form' %>
+      <%# render 'process_data_form' %>
     <% else %>
       <%= render 'authorization_form' %>
     <% end %>

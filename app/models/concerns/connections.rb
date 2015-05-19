@@ -93,7 +93,9 @@ module Connections
   def calculate_email_density
     results = []
 
-    self.connections.each do |conn|
+    all_connections = (self.connections.nil? || self.connections.empty?) ? self.get_connections! : self.connections
+
+    all_connections.each do |conn|
       query = Tripod::SparqlQuery.new("
         #{Person.query_prefixes}
 

@@ -55,7 +55,7 @@ describe ConnectionsController do
 
       it "body is valid csv string" do
         post :distribution, uri: 'http://data.artsapi.com/id/people/jeff-widgetcorp-org'
-        expect(response.body).to eq "occurrences,emails\n"
+        expect(response.body).to eq "occurrences,emails\n1,3\n1,2\n"
       end
 
     end

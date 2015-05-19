@@ -5,15 +5,16 @@ class UploadsWorker
 
   sidekiq_options :retry => 3
 
-  def perform(current_user_id, )
+  def perform(current_user_id, file_location_string, mine_keywords)
 
     # set the current_user so we can look up the person
     User.current_user = User.find(current_user_id)
-    person = Person.find(uri)
 
-    logger.debug "> Sidekiq: Generating graph for #{uri}"
-    graph_json = D3::ConnectionsGraph.new(person).formatted_hash
-    person.set_visualisation_graph(graph_json)
+    upload_client = UploadClient.new
+
+    Rails.logger.debug "> Sidekiq: uploading #{file_location_string}, triggered by #{User.current_user.email}"
+
+    upload_client.upload!(file_location_string, mine_keywords)
   end
 
 end

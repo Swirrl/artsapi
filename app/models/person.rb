@@ -67,7 +67,6 @@ class Person < ResourceWithPresenter
       .gsub(/\\xC3\\xB5/, '')
   end
 
-
   def memoized_connections
     self.connections
   end
