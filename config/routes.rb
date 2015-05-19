@@ -97,6 +97,10 @@ Rails.application.routes.draw do
   post '/create_client_and_fetch_file', to: 'uploads#create_client_and_fetch_file', as: :fetch_file
   post '/process_data', to: 'uploads#process_data', as: :process_data
 
+  # bulk tagging ----------------------------------
+
+  get '/collection_tagging', to: 'collections#show', as: :collection_tagging
+
   # static pages ----------------------------------
 
   get '/about' => 'static#about', as: :about

@@ -1,5 +1,22 @@
 /* 
 ----------------------------------------
+  FONTS
+----------------------------------------
+*/
+
+@font-face {
+  font-family: 'imagination_stationregular';
+  src: url(font-path('imagination_station-webfont.eot'));
+  src: url(font-path('imagination_station-webfont.eot') + '?#iefix') format('embedded-opentype'),
+    url(font-path('imagination_station-webfont.woff')) format('woff'),
+    url(font-path('imagination_station-webfont.ttf')) format('truetype'),
+    url(font-path('imagination_station-webfont.svg') + '#imagination_stationregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 
+----------------------------------------
   COLOURS
 ----------------------------------------
 */
@@ -174,3 +191,26 @@ p#connections-notice {
   stroke: $orange;
   stroke-width: 1.5px;
 }
+
+/* 
+----------------------------------------
+  FONTS AND TEXT
+----------------------------------------
+*/
+
+.imagination-font {
+  font-family:'imagination_stationregular', helvetica, sans-serif;
+}
+
+.font-3em {
+  font-size:3em;
+}
+
+.light-red {
+  color:$light-red;
+}
+
+.orange-yellow {
+  color:$orange-yellow;
+}
+

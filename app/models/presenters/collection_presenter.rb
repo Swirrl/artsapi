@@ -8,7 +8,7 @@ module Presenters
       self.contains_type = type
       other_collection = opts.fetch(:collection, nil)
 
-      case type
+      case type.to_sym
       when :organisation
         self.collection = Organisation.all.resources
       when :person
