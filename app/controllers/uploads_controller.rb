@@ -44,22 +44,17 @@ class UploadsController < ApplicationController
       @upload_client = UploadClient.new
       @upload_client.upload!(file_location_string, mine_keywords)
 
-      if flash.has_key? :success
-        flash[:success] << ", upload of file '#{file_location_string}' succeeded"
-      else
-        flash[:success] = "Upload of file '#{file_location_string}' succeeded"
-      end
+      flash[:success] = "Upload of file '#{file_location_string}' succeeded"
 
       current_user.decrement_uploads_in_progress!
 
       render nothing: true, status: 200
-    rescue
+    rescue Exception => e
 
-      if flash[:danger]
-        flash[:danger] << ", upload of file '#{file_location_string}' failed"
-      else
-        flash[:danger] = "Upload of file '#{file_location_string}' failed, please try again"
-      end
+      puts "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
+      e.backtrace.map { |line| puts line }
+
+      flash[:danger] = "Upload of file '#{file_location_string}' failed, please try again"
 
       current_user.decrement_uploads_in_progress!
 
