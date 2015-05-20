@@ -250,7 +250,10 @@ p#connections-notice {
 
 ul {
   li {
-    padding:10px;
+    &.organisation-row {
+      padding:10px;
+    }
+
     &.li-dark {
       background-color:#999;
     }
