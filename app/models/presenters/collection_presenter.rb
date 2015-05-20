@@ -30,6 +30,7 @@ module Presenters
         self.collection
       end
     end
+    memoize :sorted
 
     def sorted_by_size
       case self.contains_type
