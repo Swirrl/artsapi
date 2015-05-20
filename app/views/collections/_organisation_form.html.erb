@@ -1,0 +1,35 @@
+<%= form_tag('/organisations/update', method: :post, class: 'form-inline organisation-update-form', remote: true) do %>
+  <div class="form-group">
+
+    <%= hidden_field_tag :uri, org.uri %>
+
+    <div class="input-group">
+      <div class="input-group-addon">Label</div>
+      <%= text_field_tag :label, org.label, class: 'form-control' %>
+    </div>
+
+    <div class="input-group">
+      <div class="input-group-addon">Country</div>
+      <%= select_tag :country, options_for_select(
+        @presenter.country_list, 
+        org.best_guess_at_country || 'Please select a country'
+        ), class: 'form-control', prompt: 'Please select a country' %>
+    </div>
+
+    <div class="input-group">
+      <div class="input-group-addon">City</div>
+      <%= text_field_tag :city, (org.city || nil), class: 'form-control', placeholder: 'Enter a city...' %>
+    </div>
+
+    <!--     
+    <div class="input-group">
+      <div class="input-group-addon">$</div>
+      <%# select_tag :sector %>
+    </div> 
+    -->
+
+
+    <%= submit_tag 'Update resource', class: 'btn btn-success', data: { disable_with: "Updating..." } %>
+
+  </div>
+<% end %>

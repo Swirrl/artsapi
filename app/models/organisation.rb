@@ -16,6 +16,13 @@ class Organisation < ResourceWithPresenter
 
   field :graph_visualisation, RDF::ARTS['visualisation']
 
+  # sic uri or extension
+  field :sector, RDF::ARTS['sector'], is_uri: true
+
+  # for location
+  field :country, RDF::ARTS['locationCountry']
+  field :city, RDF::ARTS['locationCity']
+
   def get_visualisation_graph
     if !self.graph_visualisation.nil?
       # set_visualisation_graph_async expensive, we don't want to do this
@@ -92,6 +99,27 @@ class Organisation < ResourceWithPresenter
   end
   memoize :members_with_more_than_x_connections
 
+  # look at extension and take a punt
+  def best_guess_at_country
+    return self.country if !self.country.nil?
+
+    extension_possibilities = []
+    extension_possibilities << ".#{self.uri.to_s.gsub(/^.+organisations\/.+\-/, '')}"
+    extension_possibilities << self.uri.to_s.gsub(/^.+organisations\/[A-z]+/, '').gsub(/\-/, '.')
+    extension_possibilities << self.uri.to_s.match(/\-[A-z]+\-[A-z]+$/)[0].gsub(/\-/, '.') rescue ''
+    mapping = ArtsAPI::COUNTRIES_MAPPING
+
+    result = nil
+    extension_possibilities.each { |ex| result = mapping[ex] if mapping.has_key?(ex) }
+
+    if !result.nil?
+      self.country = result
+      self.save
+    end
+
+    result
+  end
+
   class << self
 
     # takes a uri object or string
@@ -124,6 +152,7 @@ class Organisation < ResourceWithPresenter
     end
 
     # for when you absolutely, positively need to process every dataset in the room
+    # bear in mind that async-ness might cause problems in the end anyway
     def bootstrap_all!
       organisations = Organisation.all.resources
 
@@ -134,6 +163,32 @@ class Organisation < ResourceWithPresenter
       end
 
       job_ids
+    end
+
+    # first, try and extract the owning org from current signed in user, else
+    # a more pragmatic version; the Org with the largest number of links
+    # will almost certainly be the owner organisation, and running through
+    # only their members will save a ton of processing
+    def bootstrap_owner_or_largest_org!
+      begin
+
+        owner_org = User.current_user.find_org_from_self_in_data
+        owner_org.generate_all_connections!
+        owner_org.generate_visualisations_async!
+
+      rescue # couldn't find either person or org
+
+        organisations = Organisation.all.resources
+
+        # generate connections
+        organisations.each { |org| org.generate_all_connections! }
+
+        # need to reload orgs
+        most_linked_org = Organisation.all.resources.sort { |a,b| b.linked_to.count <=> a.linked_to.count }.first
+
+        most_linked_org.generate_visualisations_async!
+
+      end
     end
 
   end

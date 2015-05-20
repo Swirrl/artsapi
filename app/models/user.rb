@@ -79,6 +79,21 @@ class User
     end
   end
 
+  def organisation_from_email
+    organisation_prefix = "http://data.ArtsAPI.com/id/organisations/"
+    suffix = self.email.gsub(/^.+@/, '').gsub(/\./, '-')
+    "#{organisation_prefix}#{suffix}"
+  end
+
+  def find_self_in_data
+    email_uri = Person.get_uri_from_email(self.email)
+    Person.find(email_uri)
+  end
+
+  def find_org_from_self_in_data
+    Organisation.find(find_self_in_data.member_of)
+  end
+
   class << self
 
     # Make mongoid and mongo play nice

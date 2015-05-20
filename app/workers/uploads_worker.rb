@@ -12,7 +12,7 @@ class UploadsWorker
 
     upload_client = UploadClient.new
 
-    Rails.logger.debug "> Sidekiq: uploading #{file_location_string}, triggered by #{User.current_user.email}"
+    Rails.logger.debug "> [Sidekiq]: uploading #{file_location_string}, triggered by #{User.current_user.email}"
 
     upload_client.upload!(file_location_string, mine_keywords)
   end

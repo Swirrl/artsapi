@@ -101,6 +101,10 @@ Rails.application.routes.draw do
 
   get '/collection_tagging', to: 'collections#show', as: :collection_tagging
 
+  # organisations ---------------------------------
+
+  post '/organisations/update', to: 'organisations#update', as: :update_organisation
+
   # static pages ----------------------------------
 
   get '/about' => 'static#about', as: :about

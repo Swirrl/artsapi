@@ -44,6 +44,10 @@ gem 'mongoid', '~> 4.0.0'
 
 gem 'bootstrap-sass', '~> 3.3.3'
 
+# pagination
+# gem 'will_paginate', '~> 3.0.7'
+# gem 'will_paginate-bootstrap', '~> 1.0.1'
+
 # background processing
 gem 'sidekiq'
 gem 'sidekiq-status'

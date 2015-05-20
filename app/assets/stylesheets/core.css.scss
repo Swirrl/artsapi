@@ -52,6 +52,18 @@ body {
   width:50% !important;
 }
 
+.margin-top-100 {
+  margin-top:100px;
+}
+
+.margin-top-50 {
+  margin-top:50px;
+}
+
+.margin-top-30 {
+  margin-top:30px;
+}
+
 .margin-top-10 {
   margin-top:10px;
 }
@@ -216,5 +228,28 @@ p#connections-notice {
 
 .orange-yellow {
   color:$orange-yellow;
+}
+
+/* 
+----------------------------------------
+  LISTS
+----------------------------------------
+*/
+
+ul {
+  li {
+    padding:10px;
+    &.li-dark {
+      background-color:#999;
+    }
+
+    &.mid-light {
+      background-color:rgb(240,240,240);
+    }
+
+    &.li-light {
+      background-color:#FAFAFA;
+    }
+  }
 }
 

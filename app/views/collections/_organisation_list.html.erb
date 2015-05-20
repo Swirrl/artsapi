@@ -1,0 +1,16 @@
+<p class='lead text-center margin-top-50'>Here's a helpful explanation for what you are looking at. Haven't the brainpower to write this yet.</p>
+<p class='text-center'>If the system could not match a best guess for the country of the organisation, you will need to choose one.</p>
+
+<ul class="list-unstyled margin-top-50">
+  <% @presenter.sorted.each do |organisation| %>
+    <li class='<%= cycle('mid-light', '') %> organisation-row'>
+      <%= render 'organisation_form', org: organisation %>
+    </li>
+  <% end %>
+</ul>
+
+<script type="text/javascript">
+  $('.organisation-update-form').bind('ajax:success', function() {
+    $(this).closest('li.organisation-row').fadeOut();
+  });
+</script>

@@ -11,7 +11,7 @@ class PeopleWorker
     User.current_user = User.find(current_user_id)
     person = Person.find(uri)
 
-    Rails.logger.debug "> Sidekiq: Generating graph for #{uri}"
+    Rails.logger.debug "> [Sidekiq]: Generating graph for #{uri}"
     graph_json = D3::ConnectionsGraph.new(person).formatted_hash
     person.set_visualisation_graph(graph_json)
   end

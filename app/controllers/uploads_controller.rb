@@ -61,9 +61,11 @@ class UploadsController < ApplicationController
   # once they've uploaded all their data
   # I feel pretty sorry for Fuseki, this will be big
   def process_data
+    # do we want to force generation of everything?
+    force_all = params[:force] if params.has_key?(:force)
 
     begin
-      job_ids = Organisation.bootstrap_all!
+      job_ids = force_all ? Organisation.bootstrap_all! : Organisation.bootstrap_owner_or_largest_org!
 
       flash[:success] = "Success! #{job_ids.count} data tasks scheduled."
       render nothing: true, status: 202

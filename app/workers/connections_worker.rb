@@ -11,7 +11,7 @@ class ConnectionsWorker
     User.current_user = User.find(current_user_id)
     person = Person.find(uri)
 
-    Rails.logger.debug "> Sidekiq: Generating connections for #{uri}"
+    Rails.logger.debug "> [Sidekiq]: Generating connections for #{uri}"
     person.get_connections!
   end
 
