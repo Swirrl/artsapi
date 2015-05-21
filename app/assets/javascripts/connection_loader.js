@@ -109,8 +109,9 @@
 
     $('a.trigger-chart-load').on('click.chartLoad', function(e){
       // default etc should already be caught by table tabs js
-      loadConnectionsChart();
+      $(this).removeClass('trigger-chart-load');
       $(this).off('click.chartLoad');
+      loadConnectionsChart();
     });
 
     // wait five seconds to kick off the AJAX extravaganza

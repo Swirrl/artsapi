@@ -40,5 +40,18 @@ module Presenters
       resource.sorted_email_density
     end
 
+    def functional_areas
+      resource.functional_area.map { |fa| KeywordSubCategory.find(fa) } || "Not known"
+    end
+
+    def subject_area
+      resource_subject_area_uri = resource.subject_area
+      (resource_subject_area_uri.nil?) ? resource.get_subject_area! : KeywordCategory.find(resource_subject_area_uri)
+    end
+
+    def subject_area_label
+      subject_area.label rescue "Unavailable"
+    end
+
   end
 end

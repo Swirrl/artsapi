@@ -11,6 +11,7 @@ class PeopleController < ApplicationController
           person = Person.find(params[:uri])
 
           person.label = params[:label] if !params[:label].blank? && !params[:label].nil?
+          person.position = params[:position] if !params[:position].blank? && !params[:position].nil?
 
           person.save
 

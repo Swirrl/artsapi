@@ -3,6 +3,7 @@ class Person < ResourceWithPresenter
 
   include Tripod::Resource
   include Connections
+  include PersonKeywordMethods
   include TripodOverrides
   extend Memoist
 
@@ -26,10 +27,17 @@ class Person < ResourceWithPresenter
   field :department, RDF::ARTS['department']
   field :possible_department, RDF::ARTS['possibleDepartment']
 
-  field :sent_emails, RDF::ARTS['sentEmails']
-  field :incoming_emails, RDF::ARTS['incomingEmails']
+  # ----- These are the department/role heuristic measures -----
+  #       subject_area points to KeywordCategories
+  #       functional_area points to KeywordSubCategories
+  #       mentioned_keywords points to Keywords
+  field :subject_area, RDF::ARTS['subjectArea'], is_uri: true#, multivalued: true
+  field :functional_area, RDF::ARTS['functionalArea'], is_uri: true, multivalued: true
   field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
 
+  # these are essentially things to help performance
+  field :sent_emails, RDF::ARTS['sentEmails']
+  field :incoming_emails, RDF::ARTS['incomingEmails']
   field :graph_visualisation, RDF::ARTS['visualisation']
 
   def get_visualisation_graph
@@ -182,55 +190,6 @@ class Person < ResourceWithPresenter
     else
       self.incoming_emails
     end
-  end
-
-  def all_keywords_from_emails
-    kw_hash = {}
-
-    self.mentioned_keywords.each do |keyword|
-      kw = keyword.to_s
-
-      query = Tripod::SparqlQuery.new("
-        #{Person.query_prefixes}
-        SELECT ?email
-        WHERE {
-          GRAPH <http://data.artsapi.com/graph/emails> {
-            ?email arts:emailSender <#{self.uri.to_s}> .
-            ?email arts:containsKeyword <#{kw}> .
-          }
-        }
-      ")
-
-      mentions = User.current_user.within {
-        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
-      }
-
-      label = Keyword.label_from_uri(kw)
-      kw_hash[kw] = [label, mentions]
-    end
-
-    kw_hash
-  end
-
-  def sorted_keywords
-    sorted = []
-    ak = all_keywords_from_emails
-    ak.sort { |a, b| ak[b[0]][1] <=> ak[a[0]][1] }.each { |h| sorted << [ak[h[0]][0], ak[h[0]][1]] }
-    sorted
-  end
-
-  def keywords_csv
-  end
-
-  # for use in rake tasks etc
-  # works out a possible department and writes a triple
-  def generate_and_write_possible_department
-  end
-
-  # for debug and partner feedback; not for production use!
-  def print_sorted_keywords
-    puts "#{self.name.titleize}: #{self.uri}\n\n"
-    sorted_keywords.each { |a| puts "'#{a[0]}' mentions: #{a[1]}"}
   end
 
   def get_colleagues

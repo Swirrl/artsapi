@@ -1,6 +1,6 @@
 <div class='row no-margins'>
   <div class='col-md-6 col-md-offset-3'>
-    <p class='lead text-justify margin-top-50'>Use this screen to tag these <%= @presenter.sorted.count %> People with a human-readable label, which should be the Person's name. This list has been sorted by the number of emails each Person has sent.</p>
+    <p class='lead text-justify margin-top-50'>Use this screen to tag these <%= @presenter.sorted.count %> People with a human-readable label, which should be the Person's name, as well as their job role or position. This list has been sorted by the number of emails each Person has sent.</p>
 
     <ol>
       <li>
@@ -11,6 +11,11 @@
       <li>
         <p>
           <strong class='orange'>Label:</strong> enter the Person's name here.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong class='orange'>Position:</strong> enter the Person's job title here.
         </p>
       </li>
     </ol>
