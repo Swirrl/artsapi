@@ -16,8 +16,6 @@ class OrganisationsController < ApplicationController
 
           org.save
 
-          @organisation = org
-
           render nothing: true, status: 200
         rescue
           render nothing: true, status: 500

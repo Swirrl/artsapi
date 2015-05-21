@@ -1,0 +1,36 @@
+<div class='row no-margins'>
+  <div class='col-md-6 col-md-offset-3'>
+    <p class='lead text-justify margin-top-50'>Use this screen to tag these <%= @presenter.sorted.count %> People with a human-readable label, which should be the Person's name. This list has been sorted by the number of emails each Person has sent.</p>
+
+    <ol>
+      <li>
+        <p>
+          <strong class='orange'>Email:</strong> this is the email associated with this Person. In case the label is wildly wrong, you can use this to work out what the label (name) of the Person should be.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong class='orange'>Label:</strong> enter the Person's name here.
+        </p>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class='row no-margins'>
+  <div class='col-md-8 col-md-offset-2'>
+    <ul class="list-unstyled margin-top-50">
+      <% @presenter.sorted.each do |person| %>
+        <li class='<%= cycle('mid-light', '') %> person-row'>
+          <%= render 'person_form', person: person %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('.person-update-form').bind('ajax:success', function() {
+    $(this).closest('li.person-row').fadeOut();
+  });
+</script>

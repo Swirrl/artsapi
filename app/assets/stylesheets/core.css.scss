@@ -68,12 +68,20 @@ body {
   margin-top:10px;
 }
 
+.margin-bottom-8 {
+  margin-bottom:8px;
+}
+
 .margin-bottom-5 {
   margin-bottom:5px;
 }
 
-.margin-bottom-8 {
-  margin-bottom:8px;
+.padding-left-10 {
+  padding-left:10px;
+}
+
+.padding-left-5 {
+  padding-left:5px;
 }
 
 .padding-bottom-5 {
@@ -180,13 +188,13 @@ p#connections-notice {
 }
 
 .node {
-  stroke: #fff;
-  stroke-width: 1.5px;
+  stroke:#fff;
+  stroke-width:1.5px;
 }
 
 .link {
-  stroke: #999;
-  stroke-opacity: .6;
+  stroke:#999;
+  stroke-opacity:.6;
 }
 
 /* 
@@ -197,15 +205,15 @@ p#connections-notice {
 
 .axis path,
 .axis line {
-  fill: none;
-  stroke: #222;
+  fill:none;
+  stroke:#222;
   shape-rendering: crispEdges;
 }
 
 .line {
-  fill: none;
-  stroke: $orange;
-  stroke-width: 1.5px;
+  fill:none;
+  stroke:$orange;
+  stroke-width:1.5px;
 }
 
 /* 
@@ -242,6 +250,10 @@ p#connections-notice {
   color:$orange;
 }
 
+.mid-grey {
+  color:#555;
+}
+
 /* 
 ----------------------------------------
   LISTS
@@ -252,6 +264,15 @@ ul {
   li {
     &.organisation-row {
       padding:10px;
+    }
+
+    &.person-row {
+      padding:10px;
+      form {
+        &.person-update-form {
+          margin:0 auto;
+        }
+      }
     }
 
     &.li-dark {
@@ -266,5 +287,19 @@ ul {
       background-color:#FAFAFA;
     }
   }
+}
+
+/* 
+----------------------------------------
+  FOOTER
+----------------------------------------
+*/
+
+footer {
+  height:200px;
+  background-color:#555;
+  margin-left:-10px;
+  margin-right:-10px;
+  margin-bottom:-10px;
 }
 

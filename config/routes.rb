@@ -105,14 +105,20 @@ Rails.application.routes.draw do
 
   post '/organisations/update', to: 'organisations#update', as: :update_organisation
 
+  # people ----------------------------------------
+
+  post '/people/update', to: 'people#update', as: :update_person
+
   # static pages ----------------------------------
 
   get '/about' => 'static#about', as: :about
   get '/contact' => 'static#contact', as: :contact
   get '/home' => 'static#home', as: :home
 
-  devise_scope :user do
-    root to: 'devise/sessions#new'
+  authenticated :user do
+    root to: 'static#home', as: :logged_in_root
   end
+
+  root to: 'devise/sessions#new'
 
 end
