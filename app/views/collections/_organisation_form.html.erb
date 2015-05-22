@@ -13,7 +13,7 @@
       <%= select_tag :country, options_for_select(
         @presenter.country_list, 
         org.best_guess_at_country || 'Please select a country'
-        ), class: 'form-control', prompt: 'Please select a country' %>
+        ), class: 'form-control width-200-px', prompt: 'Please select a country' %>
     </div>
 
     <div class="input-group">
@@ -23,13 +23,13 @@
 
     <!--     
     <div class="input-group">
-      <div class="input-group-addon">$</div>
+      <div class="input-group-addon">Sector</div>
       <%# select_tag :sector %>
     </div> 
     -->
 
     <div class="btn-group" role="group">
-      <%= submit_tag 'Update resource', class: 'btn btn-success', data: { disable_with: "Updating..." } %>
+      <%= submit_tag 'Update', class: 'btn btn-success', data: { disable_with: "Updating..." } %>
       <%= link_to 'View', Presenters::Resource.create_path_from_uri(org.uri), target: :blank, class: 'btn btn-default' %>
     </div>
 
