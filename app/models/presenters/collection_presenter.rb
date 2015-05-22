@@ -37,7 +37,7 @@ module Presenters
       when :organisation
         self.collection.sort { |a, b| b.has_members.count <=> a.has_members.count }
       when :person
-        self.collection.sort { |a, b| b.sent_emails.count <=> a.sent_emails.count }
+        self.collection.sort { |a, b| b.number_of_sent_emails <=> a.number_of_sent_emails }
       end
     end
 
