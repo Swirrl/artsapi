@@ -5,6 +5,9 @@ module SIC
     include Tripod::Resource
     include SICConcept
 
+    rdf_type 'http://swirrl.com/def/sic/SubClass'
+    graph_uri 'http://data.artsapi.com/graph/sic'
+
   end
 
 end

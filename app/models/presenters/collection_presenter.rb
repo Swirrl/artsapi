@@ -54,6 +54,26 @@ module Presenters
     end
     memoize :country_list
 
+    def sector_list
+      resources = SICConcept.all_classes_and_subclasses
+      results = []
+      to_prepend = []
+
+      # array needs to be [label, value]
+      resources.each do |resource|
+        uri = resource.uri.to_s
+
+        if SICConcept.sic_extension_uris.include?(uri)
+          to_prepend << [resource.label, uri]
+        else
+          results << [resource.label, uri]
+        end
+      end
+
+      to_prepend + results
+    end
+    memoize :sector_list
+
   end
 
 end
