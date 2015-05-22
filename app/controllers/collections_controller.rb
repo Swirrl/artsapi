@@ -6,6 +6,8 @@ class CollectionsController < ApplicationController
     type = (params[:type] || "organisation").to_sym
 
     @presenter = Presenters::CollectionPresenter.new(type)
+
+    @paginated = Kaminari.paginate_array(@presenter.sorted).page(params[:page]).per(20)
   end
 
 end

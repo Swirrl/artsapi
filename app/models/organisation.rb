@@ -52,6 +52,10 @@ class Organisation < ResourceWithPresenter
     job_id
   end
 
+  def sector_label
+    SICConcept.find_class_or_subclass(self.sector).label rescue nil
+  end
+
   def get_top_subject_areas
     members = self.has_members.map { |uri| Person.find(uri) }
 

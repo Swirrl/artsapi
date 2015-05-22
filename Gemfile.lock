@@ -42,6 +42,9 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootstrap-kaminari-views (0.0.5)
+      kaminari (>= 0.13)
+      rails (>= 3.1)
     bootstrap-sass (3.3.3)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
@@ -118,6 +121,9 @@ GEM
       backports
       json (>= 1.7.5)
       rdf (>= 1.0)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     kgio (2.9.3)
     link_header (0.0.8)
     mail (2.6.3)
@@ -296,6 +302,7 @@ PLATFORMS
 DEPENDENCIES
   authority
   better_errors (~> 2.1.1)
+  bootstrap-kaminari-views
   bootstrap-sass (~> 3.3.3)
   capybara (~> 2.4)
   coffee-rails (~> 4.1.0)
@@ -306,6 +313,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.5.0)
   jbuilder (~> 2.0)
   jquery-rails
+  kaminari (~> 0.16.3)
   memoist (~> 0.12.0)
   mongoid (~> 4.0.0)
   pry-byebug

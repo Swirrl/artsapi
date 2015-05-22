@@ -45,10 +45,6 @@ module Presenters
       self.contains_type.to_s.pluralize.titleize
     end
 
-    def all_sic_categories
-
-    end
-
     def country_list
       ArtsAPI::COUNTRIES_MAPPING.values
     end
