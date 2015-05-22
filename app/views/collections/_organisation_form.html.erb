@@ -21,12 +21,10 @@
       <%= text_field_tag :city, (org.city || nil), class: 'form-control', placeholder: 'Enter a city...' %>
     </div>
 
-    <!--     
     <div class="input-group">
       <div class="input-group-addon">Sector</div>
-      <%# select_tag :sector %>
-    </div> 
-    -->
+      <%= select_tag :sector, options_for_select(@presenter.sector_list), class: 'form-control width-200-px', prompt: 'Please select a sector' %>
+    </div>
 
     <div class="btn-group" role="group">
       <%= submit_tag 'Update', class: 'btn btn-success', data: { disable_with: "Updating..." } %>
