@@ -1,6 +1,8 @@
 module Presenters
   class OrganisationPresenter < Presenters::Resource
 
+    extend Memoist
+
     def linked_organisations
       resource.linked_to
     end
@@ -48,6 +50,38 @@ module Presenters
         fields_hash.delete(:linked_to)
         fields_hash
       end
+    end
+
+    def common_subject_areas
+      common_areas = resource.common_subject_areas
+
+      if common_areas.blank?
+        resource.get_common_subject_areas!.map { |uri| KeywordCategory.find(uri) }
+      else
+        common_areas.map { |uri| KeywordCategory.find(uri) }
+      end
+    end
+
+    def common_subject_areas_sentence
+      common_subject_areas.map(&:label).to_sentence rescue "Unavailable"
+    end
+
+    def common_keywords
+      common_keywords = resource.common_keywords
+
+      if common_keywords.blank?
+        resource.get_common_keywords!.map { |uri| Keyword.find(uri) }
+      else
+        common_keywords.map { |uri| Keyword.find(uri) }
+      end
+    end
+
+    def common_keywords_labels
+      common_keywords.map(&:label) rescue "Unavailable"
+    end
+
+    def common_keywords_sentence
+      common_keywords_labels.to_sentence rescue "Unavailable"
     end
 
   end

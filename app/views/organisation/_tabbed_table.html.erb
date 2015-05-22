@@ -4,6 +4,9 @@
       <a href="#graph" aria-controls="graph" role="tab" data-toggle="tab">Graph</a>
     </li>
     <li role="presentation">
+      <a href="#analysis" aria-controls="analysis" role="tab" data-toggle="tab">Analysis</a>
+    </li>
+    <li role="presentation">
       <a href="#members" aria-controls="members" role="tab" data-toggle="tab">Members</a>
     </li>
     <li role="presentation">
@@ -17,6 +20,10 @@
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="graph">
         <%= render 'organisation/graph' %>
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="analysis">
+        <%= render 'organisation/analysis' %>
       </div>
 
       <div role="tabpanel" class="tab-pane" id="members">

@@ -33,7 +33,7 @@
   }
 
   function triggerLabelLoad(){
-    $('a.ajax-label').each(function(){
+    $('.ajax-label').each(function(){
       var uri = $(this).data('uri');
       getLabelByAjax(uri, this).then(refreshLabel, logError);
     });

@@ -23,6 +23,10 @@ class Organisation < ResourceWithPresenter
   field :country, RDF::ARTS['locationCountry']
   field :city, RDF::ARTS['locationCity']
 
+  # for heuristics
+  field :common_subject_areas, RDF::ARTS['commonSubjectArea'], is_uri: true, multivalued: true
+  field :common_keywords, RDF::ARTS['commonKeyword'], is_uri: true, multivalued: true
+
   def get_visualisation_graph
     if !self.graph_visualisation.nil?
       # set_visualisation_graph_async expensive, we don't want to do this
@@ -46,6 +50,62 @@ class Organisation < ResourceWithPresenter
     User.add_job_for_current_user(job_id)
 
     job_id
+  end
+
+  def get_top_subject_areas
+    members = self.has_members.map { |uri| Person.find(uri) }
+
+    areas = members.map(&:get_or_generate_subject_area!).flatten
+
+    counter = {}
+
+    areas.each do |subject_area|
+      if counter.has_key?(subject_area)
+        counter[subject_area] += 1
+      else
+        counter[subject_area] = 1
+      end
+    end
+
+    counter.sort { |a, b| b[1] <=> a[1] }[0..2]
+  end
+
+  def get_common_subject_areas!
+    common_subjects = get_top_subject_areas.map { |subj| subj[0] }
+
+    self.common_subject_areas = common_subjects
+    self.save
+
+    common_subjects
+  end
+
+  def get_top_keywords
+    members = self.has_members.map { |uri| Person.find(uri) }
+
+    keyword_lists = members.map(&:sorted_keywords)
+
+    counter = {}
+
+    keyword_lists.each do |list|
+      list.each do |keyword_entry|
+        if counter.has_key?(keyword_entry[0])
+          counter[keyword_entry[0]] += keyword_entry[1]
+        else
+          counter[keyword_entry[0]] = keyword_entry[1]
+        end
+      end
+    end
+
+    counter.sort { |a, b| b[1] <=> a[1] }[0..9]
+  end
+
+  def get_common_keywords!
+    top_ten_common_words = get_top_keywords.map { |kw| Keyword.uri_from_label(kw[0]) }
+
+    self.common_keywords = top_ten_common_words
+    self.save
+
+    top_ten_common_words
   end
 
   def sanitize_json(string)

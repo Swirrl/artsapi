@@ -4,10 +4,19 @@ module PersonKeywordMethods
   extend ActiveSupport::Concern
   extend Memoist
 
-  # points to a resource of the KeywordCategory class 
+  def get_or_generate_subject_area!
+    return self.subject_area if !self.subject_area.blank?
+    get_subject_area!
+  end
+
+  # points to resources of the KeywordCategory class 
   # and contains KeywordSubCategor(ies)
   # if nothing exists in that field, it will write after calculating
-  def get_subject_area!
+  def get_subject_area!(opts={})
+    save_functional_areas = opts.fetch(:save_functional_areas, true)
+    save_categories = opts.fetch(:save_categories, true)
+    bin_threshold = opts.fetch(:bin_threshold, 2)
+
     begin
       # get sorted keywords
       weighted_keywords = self.sorted_keywords
@@ -17,7 +26,6 @@ module PersonKeywordMethods
       lowest_val = weighted_keywords.last[1].to_i # will probably be 1
       bin_size = (highest_val - lowest_val) / 10
 
-      bin_threshold = 5
       cutoff_value = lowest_val + (bin_threshold * bin_size)
 
       remaining_keywords = weighted_keywords.map { |kw| kw if kw[1].to_i > cutoff_value }.compact
@@ -36,7 +44,7 @@ module PersonKeywordMethods
 
         # while we're at it, save this functional area
         # as it's over the threshold of interestingness
-        self.functional_area = self.functional_area + [keyword_object.in_sub_category]
+        self.functional_area = self.functional_area + [keyword_object.in_sub_category] if save_functional_areas
 
         if category_counter.has_key?(category_uri)
           category_counter[category_uri] = category_counter[category_uri] + kw[1].to_i
@@ -46,15 +54,15 @@ module PersonKeywordMethods
       end
 
       # suss out which keyword category contains the most resources
-      category_uri = category_counter.sort { |a, b| b[1] <=> a[1] }.first[0]
+      category_uris = category_counter.sort { |a, b| b[1] <=> a[1] }
 
-      self.subject_area = category_uri
-      self.save # save functional areas and category
+      categories = category_uris[0..2].map { |c| c[0] }
+      self.subject_area = categories
+      self.save if save_categories # save functional areas and category
 
-      KeywordCategory.find(category_uri)
+      categories
     rescue
       # need to decide what to do here - some people will have no keywords
-
     end
   end
 

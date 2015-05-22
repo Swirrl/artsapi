@@ -31,7 +31,7 @@ class Person < ResourceWithPresenter
   #       subject_area points to KeywordCategories
   #       functional_area points to KeywordSubCategories
   #       mentioned_keywords points to Keywords
-  field :subject_area, RDF::ARTS['subjectArea'], is_uri: true#, multivalued: true
+  field :subject_area, RDF::ARTS['subjectArea'], is_uri: true, multivalued: true
   field :functional_area, RDF::ARTS['functionalArea'], is_uri: true, multivalued: true
   field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
 
