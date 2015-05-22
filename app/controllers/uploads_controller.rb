@@ -40,16 +40,51 @@ class UploadsController < ApplicationController
     mine_keywords = !!(params[:mine_keywords])
 
     begin
-      @upload_client = UploadClient.new
-      @upload_client.upload!(file_location_string, mine_keywords)
-      flash[:success] = "Upload of file '#{file_location_string}' succeeded"
+
+      upload_file_async(file_location_string, mine_keywords)
+
+      flash[:success] = "Upload of file '#{file_location_string}' queued."
 
       render nothing: true, status: 200
-    rescue
-      flash[:danger] = "Upload failed, please try again"
+    rescue Exception => e
+
+      Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
+      e.backtrace.map { |line| Rails.logger.debug(line) }
+
+      flash[:danger] = "Upload of file '#{file_location_string}' failed, please try again"
 
       render nothing: true, status: 500
     end
+  end
+
+  # this method should be triggered by the user 
+  # once they've uploaded all their data
+  # I feel pretty sorry for Fuseki, this will be big
+  def process_data
+    # do we want to force generation of everything?
+    force_all = params[:force] if params.has_key?(:force)
+
+    begin
+      job_ids = force_all ? Organisation.bootstrap_all! : Organisation.bootstrap_owner_or_largest_org!
+
+      flash[:success] = "Success! #{job_ids.count} data tasks scheduled."
+      render nothing: true, status: 202
+    rescue
+      flash[:danger] = "There was an error, please try scheduling later."
+      render nothing: true, status: 500
+    end
+
+  end
+
+  private
+
+  def upload_file_async(file_location_string, mine_keywords)
+    current_user_id = User.current_user.id.to_s
+    job_id = ::UploadsWorker.perform_in(10.seconds, current_user_id, file_location_string, mine_keywords)
+
+    User.add_job_for_current_user(job_id)
+
+    job_id
   end
 
 end

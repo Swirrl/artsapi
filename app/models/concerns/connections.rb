@@ -21,7 +21,11 @@ module Connections
   # async
   def generate_connections_async
     current_user_id = User.current_user.id.to_s
-    ::ConnectionsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+    job_id = ::ConnectionsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+
+    User.add_job_for_current_user(job_id)
+
+    job_id
   end
 
   def get_recipients_of_emails
@@ -89,7 +93,9 @@ module Connections
   def calculate_email_density
     results = []
 
-    self.connections.each do |conn|
+    all_connections = (self.connections.nil? || self.connections.empty?) ? self.get_connections! : self.connections
+
+    all_connections.each do |conn|
       query = Tripod::SparqlQuery.new("
         #{Person.query_prefixes}
 

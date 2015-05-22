@@ -1,0 +1,42 @@
+<div class='row no-margins'>
+  <div class='col-md-6 col-md-offset-3'>
+    <p class='lead text-justify margin-top-50'>Use this screen to tag these <%= @presenter.sorted.count %> Organisations with a human-readable label - ideally the Organisation's name - as well as their country, city and additionally their sector, if known. This list has been sorted by the number of members each organisation has.</p>
+
+    <ol>
+      <li>
+        <p>
+          <strong class='orange'>Label:</strong> enter the Organisation name here.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong class='orange'>Country:</strong> if the system could not match a best guess for the country of the Organisation, you will need to choose one.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong class='orange'>City:</strong> enter the city in which the Organisation is based here. This is a free-text field, so be as consistent as possible when naming different Organisations based in the same place.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong class='orange'>Sector:</strong> these are based on the SIC classifications for industrial activity. You can find an interactive list on the ONS website <%= link_to 'here', 'http://www.neighbourhood.statistics.gov.uk/HTMLDocs/SIC/ONS_SIC_hierarchy_view.html', target: :blank %>, and view the extensions created by the ArtsAPI team for this project <%= link_to 'here', 'https://github.com/Swirrl/artsapi-email-processing-tool#sic-extensions', target: :blank %>. Both are available to you in the dropdown.
+        </p>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<ul class="list-unstyled margin-top-50">
+  <% @presenter.sorted.each do |organisation| %>
+    <li class='<%= cycle('mid-light', '') %> organisation-row'>
+      <%= render 'organisation_form', org: organisation %>
+    </li>
+  <% end %>
+</ul>
+
+<script type="text/javascript">
+  $('.organisation-update-form').bind('ajax:success', function() {
+    $(this).closest('li.organisation-row').fadeOut();
+  });
+</script>

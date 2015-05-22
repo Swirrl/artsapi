@@ -86,7 +86,7 @@
               }
             });
 
-            console.log(d);
+            // console.log(d);
 
             link.style("opacity", function(o) {
               return (d.index === o.source.index || d.index === o.target.index) ? 1 : 0.1;

@@ -1,5 +1,22 @@
 /* 
 ----------------------------------------
+  FONTS
+----------------------------------------
+*/
+
+@font-face {
+  font-family: 'imagination_stationregular';
+  src: url(font-path('imagination_station-webfont.eot'));
+  src: url(font-path('imagination_station-webfont.eot') + '?#iefix') format('embedded-opentype'),
+    url(font-path('imagination_station-webfont.woff')) format('woff'),
+    url(font-path('imagination_station-webfont.ttf')) format('truetype'),
+    url(font-path('imagination_station-webfont.svg') + '#imagination_stationregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 
+----------------------------------------
   COLOURS
 ----------------------------------------
 */
@@ -35,16 +52,44 @@ body {
   width:50% !important;
 }
 
+.width-100-px {
+  width:100px !important;
+}
+
+.width-200-px {
+  width:200px !important;
+}
+
+.margin-top-100 {
+  margin-top:100px;
+}
+
+.margin-top-50 {
+  margin-top:50px;
+}
+
+.margin-top-30 {
+  margin-top:30px;
+}
+
 .margin-top-10 {
   margin-top:10px;
+}
+
+.margin-bottom-8 {
+  margin-bottom:8px;
 }
 
 .margin-bottom-5 {
   margin-bottom:5px;
 }
 
-.margin-bottom-8 {
-  margin-bottom:8px;
+.padding-left-10 {
+  padding-left:10px;
+}
+
+.padding-left-5 {
+  padding-left:5px;
 }
 
 .padding-bottom-5 {
@@ -109,9 +154,24 @@ body {
         margin:0 auto;
       }
     }
+
+    &.background-dark {
+      background:#3B3B3B;
+    }
   }
 
 }
+
+/* 
+----------------------------------------
+  URI
+----------------------------------------
+*/
+
+div#resource_uri {
+  display:none;
+}
+
 
 /* 
 ----------------------------------------
@@ -136,13 +196,13 @@ p#connections-notice {
 }
 
 .node {
-  stroke: #fff;
-  stroke-width: 1.5px;
+  stroke:#fff;
+  stroke-width:1.5px;
 }
 
 .link {
-  stroke: #999;
-  stroke-opacity: .6;
+  stroke:#999;
+  stroke-opacity:.6;
 }
 
 /* 
@@ -153,13 +213,101 @@ p#connections-notice {
 
 .axis path,
 .axis line {
-  fill: none;
-  stroke: #222;
+  fill:none;
+  stroke:#222;
   shape-rendering: crispEdges;
 }
 
 .line {
-  fill: none;
-  stroke: $orange;
-  stroke-width: 1.5px;
+  fill:none;
+  stroke:$orange;
+  stroke-width:1.5px;
 }
+
+/* 
+----------------------------------------
+  FONTS AND TEXT
+----------------------------------------
+*/
+
+.imagination-font {
+  font-family:'imagination_stationregular', helvetica, sans-serif;
+}
+
+.font-3em {
+  font-size:3em;
+}
+
+.light-red {
+  color:$light-red;
+}
+
+.orange-yellow {
+  color:$orange-yellow;
+}
+
+.blue-green {
+  color:$blue-green;
+}
+
+.dark-red {
+  color:$dark-red;
+}
+
+.orange {
+  color:$orange;
+}
+
+.mid-grey {
+  color:#555;
+}
+
+/* 
+----------------------------------------
+  LISTS
+----------------------------------------
+*/
+
+ul {
+  li {
+    &.organisation-row {
+      padding:10px;
+    }
+
+    &.person-row {
+      padding:10px;
+      form {
+        &.person-update-form {
+          margin:0 auto;
+        }
+      }
+    }
+
+    &.li-dark {
+      background-color:#999;
+    }
+
+    &.mid-light {
+      background-color:rgb(240,240,240);
+    }
+
+    &.li-light {
+      background-color:#FAFAFA;
+    }
+  }
+}
+
+/* 
+----------------------------------------
+  FOOTER
+----------------------------------------
+*/
+
+footer {
+  height:200px;
+  background-color:#555;
+  margin-left:-10px;
+  margin-right:-10px;
+  margin-bottom:-10px;
+}
+

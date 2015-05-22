@@ -11,6 +11,12 @@ class Keyword
   field :label, RDF::RDFS.label
   field :in_sub_category, 'http://data.artsapi.com/def/arts/keywords/inSubCategory', is_uri: true
 
+  # returns a RDF::URI
+  def get_category
+    sub_category = KeywordSubCategory.find(self.in_sub_category)
+    sub_category.in_category
+  end
+
   class << self
 
     def label_from_uri(uri)
@@ -19,6 +25,10 @@ class Keyword
 
     def uri_from_label(label)
       "#{ArtsAPI::HOST}/id/keywords/keyword/#{label.downcase}"
+    end
+
+    def hydrate_from_label(label)
+      Keyword.find(uri_from_label(label))
     end
 
   end

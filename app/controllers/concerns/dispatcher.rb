@@ -31,6 +31,25 @@ module Dispatcher
 
   end
 
+  def self.find_and_cast(resource_uri)
+    type_string = URI(resource_uri).path.to_s.match(/id\/.+\//)[0][3..-2] rescue nil
+
+    case type_string
+    when "domains"
+      Domain.find(resource_uri)
+    when "emails"
+      Emails.find(resource_uri)
+    when "email_accounts"
+      EmailAccount.find(resource_uri)
+    when "organisations"
+      Organisation.find(resource_uri)
+    when "people"
+      Person.find(resource_uri)
+    else # it is nil or malformed
+      raise Tripod::Errors::ResourceNotFound
+    end
+  end
+
   def self.wildcard_find(uri)
     resource = User.current_user.within {
       Tripod::SparqlClient::Query.select("

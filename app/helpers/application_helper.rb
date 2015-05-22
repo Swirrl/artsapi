@@ -4,6 +4,10 @@ module ApplicationHelper
     "| #{title}".html_safe if !title.nil?
   end
 
+  def inline_edit_link_for(uri)
+    "<a href='#' data-uri='#{uri}' class='edit-label'>[edit]</a>".html_safe
+  end
+
   def flash_style_for(key)
     case key.to_s
     when 'alert'

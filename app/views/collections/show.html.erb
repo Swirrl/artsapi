@@ -1,0 +1,6 @@
+<% provide :title, "Tagging #{@presenter.plural_type}" %>
+<% if @presenter.contains_type == :organisation %>
+  <%= render 'organisation_list' %>
+<% else %>
+  <%= render 'person_list' %>
+<% end %>

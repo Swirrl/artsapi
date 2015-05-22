@@ -18,7 +18,7 @@ module D3
     # an org with many members that have no connections might be added on the
     # first pass and their organisation will not be added later
     # naturally this is a massive code smell; we will have to refactor later.
-    MIN_CONNECTION_LENGTH = 2
+    MIN_CONNECTION_LENGTH = 1
     MIN_MEMBER_NUMBER = 3
 
     def initialize(org)
@@ -42,7 +42,7 @@ module D3
 
     def collect_all_organisations
       org_uri = self.organisation.uri
-      #add_to_hash(org_uri, type: :organisation, add_connections: false)
+      add_to_hash(org_uri, type: :organisation, add_connections: false)
 
       org = Organisation.find(org_uri)
       members = org.has_members
@@ -81,7 +81,7 @@ module D3
         members = organisation_object.members_with_more_than_x_connections(MIN_CONNECTION_LENGTH)
 
         if members.length > MIN_MEMBER_NUMBER
-          #add_to_hash(other_org_uri, type: :organisation)
+          add_to_hash(other_org_uri, type: :organisation)
           add_all_members(organisation_object, members)
         end
       end
@@ -94,7 +94,7 @@ module D3
         add_to_hash(member, type: :member)
 
         member_id = self.org_mapping[:members][member.to_s]
-        #add_link!(org_id, member_id, 1)
+        add_link!(org_id, member_id, 1)
       end
 
     end

@@ -2,15 +2,11 @@
 
 <div class='row no-margins'>
   <div class='col-md-8 col-md-offset-2'>
-    <h1>Upload Data to ArtsAPI</h1>
-    <p class='small'>
-      If you have already allowed access to your Dropbox account, you can simply specify a path to the file location within your Dropbox account.
-      <br>
-      If you have not yet connected your Dropbox account, you will need to authorize the connection. Click the link, then log in to Dropbox and click 'Allow'.
-    </p>
+    <h3>Upload Data to ArtsAPI</h3>
 
     <% if UploadClient.current_user_has_auth_code? %>
       <%= render 'file_location_form' %>
+      <%# render 'process_data_form' %>
     <% else %>
       <%= render 'authorization_form' %>
     <% end %>

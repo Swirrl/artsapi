@@ -99,7 +99,7 @@ describe "Viewing a resource" do
           visit '/id/people/jeff-widgetcorp-org'
         end
 
-        it { expect(page).to have_content("Viewing #{jeff.human_name}") }
+        it { expect(page).to have_content("#{jeff.human_name}") }
 
         it { expect(page).to have_content("Graph") }
         it { expect(page).to have_content("Distribution") }
@@ -119,7 +119,7 @@ describe "Viewing a resource" do
         end
 
         it "should use the label" do
-          expect(page).to have_content('Viewing widgetcorp.org')
+          expect(page).to have_content('widgetcorp.org')
         end
 
         it { expect(page).to have_content("Graph") }
@@ -140,7 +140,7 @@ describe "Viewing a resource" do
         end
 
         it "should still render the page" do
-          expect(page).to have_content('Viewing Resource')
+          expect(page).to have_content('Resource')
         end
       end
 

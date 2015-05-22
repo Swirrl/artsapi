@@ -25,8 +25,11 @@ class UploadClient
     contents, metadata = self.client.get_file_and_metadata(file_location_string)
 
     begin
+
       GrafterAPI.send_to_grafter!(contents, mine_keywords)
+
     rescue Exception => e
+
       if Rails.env.production?
         Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n#{e.backtrace.map { |line| line }}"
       else

@@ -16,8 +16,14 @@
     <% @presenter.weighted_connections.each do |connection| %>
       <tr>
         <td>
-          <a class='ajax-label' data-uri="<%= connection[0] %>" href="<%= URI(connection[0]).path %>">
-            <%= connection[0] %>
+          <span class='connection-inline-edit-container'>
+            <span class='ajax-label' data-uri="<%= connection[0] %>">
+              <%= connection[0] %>
+            </span> 
+            <%= inline_edit_link_for(connection[0]) %>
+          </span>
+          <a href="<%= URI(connection[0]).path %>">
+            [view]
           </a>
         </td>
         <td><%= connection[1] %></td>

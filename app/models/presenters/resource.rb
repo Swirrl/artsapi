@@ -19,17 +19,21 @@ module Presenters
       end
     end
 
+    def get_fields_hash
+      resource.fields
+    end
+
     def fields
       results = []
 
-      fields_hash = resource.fields
+      fields_hash = get_fields_hash
 
       fields_hash.each do |k,v|
         description = v.name.to_s.gsub(/-/,' ').titleize
         predicate = v.predicate.to_s
 
         if person? && v.name == :made
-            object = ["#{resource.number_of_sent_emails} Emails"]
+          object = ["#{resource.number_of_sent_emails} Emails"]
         else
           object = resource.send(v.name)
         end
@@ -40,7 +44,7 @@ module Presenters
           if !object.empty?
             object = object.map { |item|
 
-              if item.to_s.match(/http:\/\/artsapi.com\/id.+/) # it is a uri
+              if item.to_s.match(/http:\/\/data.artsapi.com\/id.+/) # it is a uri
                 Presenters::Resource.create_link_from_uri(item)
               else
                 item unless item.nil? || item.blank?

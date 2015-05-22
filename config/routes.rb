@@ -78,22 +78,36 @@ Rails.application.routes.draw do
 
   # label mini API --------------------------------
 
-  post '/label', to: 'labels#find'
+  post '/get_label', to: 'labels#find'
+  post '/edit_label', to: 'labels#edit'
 
   # connections mini API --------------------------
 
   get '/get_connections_for_chart', to: 'connections#distribution'
-  get '/get_connections_for_graph', to: 'connections#visualise'
+  get '/get_connections_for_graph', to: 'connections#visualise_person'
   get '/get_organisation_graph', to: 'connections#visualise_organisation'
   post '/get_connections', to: 'connections#find'
-  post '/generate_connections', to: 'connections#schedule'
+  post '/generate_connections', to: 'connections#generate'
 
   # uploads mini API ------------------------------
 
-  get '/upload', to: 'uploads#index', as: :uploads
+  get '/uploads', to: 'uploads#index', as: :uploads
   get '/authorize_dropbox', to: 'uploads#authorize', as: :authorize_dropbox
   get '/dropbox_callback', to: 'uploads#dropbox_callback', as: :dropbox_callback
   post '/create_client_and_fetch_file', to: 'uploads#create_client_and_fetch_file', as: :fetch_file
+  post '/process_data', to: 'uploads#process_data', as: :process_data
+
+  # bulk tagging ----------------------------------
+
+  get '/collection_tagging', to: 'collections#show', as: :collection_tagging
+
+  # organisations ---------------------------------
+
+  post '/organisations/update', to: 'organisations#update', as: :update_organisation
+
+  # people ----------------------------------------
+
+  post '/people/update', to: 'people#update', as: :update_person
 
   # static pages ----------------------------------
 
@@ -101,8 +115,10 @@ Rails.application.routes.draw do
   get '/contact' => 'static#contact', as: :contact
   get '/home' => 'static#home', as: :home
 
-  devise_scope :user do
-    root to: 'devise/sessions#new'
+  authenticated :user do
+    root to: 'static#home', as: :logged_in_root
   end
+
+  root to: 'devise/sessions#new'
 
 end

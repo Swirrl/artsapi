@@ -3,6 +3,7 @@ class Person < ResourceWithPresenter
 
   include Tripod::Resource
   include Connections
+  include PersonKeywordMethods
   include TripodOverrides
   extend Memoist
 
@@ -11,6 +12,7 @@ class Person < ResourceWithPresenter
 
   attr_accessor :all_connections, :correct_name
 
+  field :label, RDF::RDFS.label
   field :account, RDF::FOAF['account'], is_uri: true, multivalued: true
   field :name, RDF::FOAF['name'], multivalued: true
   field :given_name, RDF::FOAF['givenName']
@@ -25,9 +27,53 @@ class Person < ResourceWithPresenter
   field :department, RDF::ARTS['department']
   field :possible_department, RDF::ARTS['possibleDepartment']
 
+  # ----- These are the department/role heuristic measures -----
+  #       subject_area points to KeywordCategories
+  #       functional_area points to KeywordSubCategories
+  #       mentioned_keywords points to Keywords
+  field :subject_area, RDF::ARTS['subjectArea'], is_uri: true, multivalued: true
+  field :functional_area, RDF::ARTS['functionalArea'], is_uri: true, multivalued: true
+  field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
+
+  # these are essentially things to help performance
   field :sent_emails, RDF::ARTS['sentEmails']
   field :incoming_emails, RDF::ARTS['incomingEmails']
-  field :mentioned_keywords, RDF::ARTS['mentionedKeyword'], is_uri: true, multivalued: true
+  field :graph_visualisation, RDF::ARTS['visualisation']
+
+  def get_visualisation_graph
+    if !self.graph_visualisation.nil?
+      set_visualisation_graph_async
+      JSON.parse(sanitize_json(self.graph_visualisation))
+    else
+      graph_json = D3::ConnectionsGraph.new(self).formatted_hash
+      set_visualisation_graph(graph_json)
+      graph_json
+    end
+  end
+
+  def set_visualisation_graph(hash)
+    self.graph_visualisation = hash.to_json
+    self.save
+  end
+
+  def set_visualisation_graph_async
+    current_user_id = User.current_user.id.to_s
+    job_id = ::PeopleWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+
+    User.add_job_for_current_user(job_id)
+
+    job_id
+  end
+
+  def sanitize_json(string)
+    string.strip
+      .gsub(/\\r/, '')
+      .gsub(/\r/, '')
+      .gsub(/\n/, '')
+      .gsub(/\\n/, '')
+      .gsub(/\\/, '')
+      .gsub(/\\xC3\\xB5/, '')
+  end
 
   def memoized_connections
     self.connections
@@ -35,6 +81,9 @@ class Person < ResourceWithPresenter
   memoize :memoized_connections
 
   def human_name
+    # label can only be set via the UI so it should always take precedence
+    return self.label if !self.label.nil?
+
     name_array = self.name
     name_array.delete("")
 
@@ -53,7 +102,7 @@ class Person < ResourceWithPresenter
       end
 
       top_two = results.sort_by { |name, occurrences| occurrences }[-2..-1]
-      self.correct_name = sanitize_name("#{top_two.last[0]} #{top_two.first[0]}").titleize
+      self.correct_name = sanitize_string("#{top_two.last[0]} #{top_two.first[0]}").titleize
     else
       match = sanitized_default_name.match(/^[A-Z][a-z]+\b +\b[A-Z][a-z]+$/)
       self.correct_name = match[0] if !match.nil?
@@ -63,11 +112,11 @@ class Person < ResourceWithPresenter
   end
 
   def sanitized_default_name
-    (self.name.first.nil? || self.name.first.blank?) ? 'No Name Available' : sanitize_name(self.name.first).titleize
+    (self.name.first.nil? || self.name.first.blank?) ? 'No Name Available' : sanitize_string(self.name.first).titleize
   end
 
-  def sanitize_name(name)
-    name.strip
+  def sanitize_string(string)
+    string.strip
       .gsub(/'/, '')
       .gsub(/\'/, '')
       .gsub(/,/, '')
@@ -76,8 +125,10 @@ class Person < ResourceWithPresenter
       .gsub(/\"/, '')
       .gsub(/\(/, '')
       .gsub(/\)/, '')
+      .gsub(/(?:\\n)/, '')
       .gsub(/\n/, '')
       .gsub(/\\n/, '')
+      .gsub(/\\/, '')
   end
 
   def all_emails
@@ -139,55 +190,6 @@ class Person < ResourceWithPresenter
     else
       self.incoming_emails
     end
-  end
-
-  def all_keywords_from_emails
-    kw_hash = {}
-
-    self.mentioned_keywords.each do |keyword|
-      kw = keyword.to_s
-
-      query = Tripod::SparqlQuery.new("
-        #{Person.query_prefixes}
-        SELECT ?email
-        WHERE {
-          GRAPH <http://data.artsapi.com/graph/emails> {
-            ?email arts:emailSender <#{self.uri.to_s}> .
-            ?email arts:containsKeyword <#{kw}> .
-          }
-        }
-      ")
-
-      mentions = User.current_user.within {
-        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
-      }
-
-      label = Keyword.label_from_uri(kw)
-      kw_hash[kw] = [label, mentions]
-    end
-
-    kw_hash
-  end
-
-  def sorted_keywords
-    sorted = []
-    ak = all_keywords_from_emails
-    ak.sort { |a, b| ak[b[0]][1] <=> ak[a[0]][1] }.each { |h| sorted << [ak[h[0]][0], ak[h[0]][1]] }
-    sorted
-  end
-
-  def keywords_csv
-  end
-
-  # for use in rake tasks etc
-  # works out a possible department and writes a triple
-  def generate_and_write_possible_department
-  end
-
-  # for debug and partner feedback; not for production use!
-  def print_sorted_keywords
-    puts "#{self.name.titleize}: #{self.uri}\n\n"
-    sorted_keywords.each { |a| puts "'#{a[0]}' mentions: #{a[1]}"}
   end
 
   def get_colleagues

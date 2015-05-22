@@ -7,6 +7,9 @@
       <a href="#distribution" class='trigger-chart-load' aria-controls="distribution" role="tab" data-toggle="tab">Distribution</a>
     </li>
     <li role="presentation">
+      <a href="#analysis" class='trigger-chart-load' aria-controls="analysis" role="tab" data-toggle="tab">Analysis</a>
+    </li>
+    <li role="presentation">
       <a href="#connections" class='trigger-label-load' aria-controls="connections" role="tab" data-toggle="tab">Connections</a>
     </li>
     <li role="presentation">
@@ -24,6 +27,10 @@
 
       <div role="tabpanel" class="tab-pane" id="distribution">
         <%= render 'person/distribution' %>
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="analysis">
+        <%= render 'person/analysis' %>
       </div>
 
       <div role="tabpanel" class="tab-pane" id="connections">

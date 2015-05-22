@@ -1,3 +1,5 @@
+require 'sidekiq/api'
+
 class User
   include Mongoid::Document
   # Include default devise modules. Others available are:
@@ -23,24 +25,39 @@ class User
   field :current_sign_in_ip, type: String
   field :last_sign_in_ip,    type: String
 
-  ## Confirmable
-  # field :confirmation_token,   type: String
-  # field :confirmed_at,         type: Time
-  # field :confirmation_sent_at, type: Time
-  # field :unconfirmed_email,    type: String # Only if using reconfirmable
-
-  ## Lockable
-  # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
-  # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
-  # field :locked_at,       type: Time
-
-
   # ArtsAPI fields
   field :name, type: String
   field :ds_name_slug, type: String
   field :dropbox_auth_token, type: String, default: nil
   field :dropbox_auth_secret, type: String, default: nil
   #field :dropbox_session, type: String
+
+  # background jobs
+  field :job_ids, type: Array, default: []
+  field :uploads_in_progress, type: Integer, default: 0
+
+  def active_jobs
+    sidekiq_queue = Sidekiq::Queue.new
+
+    current_jobs = self.job_ids
+
+    active = current_jobs.map { |job| job if (Sidekiq::Status::queued?(job) || Sidekiq::Status::working?(job)) }.compact
+
+    self.job_ids = active
+    self.save
+
+    active
+  end
+
+  def increment_uploads_in_progress!
+    self.uploads_in_progress = self.uploads_in_progress + 1
+    self.save
+  end
+
+  def decrement_uploads_in_progress!
+    self.uploads_in_progress = self.uploads_in_progress - 1
+    self.save
+  end
 
   # We want to be able to do current_user.within {} to issue DB queries
   def within(&block)
@@ -62,6 +79,21 @@ class User
     end
   end
 
+  def organisation_from_email
+    organisation_prefix = "http://data.ArtsAPI.com/id/organisations/"
+    suffix = self.email.gsub(/^.+@/, '').gsub(/\./, '-')
+    "#{organisation_prefix}#{suffix}"
+  end
+
+  def find_self_in_data
+    email_uri = Person.get_uri_from_email(self.email)
+    Person.find(email_uri)
+  end
+
+  def find_org_from_self_in_data
+    Organisation.find(find_self_in_data.member_of)
+  end
+
   class << self
 
     # Make mongoid and mongo play nice
@@ -79,6 +111,12 @@ class User
 
     def current_user
       Thread.current[:current_user]
+    end
+
+    def add_job_for_current_user(job_id)
+      user = Thread.current[:current_user]
+      user.job_ids << job_id
+      user.save
     end
 
   end

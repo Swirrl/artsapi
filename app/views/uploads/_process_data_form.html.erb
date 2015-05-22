@@ -1,0 +1,6 @@
+<hr>
+<h4>Complete Upload and Process Data</h4>
+<p>
+  <em>Finished uploading <strong>all</strong> of your data? Then it's time to run the initial analysis. Please note, this will take some time, so you may want to leave it running over a lunch break or overnight.</em>
+</p>
+<%= button_to 'Process uploaded data', process_data_path, remote: true, data: { disable_with: "Processing...", confirm: "Are you sure all data imports have finished?" }, class: 'btn btn-lg btn-success' %>

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_filter :set_current_user
+  before_filter :set_current_user_and_check_jobs
 
   # Devise fallbacks
   def after_sign_in_path_for(resource)
@@ -16,6 +16,18 @@ class ApplicationController < ActionController::Base
 
   def set_current_user
     User.current_user = current_user
+  end
+
+  def check_active_jobs
+    job_count = current_user.active_jobs.count
+    upload_count = current_user.uploads_in_progress
+    total_count = job_count + upload_count
+    flash.now[:info] = "There are #{total_count} jobs in progress." if total_count > 0
+  end
+
+  def set_current_user_and_check_jobs
+    set_current_user
+    check_active_jobs if current_user
   end
 
 end

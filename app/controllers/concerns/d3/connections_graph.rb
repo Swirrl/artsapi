@@ -7,7 +7,7 @@ module D3
   # here be dragons!
   class ConnectionsGraph
     extend Memoist
-    attr_accessor :person_mapping, :conn_hash
+    attr_accessor :person_mapping, :formatted_hash
 
     def initialize(person)
       self.bootstrap_hash_and_mapping
@@ -18,7 +18,7 @@ module D3
 
       # bootstrap the self element
       person_member_of = person.member_of.to_s
-      self.conn_hash["nodes"] << {id: 0, name: person.human_name, uri: person_uri, group: person_member_of}
+      self.formatted_hash["nodes"] << {id: 0, name: person.human_name, uri: person_uri, group: person_member_of}
 
       # work out how deep the rabbit hole goes
       # 1 is a sensible setting if using naive binning, otherwise use a much higher number (e.g. 8)
@@ -35,11 +35,11 @@ module D3
     memoize :initialize
 
     def bootstrap_hash_and_mapping
-      self.conn_hash = {}
+      self.formatted_hash = {}
       self.person_mapping = {}
 
-      self.conn_hash["nodes"] = []
-      self.conn_hash["links"] = []
+      self.formatted_hash["nodes"] = []
+      self.formatted_hash["links"] = []
     end
 
     def filter_connections(conn_array, bin_cutoff, opts={})
@@ -71,7 +71,7 @@ module D3
         self.person_mapping[uri] = person_counter
         person_counter += 1
 
-        self.conn_hash["nodes"] << {
+        self.formatted_hash["nodes"] << {
           id: self.person_mapping[uri],
           name: name,
           uri: uri,
@@ -79,7 +79,7 @@ module D3
         }
       end
 
-      self.conn_hash["links"] << {
+      self.formatted_hash["links"] << {
         source: self.person_mapping[uri],
         target: self.person_mapping[target_uri],
         value: value

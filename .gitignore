@@ -26,3 +26,6 @@
 # Ignore dropbox development creds and grafter location
 /config/initializers/dropbox.rb
 /config/initializers/grafter_config.rb
+
+# Ignore unicorn dev config
+/config/unicorn_development.rb

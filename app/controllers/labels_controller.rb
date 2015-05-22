@@ -18,6 +18,24 @@ class LabelsController < ApplicationController
     
   end
 
+  def edit
+    resource_uri = params[:uri]
+    new_label = params[:label]
+
+    begin
+      resource = Dispatcher.find_and_cast(resource_uri)
+
+      resource.label = new_label
+      resource.save
+
+      render json: {text: new_label}, status: 200
+    rescue Exception => e
+      Rails.logger.debug "#{e}, #{e.message}, #{e.backtrace}"
+      render json: {text: 'New label saving failed'}, status: 500
+    end
+
+  end
+
   private
 
   # try and return label
