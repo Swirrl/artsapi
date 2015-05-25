@@ -52,6 +52,14 @@ class Organisation < ResourceWithPresenter
     job_id
   end
 
+  def sector_label
+    SICConcept.find_class_or_subclass(self.sector).label rescue nil
+  end
+
+  def location_string
+    "City: #{self.city || "Not known"}, Country: #{self.country || "Not known"}"
+  end
+
   def get_top_subject_areas
     members = self.has_members.map { |uri| Person.find(uri) }
 
@@ -214,6 +222,7 @@ class Organisation < ResourceWithPresenter
     # for when you absolutely, positively need to process every dataset in the room
     # bear in mind that async-ness might cause problems in the end anyway
     def bootstrap_all!
+      User.bootstrap_sic_for_current_user!
       organisations = Organisation.all.resources
 
       job_ids = []
@@ -231,6 +240,7 @@ class Organisation < ResourceWithPresenter
     # only their members will save a ton of processing
     def bootstrap_owner_or_largest_org!
       begin
+        User.bootstrap_sic_for_current_user!
 
         owner_org = User.current_user.find_org_from_self_in_data
         owner_org.generate_all_connections!

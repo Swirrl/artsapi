@@ -13,7 +13,7 @@ class OrganisationsController < ApplicationController
           org.label = params[:label] if !params[:label].blank? && !params[:label].nil?
           org.country = params[:country] if !params[:country].blank? && !params[:country].nil?
           org.city = params[:city].strip.downcase.titleize if !params[:city].blank? && !params[:city].nil?
-          org.sector = params[:sector].strip.downcase.titleize if !params[:sector].blank? && !params[:sector].nil?
+          org.sector = params[:sector] if !params[:sector].blank? && !params[:sector].nil?
 
           org.save
 

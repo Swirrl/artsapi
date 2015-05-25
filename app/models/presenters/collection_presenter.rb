@@ -37,16 +37,12 @@ module Presenters
       when :organisation
         self.collection.sort { |a, b| b.has_members.count <=> a.has_members.count }
       when :person
-        self.collection.sort { |a, b| b.sent_emails.count <=> a.sent_emails.count }
+        self.collection.sort { |a, b| b.number_of_sent_emails <=> a.number_of_sent_emails }
       end
     end
 
     def plural_type
       self.contains_type.to_s.pluralize.titleize
-    end
-
-    def all_sic_categories
-
     end
 
     def country_list

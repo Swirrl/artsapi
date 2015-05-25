@@ -23,14 +23,26 @@
 </div>
 
 <div class='row no-margins'>
+  <div class='col-md-8 col-md-offset-2 margin-top-50 margin-left-10'>
+    <%= paginate @paginated, theme: 'twitter-bootstrap-3' %>
+  </div>
+</div>
+
+<div class='row no-margins'>
   <div class='col-md-8 col-md-offset-2'>
-    <ul class="list-unstyled margin-top-50">
-      <% @presenter.sorted.each do |person| %>
+    <ul class="list-unstyled">
+      <% @paginated.each do |person| %>
         <li class='<%= cycle('mid-light', '') %> person-row'>
           <%= render 'person_form', person: person %>
         </li>
       <% end %>
     </ul>
+  </div>
+</div>
+
+<div class='row no-margins'>
+  <div class='col-md-8 col-md-offset-2 margin-left-10'>
+    <%= paginate @paginated, theme: 'twitter-bootstrap-3' %>
   </div>
 </div>
 

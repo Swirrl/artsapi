@@ -20,20 +20,28 @@
       </li>
       <li>
         <p>
-          <strong class='orange'>Sector:</strong> these are based on the SIC classifications for industrial activity. You can find an interactive list on the ONS website <%= link_to 'here', 'http://www.neighbourhood.statistics.gov.uk/HTMLDocs/SIC/ONS_SIC_hierarchy_view.html', target: :blank %>, and view the extensions created by the ArtsAPI team for this project <%= link_to 'here', 'https://github.com/Swirrl/artsapi-email-processing-tool#sic-extensions', target: :blank %>. Both are available to you in the dropdown.
+          <strong class='orange'>Sector:</strong> these are based on the SIC classifications for industrial activity. You can find an interactive list on the ONS website <%= link_to 'here', 'http://www.neighbourhood.statistics.gov.uk/HTMLDocs/SIC/ONS_SIC_hierarchy_view.html', target: :blank %>, and view the extensions created by the ArtsAPI team for this project <%= link_to 'here', 'https://github.com/Swirrl/artsapi-email-processing-tool#sic-extensions', target: :blank %>. Both are available to you in the dropdown, with the extensions appearing first.
         </p>
       </li>
     </ol>
   </div>
 </div>
 
-<ul class="list-unstyled margin-top-50">
-  <% @presenter.sorted.each do |organisation| %>
+<div class='margin-top-50 margin-left-10'>
+  <%= paginate @paginated, theme: 'twitter-bootstrap-3' %>
+</div>
+
+<ul class="list-unstyled">
+  <% @paginated.each do |organisation| %>
     <li class='<%= cycle('mid-light', '') %> organisation-row'>
       <%= render 'organisation_form', org: organisation %>
     </li>
   <% end %>
 </ul>
+
+<div class='margin-left-10'>
+  <%= paginate @paginated, theme: 'twitter-bootstrap-3' %>
+</div>
 
 <script type="text/javascript">
   $('.organisation-update-form').bind('ajax:success', function() {

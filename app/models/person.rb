@@ -196,6 +196,16 @@ class Person < ResourceWithPresenter
     Organisation.find(self.member_of).has_members
   end
 
+  def works_in_sector
+    parent_org = Organisation.find(self.member_of)
+    SICConcept.find_class_or_subclass(parent_org.sector)
+  end
+
+  def org_location_string
+    parent_org = Organisation.find(self.member_of)
+    parent_org.location_string
+  end
+
   class << self
 
     def get_uri_from_email(email_string)

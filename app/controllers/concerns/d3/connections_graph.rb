@@ -18,7 +18,14 @@ module D3
 
       # bootstrap the self element
       person_member_of = person.member_of.to_s
-      self.formatted_hash["nodes"] << {id: 0, name: person.human_name, uri: person_uri, group: person_member_of}
+      self.formatted_hash["nodes"] << {
+        id: 0,
+        name: person.human_name,
+        uri: person_uri,
+        group: person_member_of,
+        sector: (person.works_in_sector.label rescue "Unavailable"),
+        orgLocation: (person.org_location_string rescue "Location Unavailable")
+      }
 
       # work out how deep the rabbit hole goes
       # 1 is a sensible setting if using naive binning, otherwise use a much higher number (e.g. 8)
@@ -32,7 +39,7 @@ module D3
 
       end
     end
-    memoize :initialize
+    #memoize :initialize
 
     def bootstrap_hash_and_mapping
       self.formatted_hash = {}
@@ -64,6 +71,8 @@ module D3
       if !person_mapping.has_key?(uri)
         p = Person.find(uri)
         name = p.human_name
+        sector = p.works_in_sector.label rescue "Unavailable"
+        org_location = p.org_location_string rescue "Location Unavailable"
 
         org = p.member_of.to_s
         conn_array = p.sorted_email_density
@@ -75,7 +84,9 @@ module D3
           id: self.person_mapping[uri],
           name: name,
           uri: uri,
-          group: org
+          group: org,
+          sector: sector,
+          orgLocation: org_location
         }
       end
 

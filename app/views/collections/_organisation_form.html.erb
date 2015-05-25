@@ -23,7 +23,7 @@
 
     <div class="input-group">
       <div class="input-group-addon">Sector</div>
-      <%= select_tag :sector, options_for_select(@presenter.sector_list), class: 'form-control width-200-px', prompt: 'Please select a sector' %>
+      <%= select_tag :sector, options_for_select(@presenter.sector_list, [org.sector_label, org.sector.to_s]), class: 'form-control width-200-px', prompt: 'Please select a sector' %>
     </div>
 
     <div class="btn-group" role="group">

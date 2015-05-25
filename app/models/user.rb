@@ -80,7 +80,7 @@ class User
   end
 
   def organisation_from_email
-    organisation_prefix = "http://data.ArtsAPI.com/id/organisations/"
+    organisation_prefix = "http://data.artsapi.com/id/organisations/"
     suffix = self.email.gsub(/^.+@/, '').gsub(/\./, '-')
     "#{organisation_prefix}#{suffix}"
   end
@@ -117,6 +117,34 @@ class User
       user = Thread.current[:current_user]
       user.job_ids << job_id
       user.save
+    end
+
+    def bootstrap_sic_for_current_user!
+      user = Thread.current[:current_user]
+
+      path_to_sic = Rails.root.to_s + "/lib/sic2007.ttl"
+      sic_graph = 'http://data.artsapi.com/graph/sic'
+
+      Rails.logger.debug "> [SICBootstrap] File path: #{path_to_sic}"
+      Rails.logger.debug "> [SICBootstrap] Uploading..."
+
+      user.set_tripod_endpoints!
+
+      post_to_data_endpoint(sic_graph, path_to_sic)
+
+      Rails.logger.debug "> [SICBootstrap] Upload complete."
+    end
+
+    def post_to_data_endpoint(graph_uri, filename)
+      data_endpoint = Tripod.query_endpoint.gsub('sparql', 'data')
+      endpoint = "#{data_endpoint}?graph=#{graph_uri}"
+      RestClient::Request.execute(
+        :method => :post,
+        :url => endpoint,
+        :payload =>  File.read(filename),
+        :headers => { content_type: 'text/turtle' },
+        :timeout => 300
+      )
     end
 
   end
