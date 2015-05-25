@@ -57,7 +57,7 @@ class Organisation < ResourceWithPresenter
   end
 
   def location_string
-    "City: #{self.city}, Country: #{self.country}"
+    "City: #{self.city || "Not known"}, Country: #{self.country || "Not known"}"
   end
 
   def get_top_subject_areas

@@ -82,6 +82,11 @@ module D3
 
         if members.length > MIN_MEMBER_NUMBER
           add_to_hash(other_org_uri, type: :organisation)
+
+          org_id = self.org_mapping[:organisations][other_org_uri.to_s]
+          generating_org_id = self.org_mapping[:organisations][self.organisation.uri.to_s]
+
+          add_link!(org_id, generating_org_id, 10)
           add_all_members(organisation_object, members)
         end
       end
@@ -164,6 +169,23 @@ module D3
 
             end
           end
+        else
+          if add_connections
+            o = Organisation.find(uri)
+            linked_orgs = self.organisation.linked_to.map(&:to_s)
+            id = self.org_mapping[:organisations][uri]
+
+            o.linked_to.each do |org_uri|
+
+              if linked_orgs.include?(org_uri.to_s)
+                lookup_and_add_org_node(org_uri.to_s) if !self.org_mapping[:organisations].has_key?(org_uri.to_s)
+
+                link_id = self.org_mapping[:organisations][org_uri.to_s]
+                add_link!(id, link_id, 10)
+              end
+
+            end
+          end
         end
       end
     end
@@ -198,7 +220,7 @@ module D3
       sector = o.sector_label
       location_string = o.location_string
 
-      add_node!(id, uri, uri, uri, sector, location_string, is_org: true)
+      add_node!(id, o.label, uri, uri, sector, location_string, is_org: true)
       increment_counter!
       [o, id]
     end
