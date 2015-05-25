@@ -198,7 +198,12 @@ class Person < ResourceWithPresenter
 
   def works_in_sector
     parent_org = Organisation.find(self.member_of)
-    SICConcept.find_class_or_subclass(parent_org.sector) rescue nil
+    SICConcept.find_class_or_subclass(parent_org.sector)
+  end
+
+  def org_location_string
+    parent_org = Organisation.find(self.member_of)
+    parent_org.location_string
   end
 
   class << self

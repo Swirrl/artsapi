@@ -56,6 +56,10 @@ class Organisation < ResourceWithPresenter
     SICConcept.find_class_or_subclass(self.sector).label rescue nil
   end
 
+  def location_string
+    "City: #{self.city}, Country: #{self.country}"
+  end
+
   def get_top_subject_areas
     members = self.has_members.map { |uri| Person.find(uri) }
 

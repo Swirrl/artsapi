@@ -121,7 +121,7 @@
             .on('dblclick', connectedNodes);
 
         node.append("title")
-            .text(function(d) { return d.name + "\n" + d.uri + "\n" + "Weight: " + d.weight + ((d.connections === undefined) ? '' : "\n" + "Connections: " + d.connections); });
+            .text(function(d) { return d.name + "\n" + d.uri + "\n" + "Weight: " + d.weight + ((d.connections === undefined) ? '' : "\n" + "Connections: " + d.connections) + "\n" + "SIC Sector: " + (d.sector === undefined ? 'Unavailable' : d.sector) + "\n" + (d.orgLocation === undefined ? 'Location Unavailable' : d.orgLocation); });
 
         force.on("tick", function() {
           link.attr("x1", function(d) { return d.source.x; })
