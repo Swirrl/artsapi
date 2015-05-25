@@ -111,10 +111,5 @@ module Presenters
       common_keywords_labels.to_sentence rescue "Unavailable"
     end
 
-    def works_in_sector
-      parent_org = Organisation.find(resource.member_of)
-      SICConcept.find_class_or_subclass(parent_org.sector) rescue nil
-    end
-
   end
 end
