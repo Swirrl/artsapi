@@ -107,10 +107,10 @@
       calculateConnectionsByAjax(uri).then(alertSuccess, logError);
     });
 
-    $('a.trigger-chart-load').on('click.chartLoad', function(e){
+    $('a.trigger-chart-load').one('click.chartLoad', function(e){
       // default etc should already be caught by table tabs js
-      $(this).removeClass('trigger-chart-load');
-      $(this).off('click.chartLoad');
+      $('a.trigger-chart-load').off('click.chartLoad');
+      $('a.trigger-chart-load').removeClass('trigger-chart-load');
       loadConnectionsChart();
     });
 
