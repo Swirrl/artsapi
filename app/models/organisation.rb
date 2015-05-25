@@ -223,6 +223,8 @@ class Organisation < ResourceWithPresenter
     # bear in mind that async-ness might cause problems in the end anyway
     def bootstrap_all!
       User.bootstrap_sic_for_current_user!
+      User.bootstrap_keywords_for_current_user!
+
       organisations = Organisation.all.resources
 
       job_ids = []
@@ -241,6 +243,7 @@ class Organisation < ResourceWithPresenter
     def bootstrap_owner_or_largest_org!
       begin
         User.bootstrap_sic_for_current_user!
+        User.bootstrap_keywords_for_current_user!
 
         owner_org = User.current_user.find_org_from_self_in_data
         owner_org.generate_all_connections!

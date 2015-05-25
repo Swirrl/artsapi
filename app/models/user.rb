@@ -135,6 +135,24 @@ class User
       Rails.logger.debug "> [SICBootstrap] Upload complete."
     end
 
+    def bootstrap_keywords_for_current_user!
+      user = Thread.current[:current_user]
+
+      path_to_concept_scheme = Rails.root.to_s + "/lib/keywords_concept_scheme.ttl"
+      path_to_keywords = Rails.root.to_s + "/lib/keywords_resources.ttl"
+      keywords_graph = 'http://data.artsapi.com/graph/keywords'
+
+      Rails.logger.debug "> [KeywordsBootstrap] File path: #{path_to_keywords}"
+      Rails.logger.debug "> [KeywordsBootstrap] Uploading..."
+
+      user.set_tripod_endpoints!
+
+      post_to_data_endpoint(keywords_graph, path_to_concept_scheme)
+      post_to_data_endpoint(keywords_graph, path_to_keywords)
+
+      Rails.logger.debug "> [KeywordsBootstrap] Upload complete."
+    end
+
     def post_to_data_endpoint(graph_uri, filename)
       data_endpoint = Tripod.query_endpoint.gsub('sparql', 'data')
       endpoint = "#{data_endpoint}?graph=#{graph_uri}"
