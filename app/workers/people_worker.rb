@@ -3,7 +3,7 @@ class PeopleWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
-  sidekiq_options :retry => 3
+  sidekiq_options :retry => 1
 
   def perform(uri, current_user_id)
 

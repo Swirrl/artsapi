@@ -79,7 +79,7 @@ class Organisation < ResourceWithPresenter
   end
 
   def get_common_subject_areas!
-    common_subjects = get_top_subject_areas.map { |subj| subj[0] }
+    common_subjects = get_top_subject_areas.map { |subj| subj[0] }.compact
 
     self.common_subject_areas = common_subjects
     self.save
@@ -246,20 +246,24 @@ class Organisation < ResourceWithPresenter
         User.bootstrap_keywords_for_current_user!
 
         owner_org = User.current_user.find_org_from_self_in_data
-        owner_org.generate_all_connections!
+
+        owner_org.generate_connections_async!
         owner_org.generate_visualisations_async!
 
       rescue # couldn't find either person or org
 
-        organisations = Organisation.all.resources
+        bootstrap_all!
 
-        # generate connections
-        organisations.each { |org| org.generate_all_connections! }
+        # this would be nice, but it times out
+        # organisations = Organisation.all.resources
 
-        # need to reload orgs
-        most_linked_org = Organisation.all.resources.sort { |a,b| b.linked_to.count <=> a.linked_to.count }.first
+        # # generate connections
+        # organisations.each { |org| org.generate_all_connections! }
 
-        most_linked_org.generate_visualisations_async!
+        # # need to reload orgs
+        # most_linked_org = Organisation.all.resources.sort { |a,b| b.linked_to.count <=> a.linked_to.count }.first
+
+        # most_linked_org.generate_visualisations_async!
 
       end
     end

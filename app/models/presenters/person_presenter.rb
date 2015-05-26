@@ -42,6 +42,10 @@ module Presenters
       resource.sorted_email_density
     end
 
+    def resource_position
+      resource.position || "Unavailable"
+    end
+
     def functional_areas
       resource.functional_area.map { |fa| KeywordSubCategory.find(fa) } || "Not known"
     end

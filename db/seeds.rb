@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 test_user = User.create(
-  email: 'jeff@example.com',
+  email: '',
   password: 'password',
   name: 'Jeff Vader',
   ds_name_slug: 'artsapi-dev'

@@ -115,10 +115,10 @@ Rails.application.routes.draw do
   get '/contact' => 'static#contact', as: :contact
   get '/home' => 'static#home', as: :home
 
+  root to: 'devise/sessions#new'
+
   authenticated :user do
     root to: 'static#home', as: :logged_in_root
   end
-
-  root to: 'devise/sessions#new'
 
 end
