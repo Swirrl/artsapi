@@ -12,4 +12,11 @@ module TripodOverrides
   end
   memoize :find
 
+  # override to use correct db
+  def all(opts={})
+    User.current_user.within do
+      super(opts)
+    end
+  end
+
 end

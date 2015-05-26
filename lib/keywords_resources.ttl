@@ -1,9 +1,76 @@
 @prefix rdf:                    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:                   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:                    <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:                    <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:                   <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf:                   <http://xmlns.com/foaf/0.1/> .
+@prefix dct:                    <http://purl.org/dc/terms/> .
 @prefix keywords:               <http://data.artsapi.com/def/arts/keywords/> .
 @prefix keywordcategory:        <http://data.artsapi.com/id/keywords/category/> .
 @prefix keywordsubcategory:     <http://data.artsapi.com/id/keywords/subcategory/> .
 @prefix keywordresource:        <http://data.artsapi.com/id/keywords/keyword/> .
+@prefix arts:       <http://data.artsapi.com/def/arts/> .
+
+# Keywords Concept Scheme
+#---------------------------------------------------------
+
+keywords:keywords a skos:ConceptScheme;
+    rdfs:label "ArtsAPI Keyword Hierarchy";
+    dct:title "ArtsAPI Keyword Hierarchy";
+    rdfs:comment "A concept scheme for keywords with nesting to represent thematic hierarchies";
+    skos:hasTopConcept keywords:KeywordCategory;
+    .
+
+keywords:KeywordCategory a skos:Concept;
+    rdfs:label "A category"@en;
+    rdfs:comment "A category contains SubCategor(ies), which in turn contain Keywords."@en;
+    skos:definition "A category contains SubCategor(ies), which in turn contain Keywords."@en;
+    skos:inScheme keywords:keywords;
+    .
+
+keywords:KeywordSubCategory a skos:Concept;
+    rdfs:label "A sub category"@en;
+    rdfs:comment "A sub category contains Keywords."@en;
+    skos:definition "A sub category contains Keywords."@en;
+    skos:inScheme keywords:keywords;
+    skos:broader keywords:KeywordCategory;
+    .
+
+keywords:Keyword a skos:Concept;
+    rdfs:label "A Keyword"@en;
+    rdfs:comment "A Keyword identified as having specific relevance to a person's role within an organisation."@en;
+    skos:definition "A Keyword identified as having specific relevance to a person's role within an organisation."@en;
+    skos:inScheme keywords:keywords;
+    skos:broader keywords:KeywordSubCategory;
+    .
+
+# Keywords Properties
+#---------------------------------------------------------
+
+keywords:inCategory a owl:ObjectProperty, rdf:Property;
+    rdfs:label "In Category"@en;
+    rdfs:comment ""@en;
+    rdfs:isDefinedBy arts:ontology;
+    rdfs:subPropertyOf skos:broader;
+    rdfs:domain keywords:KeywordSubCategory;
+    rdfs:range keywords:KeywordCategory;
+    .
+
+keywords:inSubCategory a owl:ObjectProperty, rdf:Property;
+    rdfs:label "In Sub-Category"@en;
+    rdfs:comment ""@en;
+    rdfs:isDefinedBy arts:ontology;
+    rdfs:subPropertyOf skos:broader;
+    rdfs:domain keywords:Keyword;
+    rdfs:range keywords:KeywordSubCategory;
+    .
+
+keywords:hasInflection a owl:ObjectProperty, rdf:Property;
+    rdfs:label "Has inflection"@en;
+    rdfs:comment "Has an inflection of the base Keyword that can be considered equivalent for the purposes of Keyword Analysis."@en;
+    rdfs:isDefinedBy arts:ontology;
+    rdfs:domain keywords:Keyword;
+    .
 
 #---------------------------------------------------------
 # Concept Scheme Resources 

@@ -3,6 +3,10 @@
 
     <%= hidden_field_tag :uri, org.uri %>
 
+    <p class='padding-left-5 mid-grey'>
+      <strong>Organisation: <%= org.label %>, Members: <%= org.has_members.count %></strong>
+    </p>
+
     <div class="input-group">
       <div class="input-group-addon">Label</div>
       <%= text_field_tag :label, org.label, class: 'form-control' %>

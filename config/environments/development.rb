@@ -50,4 +50,6 @@ Tripod.configure do |config|
   config.query_endpoint = 'http://127.0.0.1:3030/artsapi-dev/sparql'
   config.timeout_seconds = 240
 
+  config.response_limit_bytes = 40.megabytes
+
 end

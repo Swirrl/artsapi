@@ -1,6 +1,6 @@
 rails_env = ENV['RAILS_ENV'] || 'production' 
 worker_processes (rails_env == 'production' ? 10 : 4)
-timeout 600
+timeout 900
 preload_app true
 
 RAILS_ROOT = "/artsapi"

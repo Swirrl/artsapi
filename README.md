@@ -96,9 +96,17 @@ NB: Remember, to inspect running containers, you can use `sudo docker exec -i -t
 - Fuseki
 - MongoDB
 
+### Seeding Users
+
+In development, `rake db:seed` will create an example user; however, the data bootstrap task will try to infer the logged-in user's organisation in the data using the registered email, so if the organisation whose data is in the system is called WidgetCorp, with a URL of `http://www.widgetcorp.org` and a mailserver at the same host, you will want to create a user on the command line (using an email `@widgetcorp.org`) rather than using the rake task, as this will allow you to use the data bootstrapping/background processing class methods on Organisation.
+
+In production, you will need to make sure you have correctly set up your Fuseki config and then ensure that the user's email matches the host that their data will use in the system. See the development instructions above for more details on that.
+
 ### Seed data
 
-You will need to upload the concept scheme for keywords; this is in the [ArtsAPI Grafter Project](https://github.com/Swirrl/artsapi-email-processing-tool), in the `doc` folder. Upload these to the named graph of the concept scheme using Fuseki's `s-put` tool. 
+In production, so long as you have seeded your User correctly for each tenant on the system, the bootstrap data tasks will seed the database with the concept schemes and resources you require.
+
+In development, you will need to upload the concept scheme for keywords; this is in the [ArtsAPI Grafter Project](https://github.com/Swirrl/artsapi-email-processing-tool), in the `doc` folder. Upload these to the named graph of the concept scheme using Fuseki's `s-put` tool. 
 
 1. `cd` into your Fuseki installation directory
 2. Load the concept scheme resources `./s-put http://localhost:3030/artsapi-dev/data 'http://data.artsapi.com/graph/keywords' '/path/to/artsapi-graft/doc/keywords_concept_scheme.ttl'`

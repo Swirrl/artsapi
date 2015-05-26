@@ -16,25 +16,24 @@
     </div>
     <hr>
 
-    <h4>Data processing</h4>
+    <h4>Data tagging</h4>
     <div class= 'row no-margins'>
       <div class='imagination-font orange-yellow font-3em col-md-1'>2.</div>
-      <div class='col-md-11'>
-        <p>If all the data from your organisation has already been uploaded into the system, then you can click the button below to run the initial analysis required to view your data in the ArtsAPI tool. Please note, this will take some time, so you may want to leave it running over a lunch break or overnight.</p>
-        <%= button_to 'Process uploaded data', process_data_path, remote: true, data: { disable_with: "Processing...", confirm: "Are you sure all data imports have finished?" }, class: 'btn btn-success' %>
-      </div>
-    </div>
-    <hr>
-
-    <h4>Post-processing</h4>
-    <div class= 'row no-margins'>
-      <div class='imagination-font orange-yellow font-3em col-md-1'>3.</div>
       <div class='col-md-11'>
         <p>To use all the functionality for locations and industry sector, you will need to tag organisations in the system with that data. <%= link_to 'Click here to get started', collection_tagging_path(type: "organisation") %>.</p>
         <p>You can also bulk-edit people to add human readable names or correct mistakes. To do that, <%= link_to 'click here', collection_tagging_path(type: "person") %>.</p>
       </div>
     </div>
+    <hr>
 
+    <h4>Data processing</h4>
+    <div class= 'row no-margins'>
+      <div class='imagination-font orange-yellow font-3em col-md-1'>3.</div>
+      <div class='col-md-11'>
+        <p>If all the data from your organisation has already been uploaded into the system, then you can click the button below to run the initial analysis required to view your data in the ArtsAPI tool. Please note, this will take some time, so you may want to leave it running over a lunch break or overnight.</p>
+        <%= button_to 'Process uploaded data', process_data_path, remote: true, data: { disable_with: "Processing...", confirm: "Are you sure all data imports have finished?" }, class: 'btn btn-success' %>
+      </div>
+    </div>
     <hr>
 
     <p>If you have any further questions, please consult the user guides.</p>

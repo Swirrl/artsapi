@@ -4,7 +4,7 @@
     <%= hidden_field_tag :uri, person.uri %>
 
     <p class='padding-left-5 mid-grey'>
-      <strong>Email: <%= person.mbox.downcase %></strong>
+      <strong>Email: <%= person.mbox.downcase %>, Sent emails: <%= person.number_of_sent_emails %></strong>
     </p>
 
     <div class="input-group">

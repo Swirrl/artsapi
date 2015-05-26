@@ -10,7 +10,7 @@
 
 <hr>
 
-<%= form_tag('/create_client_and_fetch_file', method: :post, class: 'width-50', remote: true) do %>
+<%= form_tag('/create_client_and_fetch_file', method: :post, class: 'width-50 file-location-form', remote: true) do %>
 
   <div class="form-group">
     <%= label_tag :location, 'File location:' %>
@@ -29,3 +29,9 @@
 <p class='margin-top-10'>
   <%= link_to "&larr; Return home while upload completes".html_safe, root_path %>
 </p>
+
+<script type="text/javascript">
+  $('.file-location-form').bind('ajax:success', function() {
+    alert('Upload successfully queued.');
+  });
+</script>

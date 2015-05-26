@@ -52,6 +52,14 @@ module Presenters
 
     def sector_list
       resources = SICConcept.all_classes_and_subclasses
+
+      # this may be the first time they have logged in
+      # in which case SIC will not be loaded yet
+      if resources.empty?
+        User.bootstrap_sic_for_current_user! 
+        resources = SICConcept.all_classes_and_subclasses
+      end
+
       results = []
       to_prepend = []
 
