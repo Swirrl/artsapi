@@ -29,7 +29,8 @@ class Organisation < ResourceWithPresenter
 
   def get_visualisation_graph
     if !self.graph_visualisation.nil?
-      # set_visualisation_graph_async expensive, we don't want to do this
+      # expensive, not sure we want to do this
+      set_visualisation_graph_async 
       JSON.parse(sanitize_json(self.graph_visualisation))
     else
       graph_json = D3::OrganisationsGraph.new(self).formatted_hash
