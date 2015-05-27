@@ -1,30 +1,36 @@
 <div class='row no-margins'>
-  <div class='col-md-6 col-md-offset-3'>
-    <p class='lead text-center margin-top-50'>This panel shows information gleaned from the data using keyword analysis. SNA analysis can be found on Organisation resource pages. More detailed information is below.</p>
-
+  <div class='col-md-8 col-md-offset-2'>
     <h3>Keyword Analysis</h3>
 
-    <p>Please note that a more detailed examination of the keywords themselves is to be found on the keywords tab above.</p>
+    <p>Please note that a more detailed examination of the keywords themselves is to be found on the keywords tab above. SNA analysis is on Organisation pages.</p>
     <hr>
 
-    <h4>Subject Area</h4>
-    <p>
-      The most relevant subject area the system has calculated for this Person is <strong><%= @presenter.subject_area_label %></strong>.
-    </p>
-    <p>This person's job role has been manually input as <strong><%= @presenter.resource_position %></strong>.</p>
-    <p>
-      However, in certain cases (for example an ontology keyword like 'Club' being in all email signatures), this might not be representative; the following is an expanded list of one or more identified subject areas, ranked by likelihood of relevance.
-    </p>
-    <p>
-      <strong><%= @presenter.subject_areas_sentence %></strong>
-    </p>
-    <hr>
+    <div class='row no-margins'>
+      <div class='col-md-8 background-orange height-220-px'>
+        <h4>Subject Area</h4>
+        <p>
+          The most relevant subject area the system has calculated for this Person is <strong><%= @presenter.subject_area_label %></strong>.
+        </p>
+        <p>This person's job role has been manually input as <strong><%= @presenter.resource_position %></strong>.</p>
+        <p>
+          However, in certain cases (for example an ontology keyword like 'Club' being in all email signatures), this might not be representative; the following is an expanded list of one or more identified subject areas, ranked by likelihood of relevance: <strong><%= @presenter.subject_areas_sentence %></strong>.
+        </p>
+      </div>
 
-    <p>The most common subject areas for members of this organisation are <strong><%= @presenter.common_subject_areas_sentence %></strong>.</p>
-    <hr>
+      <div class='col-md-4 padding-top-38 background-blue height-220-px'>
+        <p>The most common subject areas for members of this organisation are <strong><%= @presenter.common_subject_areas_sentence %></strong>.</p>
+      </div>
+    </div>
 
-    <h4>Functional Areas</h4>
-    <p>The functional areas for this Person are: <%= @presenter.functional_areas_sentence %></p>
+    <div class='row no-margins'>
+      <div class='col-md-4 background-green height-220-px padding-top-20'>
+        <h4>Functional Areas</h4>
+        <p>The functional areas for this Person are: <strong><%= @presenter.functional_areas_sentence %></strong>.</p>
+      </div>
+      <div class='col-md-8 padding-top-58 background-orange-yellow height-220-px'>
+        <p>Functional areas are Keyword Sub Categories from the Keyword Concept scheme. These are added to a user when a Keyword within them is used enough times by a Person in email correspondence.</p>
+      </div>
+    </div>
     <hr>
 
     <h3>Generate Report</h3>

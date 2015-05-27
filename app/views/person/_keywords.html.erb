@@ -1,35 +1,44 @@
 <div class='row no-margins'>
-  <div class='col-md-6 col-md-offset-3'>
-    <p class='lead text-center margin-top-50'>Showing keyword usage for this Person</p>
-    <p class='margin-top-50'>
-      This is a list of sorted keywords for this person, sorted by number of uses. The ten most common keywords for this person's organisation are:
-    </p>
+  <div class='col-md-8 col-md-offset-2 margin-top-50'>
+    <div class='row no-margins'>
+      <div class='col-md-8 padding-top-20 background-orange height-220-px'>
+        <h4>Keyword Usage</h4>
+        <p>
+          This is a list of sorted keywords for this person, sorted by number of uses in the user's email corpus. 
+        </p>
+        <p>
+          For reference, the ten most common keywords for members of this person's organisation are listed to the right.
+        </p>
+      </div>
+
+      <div class='col-md-4 padding-top-58 background-blue height-220-px'>
+        <% if !@presenter.common_keywords_labels.blank? %>
+          <ol class='columns-2'>
+          <% @presenter.common_keywords_labels.each do |kw| %>
+            <li><%= kw %></li>
+          <% end %>
+          </ol>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class='row no-margins'>
-  <div class='col-md-6 col-md-offset-3'>
-    <% if !@presenter.common_keywords_labels.blank? %>
-      <ol>
-      <% @presenter.common_keywords_labels.each do |kw| %>
-        <li><%= kw %></li>
-      <% end %>
-      </ol>
-    <% end %>
+  <div class='col-md-8 col-md-offset-2'>
+    <table class='table table-striped margin-top-50'>
+      <thead>
+        <th>Keyword</th>
+        <th>Mentions</th>
+      </thead>
+      <tbody>
+        <% @presenter.keywords.each do |kw| %>
+          <tr>
+            <td><a href="/id/keywords/keyword/<%= kw[0].downcase %>"><%= kw[0] %></a></td>
+            <td><%= kw[1] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
-
-<table class='table table-striped margin-top-50'>
-  <thead>
-    <th>Keyword</th>
-    <th>Mentions</th>
-  </thead>
-  <tbody>
-    <% @presenter.keywords.each do |kw| %>
-      <tr>
-        <td><a href="/id/keywords/keyword/<%= kw[0].downcase %>"><%= kw[0] %></a></td>
-        <td><%= kw[1] %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>

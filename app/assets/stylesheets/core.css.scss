@@ -84,6 +84,26 @@ body {
   margin-bottom:5px;
 }
 
+.padding-top-58 {
+  padding-top:58px;
+}
+
+.padding-top-38 {
+  padding-top:38px;
+}
+
+.padding-top-35 {
+  padding-top:35px;
+}
+
+.padding-top-30 {
+  padding-top:30px;
+}
+
+.padding-top-20 {
+  padding-top:20px;
+}
+
 .padding-left-10 {
   padding-left:10px;
 }
@@ -157,6 +177,39 @@ body {
 
     &.background-dark {
       background:#3B3B3B;
+    }
+
+    &.background-orange {
+      background:$orange;
+      color:#FAFAFA !important;
+    }
+
+    &.background-blue {
+      background:$blue-green;
+      color:#FAFAFA !important;
+    }
+
+    &.background-green {
+      background:$green;
+      color:#FAFAFA !important;
+    }
+
+    &.background-light-red {
+      background:$light-red;
+      color:#FAFAFA !important;
+    }
+
+    &.background-orange-yellow {
+      background:$orange-yellow;
+      color:#FAFAFA !important;
+    }
+
+    &.height-220-px {
+      height:220px;
+    }
+
+    &.height-300-px {
+      height:300px;
     }
   }
 
@@ -294,6 +347,14 @@ ul {
     &.li-light {
       background-color:#FAFAFA;
     }
+  }
+}
+
+ol {
+  &.columns-2 {
+    columns:2;
+    -webkit-columns:2;
+    -moz-columns:2;
   }
 }
 

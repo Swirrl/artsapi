@@ -30,7 +30,7 @@ class Organisation < ResourceWithPresenter
   def get_visualisation_graph
     if !self.graph_visualisation.nil?
       # expensive, not sure we want to do this
-      set_visualisation_graph_async 
+      set_visualisation_graph_async if Rails.env.production?
       JSON.parse(sanitize_json(self.graph_visualisation))
     else
       graph_json = D3::OrganisationsGraph.new(self).formatted_hash
