@@ -46,6 +46,14 @@ module Presenters
       resource.position || "Unavailable"
     end
 
+    def parent_organisation_label
+      resource.parent_organisation.label
+    end
+
+    def parent_organisation_path
+      Presenters::Resource.create_path_from_uri(resource.member_of)
+    end
+
     def functional_areas
       resource.functional_area.map { |fa| KeywordSubCategory.find(fa) } || "Not known"
     end

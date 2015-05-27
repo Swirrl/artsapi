@@ -4,6 +4,7 @@
       <li><p><%= add_connection_advice? @presenter.connections, @presenter.resource.uri %></p></li>
       <li><p><%= @presenter.resource.number_of_sent_emails %> Emails sent</p></li>
       <li><p><%= @presenter.resource.number_of_incoming_emails %> Emails received</p></li>
+      <li><p>Member of: <a href='<%= @presenter.parent_organisation_path %>' target='_blank'><%= @presenter.parent_organisation_label %></p></a></li>
       <!--
       <li><p><%# @presenter.resource.get_recipients_of_emails.count %> Email recipients</p></li>
       <li><p><%# @presenter.resource.get_incoming_mail_senders.count %> Incoming Email senders</p></li>

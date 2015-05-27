@@ -193,7 +193,11 @@ class Person < ResourceWithPresenter
   end
 
   def get_colleagues
-    Organisation.find(self.member_of).has_members
+    parent_organisation.has_members
+  end
+
+  def parent_organisation
+    Organisation.find(self.member_of)
   end
 
   def works_in_sector
