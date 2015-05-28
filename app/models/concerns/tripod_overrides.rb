@@ -10,12 +10,12 @@ module TripodOverrides
       super(uri, opts)
     end
   end
-  memoize :find
+  # memoize :find
 
   # override to use correct db
-  def all(opts={})
+  def all
     User.current_user.within do
-      super(opts)
+      super
     end
   end
 

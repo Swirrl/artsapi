@@ -99,7 +99,7 @@ describe "Viewing a resource" do
           visit '/id/people/jeff-widgetcorp-org'
         end
 
-        it { expect(page).to have_content("#{jeff.human_name}") }
+        it { expect(page).to have_content("Jeff Lebowsk") }
 
         it { expect(page).to have_content("Graph") }
         it { expect(page).to have_content("Distribution") }

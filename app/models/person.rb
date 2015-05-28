@@ -2,9 +2,9 @@ require 'memoist'
 class Person < ResourceWithPresenter
 
   include Tripod::Resource
+  extend TripodOverrides
   include Connections
   include PersonKeywordMethods
-  include TripodOverrides
   extend Memoist
 
   rdf_type 'http://xmlns.com/foaf/0.1/Person'

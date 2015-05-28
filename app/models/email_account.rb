@@ -1,7 +1,7 @@
 class EmailAccount < ResourceWithPresenter
 
   include Tripod::Resource
-  include TripodOverrides
+  extend TripodOverrides
 
   rdf_type 'http://data.artsapi.com/def/arts/EmailAccount'
   graph_uri 'http://data.artsapi.com/graph/email-accounts'

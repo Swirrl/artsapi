@@ -1,7 +1,7 @@
 class Domain < ResourceWithPresenter
 
   include Tripod::Resource
-  include TripodOverrides
+  extend TripodOverrides
 
   rdf_type 'http://data.artsapi.com/def/arts/Domain'
   graph_uri 'http://data.artsapi.com/graph/domains'

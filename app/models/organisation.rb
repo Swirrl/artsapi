@@ -2,7 +2,7 @@ require 'memoist'
 class Organisation < ResourceWithPresenter
 
   include Tripod::Resource
-  include TripodOverrides
+  extend TripodOverrides
   extend Memoist
 
   rdf_type 'http://www.w3.org/ns/org#Organization'
@@ -136,7 +136,7 @@ class Organisation < ResourceWithPresenter
       organisation_level_connections << member.get_connections!
     end
 
-    organisation_level_connections.flatten.uniq
+    organisation_level_connections.flatten
   end
 
   def generate_connections_async!

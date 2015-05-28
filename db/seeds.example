@@ -1,0 +1,6 @@
+test_user = User.create(
+  email: '',
+  password: 'password',
+  name: 'Jeff Vader',
+  ds_name_slug: 'artsapi-dev'
+)

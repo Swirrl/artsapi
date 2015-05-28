@@ -80,6 +80,10 @@ describe 'Person' do
         it { expect(Person.get_rdf_uri_from_email("kaneda@capsules.jp")).to eq RDF::URI("http://data.artsapi.com/id/people/kaneda-capsules-jp") }
       end
 
+    end
+
+    context "mixed in methods" do
+
       # this actually uses methods in the Connections concern
       # as well as a class method on Person to write connections
       describe "#get_connections!" do

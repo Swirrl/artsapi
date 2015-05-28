@@ -14,7 +14,7 @@ NB: Every time `$` is seen in a code snippet, you should type this into a termin
 4. Add `alias fuseki_artsapi="cd $HOME/jena-fuseki-1.0.1 ; ./fuseki-server --config=fuseki_config.ttl"` to your shell to start Fuseki using `$ fuseki-artsapi`. Change `jena-fuseki-1.0.1` in the previous command to the version and folder of your installed version of Fuseki.
 5. Install redis and run it.
 6. Use `bundle exec sidekiq` to bring up sidekiq for background processing.
-7. Use `rake db:seed` to generate a user.
+7. Fill in the correct details in `/db/seeds.example`, rename the file to `seeds.rb` and use `rake db:seed` to generate a user.
 
 NB: You *must* be running Fuseki on port 3030 if you do not want to modify the multiple tenancy code. If you want to use the Dropbox upload features, you will also need a copy of the [ArtsAPI Grafter project](https://github.com/Swirrl/artsapi-email-processing-tool) on your hard drive so that the Rails app can call leiningen to run pipelines. Put the absolute path to this directory (e.g. `/Users/jeff/artsapi-email-processing-tool`) in the `grafter_config.example` file and then rename it `grafter_config.rb`.
 

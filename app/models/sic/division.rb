@@ -3,6 +3,7 @@ module SIC
   class Division
 
     include Tripod::Resource
+    extend TripodOverrides
     include SICConcept
 
     rdf_type 'http://swirrl.com/def/sic/Division'

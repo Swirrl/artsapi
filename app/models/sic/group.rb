@@ -3,6 +3,7 @@ module SIC
   class Group
 
     include Tripod::Resource
+    extend TripodOverrides
     include SICConcept
 
     rdf_type 'http://swirrl.com/def/sic/Group'

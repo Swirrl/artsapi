@@ -29,3 +29,6 @@
 
 # Ignore unicorn dev config
 /config/unicorn_development.rb
+
+# Ignore db seeds
+/db/seeds.rb

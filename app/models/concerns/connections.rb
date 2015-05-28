@@ -16,7 +16,7 @@ module Connections
   def get_connections
     calculate_connections
   end
-  memoize :get_connections
+  #memoize :get_connections
 
   # async
   def generate_connections_async
