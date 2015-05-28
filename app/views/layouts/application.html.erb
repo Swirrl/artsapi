@@ -31,6 +31,10 @@
 
 </body>
 <footer class='no-margins margin-top-100'>
-
+  <div class='padding-top-50'>
+    <p class='text-center'>
+      <%= link_to('&larr; Log out'.html_safe, destroy_user_session_path, method: :delete, class: 'dark-background') if user_signed_in? %>
+    </p>
+  </div>
 </footer>
 </html>

@@ -88,6 +88,10 @@ body {
   padding-top:58px;
 }
 
+.padding-top-50 {
+  padding-top:50px;
+}
+
 .padding-top-38 {
   padding-top:38px;
 }
@@ -370,5 +374,14 @@ footer {
   margin-left:-10px;
   margin-right:-10px;
   margin-bottom:-10px;
+
+  a {
+    &.dark-background {
+      color:#FAFAFA;
+    }
+    &.dark-background:hover {
+      color:$orange-yellow;
+    }
+  }
 }
 
