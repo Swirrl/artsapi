@@ -144,7 +144,7 @@ keywordsubcategory:writing a keywords:KeywordSubCategory;
     keywords:inCategory keywordcategory:developing;
     .
 
-keywordcategory:marketing a keywords:KeywordSubCategory;
+keywordsubcategory:marketing a keywords:KeywordSubCategory;
     rdfs:label "Marketing"@en;
     rdfs:comment "Marketing"@en;
     keywords:inCategory keywordcategory:pr;
