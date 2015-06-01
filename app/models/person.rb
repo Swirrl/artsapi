@@ -142,8 +142,8 @@ class Person < ResourceWithPresenter
     }
   end
 
-  def number_of_sent_emails
-    if self.sent_emails.nil?
+  def number_of_sent_emails(regenerate=false)
+    if self.sent_emails.nil? || regenerate == true
       query = Tripod::SparqlQuery.new("
         #{Person.query_prefixes}
         SELECT DISTINCT ?uri 
@@ -167,8 +167,8 @@ class Person < ResourceWithPresenter
     end
   end
 
-  def number_of_incoming_emails
-    if self.incoming_emails.nil?
+  def number_of_incoming_emails(regenerate=false)
+    if self.incoming_emails.nil? || regenerate == true
       query = Tripod::SparqlQuery.new("
         #{Person.query_prefixes}
         SELECT DISTINCT ?uri 
