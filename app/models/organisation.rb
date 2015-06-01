@@ -163,6 +163,14 @@ class Organisation < ResourceWithPresenter
     job_ids
   end
 
+  def force_regenerate_email_counts!
+    self.has_members.each do |member_uri|
+      p = Person.find(member_uri)
+      p.number_of_incoming_emails(true)
+      p.number_of_sent_emails(true)
+    end
+  end
+
   def members_with_more_than_x_connections(x)
     self.has_members.map { |m| m if Person.find(m).connections.length > x }.compact
   end
@@ -250,6 +258,9 @@ class Organisation < ResourceWithPresenter
 
         owner_org.generate_connections_async!
         owner_org.generate_visualisations_async!
+
+        # we may need to make this async
+        owner_org.force_regenerate_email_counts!
 
       rescue # couldn't find either person or org
 

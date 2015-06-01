@@ -226,8 +226,13 @@ class Person < ResourceWithPresenter
       PREFIX org: <http://www.w3.org/ns/org#>"
     end
 
-    def total_count
+    # to facilitate search
+    def find_by_email(email)
+      uri = get_uri_from_email(email)
+      Person.find(uri)
+    end
 
+    def total_count
       # get unhydrated uris
       all_people_query = "
         SELECT DISTINCT ?uri

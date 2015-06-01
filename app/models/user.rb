@@ -163,6 +163,11 @@ class User
       )
     end
 
+    def find_by_email(email)
+      id = User.where(email: email).distinct(:id).first.to_s
+      User.find(id)
+    end
+
   end
 
 end
