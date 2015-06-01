@@ -22,11 +22,15 @@ class UploadsController < ApplicationController
   def dropbox_callback
     db_session = DropboxSession.deserialize(session[:dropbox_session])
 
-    # get an oauth access token
-    access_token = db_session.get_access_token
-    UploadClient.save_current_user_auth_code!(access_token)
+    unless params[:not_approved] == 'true'
+      # get an oauth access token
+      access_token = db_session.get_access_token
+      UploadClient.save_current_user_auth_code!(access_token)
 
-    flash[:success] = "You have successfully authorized your Dropbox."
+      flash[:success] = "You have successfully authorized your Dropbox."
+    else
+      flash[:danger] = "You have to authorize to continue."
+    end
 
     redirect_to uploads_path
   end

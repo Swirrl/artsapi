@@ -118,6 +118,11 @@ module Presenters
     def common_keywords_labels
       common_keywords.map(&:label) rescue "Unavailable"
     end
+    memoize :common_keywords_labels
+
+    def common_keywords_unavailable?
+      true if common_keywords_labels == "Unavailable"
+    end
 
     def common_keywords_sentence
       common_keywords_labels.to_sentence rescue "Unavailable"

@@ -21,7 +21,7 @@ module Presenters
         [lo.to_s, 
           o.has_members.size, 
           o.linked_to.size]
-      }.sort { |a,b| b[2] <=> a[2] }
+      }.sort { |a,b| b[1] <=> a[1] }
     end
 
     def members

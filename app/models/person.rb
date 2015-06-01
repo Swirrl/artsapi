@@ -87,28 +87,32 @@ class Person < ResourceWithPresenter
     name_array = self.name
     name_array.delete("")
 
-    if self.correct_name.nil? && name_array.length > 1
-      results = {}
-      all_split = name_array.map { |n| n.downcase.split(' ') }.flatten
+    begin
+      if self.correct_name.nil? && name_array.length > 1
+        results = {}
+        all_split = name_array.map { |n| n.downcase.split(' ') }.flatten
 
-      all_split.each do |word|
+        all_split.each do |word|
 
-        if results.has_key?(word)
-          results[word] = results[word] += 1
-        else
-          results[word] = 1
+          if results.has_key?(word)
+            results[word] = results[word] += 1
+          else
+            results[word] = 1
+          end
+
         end
 
+        top_two = results.sort_by { |name, occurrences| occurrences }[-2..-1]
+        self.correct_name = sanitize_string("#{top_two.last[0]} #{top_two.first[0]}").titleize
+      else
+        match = sanitized_default_name.match(/^[A-Z][a-z]+\b +\b[A-Z][a-z]+$/)
+        self.correct_name = match[0] if !match.nil?
       end
 
-      top_two = results.sort_by { |name, occurrences| occurrences }[-2..-1]
-      self.correct_name = sanitize_string("#{top_two.last[0]} #{top_two.first[0]}").titleize
-    else
-      match = sanitized_default_name.match(/^[A-Z][a-z]+\b +\b[A-Z][a-z]+$/)
-      self.correct_name = match[0] if !match.nil?
+      self.correct_name || self.sanitized_default_name
+    rescue
+      self.sanitized_default_name
     end
-
-    self.correct_name || self.sanitized_default_name
   end
 
   def sanitized_default_name

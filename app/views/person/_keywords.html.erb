@@ -12,7 +12,7 @@
       </div>
 
       <div class='col-md-4 padding-top-58 background-blue height-220-px'>
-        <% if !@presenter.common_keywords_labels.blank? %>
+        <% if !@presenter.common_keywords_unavailable? %>
           <ol class='columns-2'>
           <% @presenter.common_keywords_labels.each do |kw| %>
             <li><%= kw %></li>
