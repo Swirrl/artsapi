@@ -50,13 +50,10 @@ RUN echo "gem: --no-ri --no-rdoc" > ~/.gemrc
 # Bundler please
 RUN /bin/bash -l -c 'gem install bundler --no-ri --no-rdoc'
 
-# Grafter please
-RUN /bin/bash -l -c 'git clone https://github.com/Swirrl/artsapi-email-processing-tool.git'
-
-# Leiningen please
-ADD https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein /bin/lein
-RUN chmod 755 /bin/lein
-RUN /bin/bash -l -c "lein"
+# Grafter please - get the uberjar from Github
+RUN mkdir artsapi-email-processing-tool
+RUN chmod +rwx artsapi-email-processing-tool
+ADD https://github.com/Swirrl/artsapi-email-processing-tool/releases/download/2.3.1/artsapi-graft-standalone.jar /artsapi-email-processing-tool/artsapi-graft-standalone.jar
 
 # Copy the Gemfile and Gemfile.lock into the image.
 # Temporarily set the working directory to where they are.
@@ -81,6 +78,7 @@ RUN chmod +x /artsapi
 RUN chmod +x /artsapi-email-processing-tool
 RUN chmod +x /usr/bin/start-server-production
 RUN chmod +x /usr/bin/replace-mongoid-yml
+RUN chmod +x /artsapi-email-processing-tool/artsapi-graft-standalone.jar
 
 # Make a place for Unicorn pids and sockets to go
 RUN mkdir -p /artsapi/tmp/unicorn/pids

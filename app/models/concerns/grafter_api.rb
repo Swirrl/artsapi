@@ -19,7 +19,7 @@ module GrafterAPI
 
       # Okay, this is gnarly. I am genuinely sorry about that
       User.current_user.set_tripod_endpoints!
-      `cd #{ArtsAPI.grafter_location}; lein run #{file.path} #{Tripod.query_endpoint} #{Tripod.update_endpoint} #{'no-convert' unless mine_keywords}`
+      `cd #{ArtsAPI.grafter_location}; java -jar artsapi-graft-standalone.jar #{file.path} #{Tripod.query_endpoint} #{Tripod.update_endpoint} #{'no-convert' unless mine_keywords}`
 
       Rails.logger.debug "> [GrafterAPI] Grafted."
     ensure
