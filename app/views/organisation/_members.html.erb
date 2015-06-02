@@ -1,7 +1,7 @@
 <table class='table table-striped'>
   <thead>
     <th>Member</th>
-    <!--<th>Number of known Connections</th>-->
+    <th>Number of known Connections</th>
   </thead>
   <tbody>
     <% @presenter.members_data.each do |member| %>
@@ -11,7 +11,7 @@
             <%= member[1] %>
           </a>
         </td>
-        <!--<td><%# member[2] %></td>-->
+        <td><%= member[2] %></td>
       </tr>
     <% end %>
   </tbody>

@@ -36,8 +36,9 @@ module Presenters
       members.map { |m|
         p = Person.find(m)
         [Presenters::Resource.create_path_from_uri(m.to_s), 
-          p.human_name]
-      }
+          p.human_name,
+          p.connections.count]
+      }.sort { |a,b| b[2] <=> a[2] }
     end
 
     def get_fields_hash
