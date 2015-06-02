@@ -53,6 +53,11 @@ RUN /bin/bash -l -c 'gem install bundler --no-ri --no-rdoc'
 # Grafter please
 RUN /bin/bash -l -c 'git clone https://github.com/Swirrl/artsapi-email-processing-tool.git'
 
+# Leiningen please
+ADD https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein /bin/lein
+RUN chmod 755 /bin/lein
+RUN /bin/bash -l -c "lein"
+
 # Copy the Gemfile and Gemfile.lock into the image.
 # Temporarily set the working directory to where they are.
 RUN mkdir /artsapi
