@@ -10,6 +10,7 @@
    fuseki:services (
      <#artsapi-dev>
      <#artsapi-test>
+     <#artsapi-test-two>
    ) .
 
 [] ja:loadClass "com.hp.hpl.jena.tdb.TDB" .
@@ -61,3 +62,27 @@ tdb:GraphTDB    rdfs:subClassOf  ja:Model .
     ja:context [ ja:cxtName "arq:queryTimeout" ;  ja:cxtValue "10000" ] ;
     tdb:unionDefaultGraph true ;
     .
+
+<#artsapi-test-two> a fuseki:Service ;
+    fuseki:name "artsapi-test-two";
+    # http://host:port/artsapi-test-two
+
+    fuseki:serviceQuery "sparql";
+    # SPARQL query service  http://host:port/artsapi-test-two/sparql?query=...
+
+    fuseki:serviceUpdate "update";
+    # SPARQL update servicehttp://host:port/artsapi-test-two/update?query=
+
+    fuseki:serviceReadWriteGraphStore "data";
+    # SPARQL Graph store protocol (read and write)
+
+    fuseki:dataset <#dataset-artsapi-test-two>;
+    .
+
+ <#dataset-artsapi-test-two> a tdb:DatasetTDB ;
+    tdb:location "/tdb_data/artsapi-test-two" ;  # change to suit your local installation
+    # Query timeout on this dataset (1s, 1000 milliseconds)
+    ja:context [ ja:cxtName "arq:queryTimeout" ;  ja:cxtValue "10000" ] ;
+    tdb:unionDefaultGraph true ;
+    .
+

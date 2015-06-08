@@ -5,9 +5,17 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rails'
 #require 'devise'
+require 'sidekiq/testing'
 
 include Warden::Test::Helpers
 Warden.test_mode!
+
+# we want sidekiq to run against redis
+# and run immediately; the queue is cleared between tests
+Sidekiq::Testing.inline!
+
+DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.orm = "mongoid"
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -66,6 +74,9 @@ RSpec.configure do |config|
   # TODO: seed concept schemes
 
   config.before(:each) do
+    # clear sidekiq
+    Sidekiq::Worker.clear_all
+
     #Tripod.cache_store.clear!
     #delete everything from fuseki
     Tripod::SparqlClient::Update.update('
@@ -74,5 +85,8 @@ RSpec.configure do |config|
       # delete from named graphs:
       DELETE {graph ?g {?s ?p ?o}} WHERE {graph ?g {?s ?p ?o}};
     ')
+
+    # clear mongo
+    DatabaseCleaner.clean
   end
 end

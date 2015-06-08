@@ -1,6 +1,6 @@
 shared_examples_for "given a db with two organisations" do
   let!(:user) { User.create(
-    email: 'jeff@example.com',
+    email: 'jeff@widgetcorp-org',
     password: 'password',
     name: 'Jeff Vader',
     ds_name_slug: 'artsapi-test'
