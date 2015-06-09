@@ -161,8 +161,12 @@ describe User do
       # jazz should not be present
       it "user_one should not have other org's data" do
         User.current_user = user_one
-        expect(Person.find('http://data.artsapi.com/id/people/jazz-swirrl-com')).to be_nil
-        expect(Person.find('http://data.artsapi.com/id/people/arthur-example-com')).to be_nil
+        expect {
+          Person.find('http://data.artsapi.com/id/people/jazz-swirrl-com')
+        }.to raise_error(Tripod::Errors::ResourceNotFound)
+        expect {
+          Person.find('http://data.artsapi.com/id/people/arthur-example-com')
+        }.to raise_error(Tripod::Errors::ResourceNotFound)
       end
 
       # jazz should be in this graph
@@ -175,8 +179,12 @@ describe User do
       # but john mcclane has no place here
       it "user_two should not have other org's data" do
         User.current_user = user_two
-        expect(Person.find('http://data.artsapi.com/id/people/john-nyc-gov')).to be_nil
-        expect(Person.find('http://data.artsapi.com/id/people/walter-widgetcorp-org')).to be_nil
+        expect {
+          Person.find('http://data.artsapi.com/id/people/john-nyc-gov')
+        }.to raise_error(Tripod::Errors::ResourceNotFound)
+        expect {
+          Person.find('http://data.artsapi.com/id/people/walter-widgetcorp-org')
+        }.to raise_error(Tripod::Errors::ResourceNotFound)
       end
 
     end
