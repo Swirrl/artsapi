@@ -5,10 +5,10 @@ class UploadsWorker
 
   sidekiq_options :retry => 3
 
-  def perform(current_user_id, file_location_string, mine_keywords)
+  def perform(_, current_user_id, file_location_string, mine_keywords)
 
     # set the current_user so we can look up the person
-    User.current_user = User.find(current_user_id)
+    # User.current_user = User.find(current_user_id)
 
     upload_client = UploadClient.new
 

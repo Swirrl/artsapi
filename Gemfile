@@ -51,6 +51,7 @@ gem 'bootstrap-kaminari-views'
 # background processing
 gem 'sidekiq'
 gem 'sidekiq-status'
+gem 'request_store', '~> 1.1.0'
 
 # add memoization
 gem 'memoist', '~> 0.12.0'

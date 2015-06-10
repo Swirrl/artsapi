@@ -84,7 +84,7 @@ class UploadsController < ApplicationController
 
   def upload_file_async(file_location_string, mine_keywords)
     current_user_id = User.current_user.id.to_s
-    job_id = ::UploadsWorker.perform_in(10.seconds, current_user_id, file_location_string, mine_keywords)
+    job_id = ::UploadsWorker.perform_in(10.seconds, 'true', current_user_id, file_location_string, mine_keywords)
 
     User.add_job_for_current_user(job_id)
 

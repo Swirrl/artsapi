@@ -146,21 +146,22 @@ describe User do
       # seed one organisation and two people for each
       # then call the async data processing for both users
       before do
-        user_one.save
-        user_two.save
-        seed_multiple_endpoint_data(user_one, user_two)
+        @user_one = user_one
+        @user_two = user_two
+        seed_multiple_endpoint_data(@user_one, @user_two)
       end
 
       # user one should have john mcclane
       it "user_one should have its own data" do
-        User.current_user = user_one
+        User.current_user = @user_one
+        expect(@user_one.active_jobs.count).to be > 0
         expect(Person.find('http://data.artsapi.com/id/people/john-nyc-gov').uri.to_s).to eq 'http://data.artsapi.com/id/people/john-nyc-gov'
         expect(Person.find('http://data.artsapi.com/id/people/walter-widgetcorp-org').uri.to_s).to eq 'http://data.artsapi.com/id/people/walter-widgetcorp-org'
       end
 
       # jazz should not be present
       it "user_one should not have other org's data" do
-        User.current_user = user_one
+        User.current_user = @user_one
         expect {
           Person.find('http://data.artsapi.com/id/people/jazz-swirrl-com')
         }.to raise_error(Tripod::Errors::ResourceNotFound)
@@ -171,14 +172,14 @@ describe User do
 
       # jazz should be in this graph
       it "user_two should have its own data" do
-        User.current_user = user_two
+        User.current_user = @user_two
         expect(Person.find('http://data.artsapi.com/id/people/jazz-swirrl-com').uri.to_s).to eq 'http://data.artsapi.com/id/people/jazz-swirrl-com'
         expect(Person.find('http://data.artsapi.com/id/people/arthur-example-com').uri.to_s).to eq 'http://data.artsapi.com/id/people/arthur-example-com'
       end
 
       # but john mcclane has no place here
       it "user_two should not have other org's data" do
-        User.current_user = user_two
+        User.current_user = @user_two
         expect {
           Person.find('http://data.artsapi.com/id/people/john-nyc-gov')
         }.to raise_error(Tripod::Errors::ResourceNotFound)

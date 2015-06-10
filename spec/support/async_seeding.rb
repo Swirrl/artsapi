@@ -10,8 +10,10 @@ def seed_multiple_endpoint_data(user_one, user_two)
 
   set_current_user_and_bootstrap_for(user_one)
   set_current_user_and_bootstrap_for(user_two)
+  set_current_user_and_bootstrap_for(user_one)
+  set_current_user_and_bootstrap_for(user_two)
 
-  sleep 10
+  sleep 240
 end
 
 def seed_widgetcorp_data!(user)
@@ -112,5 +114,5 @@ end
 def set_current_user_and_bootstrap_for(user)
   User.current_user = user
   Organisation.bootstrap_owner_or_largest_org!
-  User.current_user = nil
+  #User.current_user = nil
 end

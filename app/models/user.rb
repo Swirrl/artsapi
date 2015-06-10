@@ -106,21 +106,21 @@ class User
     # so that we can call the .within {} method above
     # this looks terrifying, but it's an rbates special
     def current_user=(user)
-      Thread.current[:current_user] = user
+      Thread.current[:__session_user__] = user
     end
 
     def current_user
-      Thread.current[:current_user]
+      Thread.current[:__session_user__]
     end
 
     def add_job_for_current_user(job_id)
-      user = Thread.current[:current_user]
+      user = Thread.current[:__session_user__]
       user.job_ids << job_id
       user.save
     end
 
     def bootstrap_sic_for_current_user!
-      user = Thread.current[:current_user]
+      user = Thread.current[:__session_user__]
 
       path_to_sic = Rails.root.to_s + "/lib/sic2007.ttl"
       sic_graph = 'http://data.artsapi.com/graph/sic'
@@ -136,7 +136,7 @@ class User
     end
 
     def bootstrap_keywords_for_current_user!
-      user = Thread.current[:current_user]
+      user = Thread.current[:__session_user__]
 
       path_to_keywords = Rails.root.to_s + "/lib/keywords_resources.ttl"
       keywords_graph = 'http://data.artsapi.com/graph/keywords'

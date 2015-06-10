@@ -44,7 +44,7 @@ module Connections
       ").map { |r| r["person"]["value"] }
     }
   end
-  memoize :get_recipients_of_emails
+  # memoize :get_recipients_of_emails
 
   def get_incoming_mail_senders
     User.current_user.within {
@@ -87,7 +87,7 @@ module Connections
 
     filtered
   end
-  memoize :calculate_connections
+  # memoize :calculate_connections
 
   # requires you to know the connections in advance
   def calculate_email_density

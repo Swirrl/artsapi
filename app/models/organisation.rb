@@ -174,7 +174,7 @@ class Organisation < ResourceWithPresenter
   def members_with_more_than_x_connections(x)
     self.has_members.map { |m| m if Person.find(m).connections.length > x }.compact
   end
-  memoize :members_with_more_than_x_connections
+  # memoize :members_with_more_than_x_connections
 
   # look at extension and take a punt
   def best_guess_at_country
@@ -254,16 +254,20 @@ class Organisation < ResourceWithPresenter
         User.bootstrap_sic_for_current_user!
         User.bootstrap_keywords_for_current_user!
 
-        owner_org = User.current_user.find_org_from_self_in_data
+        Rails.logger.debug "> [Bootstrap] Triggered by #{Thread.current[:__session_user__].email}"
+
+        owner_org = Thread.current[:__session_user__].find_org_from_self_in_data
 
         owner_org.generate_connections_async!
         owner_org.generate_visualisations_async!
 
         # we may need to make this async
-        owner_org.force_regenerate_email_counts!
+        #owner_org.force_regenerate_email_counts!
 
       rescue # couldn't find either person or org
 
+        # do nothing for now
+        Rails.logger.debug "> [Bootstrap] Could not find user in data"
         bootstrap_all!
 
         # this would be nice, but it times out

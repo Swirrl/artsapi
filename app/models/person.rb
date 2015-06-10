@@ -78,7 +78,7 @@ class Person < ResourceWithPresenter
   def memoized_connections
     self.connections
   end
-  memoize :memoized_connections
+  # memoize :memoized_connections
 
   def human_name
     # label can only be set via the UI so it should always take precedence
