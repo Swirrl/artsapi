@@ -35,6 +35,40 @@ describe 'Organisation' do
 
       end
 
+      describe "sidekiq tasks" do
+
+        it "should enqueue a visualisation worker" do
+          jeff.get_connections!
+          expect {
+            Sidekiq::Testing.fake! do
+              organisation.set_visualisation_graph_async
+            end
+          }.to change(OrganisationsWorker.jobs, :size).by(1)
+        end
+
+        it "#generate_connections_async! should enqueue jobs" do
+          expect {
+            Sidekiq::Testing.fake! do
+              organisation.generate_connections_async!
+            end
+          }.to change(ConnectionsWorker.jobs, :size).by(2)
+        end
+
+        it "#generate_visualisations_async! should enque jobs" do
+          expect {
+            Sidekiq::Testing.fake! do
+              organisation.generate_visualisations_async!
+            end
+          }.to change(PeopleWorker.jobs, :size).by(2)
+          expect {
+            Sidekiq::Testing.fake! do
+              organisation.generate_visualisations_async!
+            end
+          }.to change(OrganisationsWorker.jobs, :size).by(1)
+        end
+
+      end
+
     end
 
     context "class methods" do

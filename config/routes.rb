@@ -78,7 +78,7 @@ Rails.application.routes.draw do
 
   # e.g. http://data.artsapi.com/id/people/jeff-widgetcorp-org
   # e.g. http://data.artsapi.com/id/emails/email-hash-here>
-  get 'id/:resource_type/:slug', to: 'resources#show'
+  get 'id/:resource_type/:slug', to: 'resources#show', as: :resource
 
   # label mini API --------------------------------
 
@@ -112,6 +112,10 @@ Rails.application.routes.draw do
   # people ----------------------------------------
 
   post '/people/update', to: 'people#update', as: :update_person
+
+  # search ----------------------------------------
+
+  post '/search', to: 'search#show', as: :search
 
   # static pages ----------------------------------
 
