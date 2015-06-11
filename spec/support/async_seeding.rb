@@ -12,8 +12,6 @@ def seed_multiple_endpoint_data(user_one, user_two)
   set_current_user_and_bootstrap_for(user_two)
   set_current_user_and_bootstrap_for(user_one)
   set_current_user_and_bootstrap_for(user_two)
-
-  sleep 240
 end
 
 def seed_widgetcorp_data!(user)

@@ -3,12 +3,20 @@ require 'sidekiq-status'
 
 class ArtsAPI::SidekiqServerMiddleware
   def call(worker, message, queue)
-    Rails.logger.debug "SANDWICH\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nUID:#{message["args"][1]}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-    message["args"][1]
-    Thread.current[:__session_user__] = User.find(message["args"][1]) if message["args"][1]
-    yield
+    # lock the thread, perform DB work, unlock again
+    # this is needed because Tripod is not thread-safe
+    # and background jobs work in threads
+    # this is a coarse locking strategy, you may want to improve
+    semaphore = Mutex.new
+    semaphore.synchronize do
+
+      # wrapper for a thread local variable
+      User.current_user = User.find(message["args"][1]) if message["args"][1]
+
+      yield
+    end
   ensure
-    Thread.current[:__session_user__] = nil
+    User.current_user = nil
   end
 end
 

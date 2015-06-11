@@ -7,8 +7,6 @@ class PeopleWorker
 
   def perform(uri, current_user_id)
 
-    # set the current_user so we can look up the person
-    # User.current_user = User.find(current_user_id)
     person = Person.find(uri)
 
     # reload graph vis
@@ -20,6 +18,7 @@ class PeopleWorker
     Rails.logger.debug "> [Sidekiq]: Re-generating email counts for #{uri}"
     person.number_of_incoming_emails(true)
     person.number_of_sent_emails(true)
+
   end
 
 end

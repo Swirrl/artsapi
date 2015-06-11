@@ -145,23 +145,44 @@ describe User do
 
       # seed one organisation and two people for each
       # then call the async data processing for both users
-      before do
-        @user_one = user_one
-        @user_two = user_two
-        seed_multiple_endpoint_data(@user_one, @user_two)
+      before(:all) do
+        @user_one = User.create(
+          email: 'jeff@widgetcorp.org',
+          password: 'password',
+          name: 'Jeff Vader',
+          ds_name_slug: 'artsapi-test'
+        )
+
+        @user_two = User.create(
+          email: 'brian@example.com',
+          password: 'password',
+          name: 'Brian Vader',
+          ds_name_slug: 'artsapi-test-two'
+        )
       end
 
       # user one should have john mcclane
       it "user_one should have its own data" do
+        seed_multiple_endpoint_data(@user_one, @user_two)
         User.current_user = @user_one
-        expect(@user_one.active_jobs.count).to be > 0
+
         expect(Person.find('http://data.artsapi.com/id/people/john-nyc-gov').uri.to_s).to eq 'http://data.artsapi.com/id/people/john-nyc-gov'
         expect(Person.find('http://data.artsapi.com/id/people/walter-widgetcorp-org').uri.to_s).to eq 'http://data.artsapi.com/id/people/walter-widgetcorp-org'
       end
 
+      # for user one, sidekiq should have written data
+      it "should have written on models via background jobs" do
+        seed_multiple_endpoint_data(@user_one, @user_two)
+        User.current_user = @user_one
+
+        expect(Person.find('http://data.artsapi.com/id/people/jeff-widgetcorp-org').connections).not_to be_empty
+      end
+
       # jazz should not be present
       it "user_one should not have other org's data" do
+        seed_multiple_endpoint_data(@user_one, @user_two)
         User.current_user = @user_one
+
         expect {
           Person.find('http://data.artsapi.com/id/people/jazz-swirrl-com')
         }.to raise_error(Tripod::Errors::ResourceNotFound)
@@ -172,14 +193,26 @@ describe User do
 
       # jazz should be in this graph
       it "user_two should have its own data" do
+        seed_multiple_endpoint_data(@user_one, @user_two)
         User.current_user = @user_two
+
         expect(Person.find('http://data.artsapi.com/id/people/jazz-swirrl-com').uri.to_s).to eq 'http://data.artsapi.com/id/people/jazz-swirrl-com'
         expect(Person.find('http://data.artsapi.com/id/people/arthur-example-com').uri.to_s).to eq 'http://data.artsapi.com/id/people/arthur-example-com'
       end
 
+      # for user two, sidekiq should have written data
+      it "should have written on models via background jobs" do
+        seed_multiple_endpoint_data(@user_one, @user_two)
+        User.current_user = @user_two
+
+        expect(Person.find('http://data.artsapi.com/id/people/brian-example-com').connections).not_to be_empty
+      end
+
       # but john mcclane has no place here
       it "user_two should not have other org's data" do
+        seed_multiple_endpoint_data(@user_one, @user_two)
         User.current_user = @user_two
+
         expect {
           Person.find('http://data.artsapi.com/id/people/john-nyc-gov')
         }.to raise_error(Tripod::Errors::ResourceNotFound)

@@ -62,9 +62,17 @@ class User
   # We want to be able to do current_user.within {} to issue DB queries
   def within(&block)
     return unless block_given?
-    set_tripod_endpoints!
 
-    yield
+    # lock the thread, perform DB work, unlock again
+    # this is needed because Tripod is not thread-safe
+    # and background jobs work in threads
+    semaphore = Mutex.new
+    semaphore.synchronize do
+
+      set_tripod_endpoints!
+      yield
+
+    end
   end
 
   def set_tripod_endpoints!

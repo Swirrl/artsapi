@@ -30,11 +30,13 @@
   </div>
 
 </body>
-<footer class='no-margins margin-top-100'>
+<footer class='footer no-margins margin-top-300'>
   <div class='padding-top-50'>
     <p class='text-center'>
       <%= link_to('&larr; Log out'.html_safe, destroy_user_session_path, method: :delete, class: 'dark-background') if user_signed_in? %> | 
       <%= link_to('Edit user', edit_user_registration_path, class: 'dark-background') if user_signed_in? %>
+      <br>
+      <p class='text-center'>Signed in as <strong><%= current_user.email if user_signed_in? %></strong></p>
     </p>
   </div>
 </footer>

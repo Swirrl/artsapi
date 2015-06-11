@@ -58,7 +58,7 @@ class Person < ResourceWithPresenter
 
   def set_visualisation_graph_async
     current_user_id = User.current_user.id.to_s
-    job_id = ::PeopleWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+    job_id = ::PeopleWorker.perform_in(10.seconds, self.uri.to_s, current_user_id)
 
     User.add_job_for_current_user(job_id)
 

@@ -46,7 +46,7 @@ class Organisation < ResourceWithPresenter
 
   def set_visualisation_graph_async
     current_user_id = User.current_user.id.to_s
-    job_id = ::OrganisationsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+    job_id = ::OrganisationsWorker.perform_in(10.seconds, self.uri.to_s, current_user_id)
 
     User.add_job_for_current_user(job_id)
 
@@ -254,9 +254,9 @@ class Organisation < ResourceWithPresenter
         User.bootstrap_sic_for_current_user!
         User.bootstrap_keywords_for_current_user!
 
-        Rails.logger.debug "> [Bootstrap] Triggered by #{Thread.current[:__session_user__].email}"
+        Rails.logger.debug "> [Bootstrap] Triggered by #{User.current_user.email}"
 
-        owner_org = Thread.current[:__session_user__].find_org_from_self_in_data
+        owner_org = User.current_user.find_org_from_self_in_data
 
         owner_org.generate_connections_async!
         owner_org.generate_visualisations_async!

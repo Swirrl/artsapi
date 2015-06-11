@@ -83,7 +83,7 @@ module PersonKeywordMethods
         }
       ")
 
-      mentions = User.current_user.within {
+      mentions = Thread.current[:__session_user__].within {
         Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
       }
 

@@ -13,12 +13,14 @@ NB: Every time `$` is seen in a code snippet, you should type this into a termin
 3. In the file, change the value next to `tdb:location` to the location of your tdb folder, for example `/Users/<your-user>/tdb_data/artsapi-dev`.
 4. Add `alias fuseki_artsapi="cd $HOME/jena-fuseki-1.0.1 ; ./fuseki-server --config=fuseki_config.ttl"` to your shell to start Fuseki using `$ fuseki-artsapi`. Change `jena-fuseki-1.0.1` in the previous command to the version and folder of your installed version of Fuseki.
 5. Install redis and run it.
-6. Use `bundle exec sidekiq` to bring up sidekiq for background processing.
+6. Use `bundle exec sidekiq -c 1` to bring up sidekiq for background processing.
 7. Fill in the correct details in `/db/seeds.example`, rename the file to `seeds.rb` and use `rake db:seed` to generate a user.
 
 NB: You *must* be running Fuseki on port 3030 if you do not want to modify the multiple tenancy code. If you want to use the Dropbox upload features, you will also need a copy of the [ArtsAPI Grafter project](https://github.com/Swirrl/artsapi-email-processing-tool) on your hard drive so that the Rails app can call leiningen to run pipelines. Put the absolute path to this directory (e.g. `/Users/jeff/artsapi-email-processing-tool`) in the `grafter_config.example` file and then rename it `grafter_config.rb`.
 
 In production, you will use env vars to declare dropbox credentials. In development, you will need to find the file in `/config/initializers` called `dropbox.example` - add your credentials for Dropbox in here and rename it `dropbox.rb`. Make sure you do not commit this, as you will have to change `production.rb` to not expect env vars with the locations provided (see the Docker/Deployment) section below.
+
+Although effort has been made to try and make the application thread-safe, we cannot guarantee that it will work; hence you will need to pass the `-c 1` option to Sidekiq when running.
 
 ## Deployment
 

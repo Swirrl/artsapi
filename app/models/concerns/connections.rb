@@ -21,7 +21,7 @@ module Connections
   # async
   def generate_connections_async
     current_user_id = User.current_user.id.to_s
-    job_id = ::ConnectionsWorker.perform_in(50.seconds, self.uri.to_s, current_user_id)
+    job_id = ::ConnectionsWorker.perform_in(10.seconds, self.uri.to_s, current_user_id)
 
     User.add_job_for_current_user(job_id)
 
@@ -68,7 +68,7 @@ module Connections
     connection_set = []
     recipients = self.get_recipients_of_emails
 
-    filtered =  User.current_user.within { 
+    filtered = User.current_user.within { 
       Tripod::SparqlClient::Query.select("
       #{Person.query_prefixes}
 

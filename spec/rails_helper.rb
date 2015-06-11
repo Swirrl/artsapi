@@ -5,14 +5,14 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rails'
 #require 'devise'
-#require 'sidekiq/testing'
+require 'sidekiq/testing'
 
 include Warden::Test::Helpers
 Warden.test_mode!
 
 # we want sidekiq to run against redis
 # and run immediately; the queue is cleared between tests
-# Sidekiq::Testing.inline!
+Sidekiq::Testing.inline!
 
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.orm = "mongoid"
@@ -75,7 +75,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     # clear sidekiq
-    # Sidekiq::Worker.clear_all
+    Sidekiq::Worker.clear_all
 
     #Tripod.cache_store.clear!
     #delete everything from fuseki
