@@ -15,6 +15,8 @@
 
   <div class="container-fluid">
 
+    <%= render 'shared/search' if user_signed_in? %>
+
     <div class='row'>
       <%= render 'shared/header' %>
     </div>
@@ -36,7 +38,7 @@
       <%= link_to('&larr; Log out'.html_safe, destroy_user_session_path, method: :delete, class: 'dark-background') if user_signed_in? %> | 
       <%= link_to('Edit user', edit_user_registration_path, class: 'dark-background') if user_signed_in? %>
       <br>
-      <p class='text-center'>Signed in as <strong><%= current_user.email if user_signed_in? %></strong></p>
+      Signed in as <strong><%= current_user.email if user_signed_in? %></strong>
     </p>
   </div>
 </footer>

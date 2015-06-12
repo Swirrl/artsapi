@@ -230,9 +230,36 @@ class Person < ResourceWithPresenter
       PREFIX org: <http://www.w3.org/ns/org#>"
     end
 
+    # try one, fall back to the other
+    # will throw an exception if neither is found
+    def find_by_email_or_name(string)
+      string.strip!
+      begin
+        find_by_email(string)
+      rescue
+        find_by_name(string)
+      end
+    end
+
     # to facilitate search
     def find_by_email(email)
       uri = get_uri_from_email(email)
+      Person.find(uri)
+    end
+
+    def find_by_name(string)
+      uri = User.current_user.within {
+        Tripod::SparqlClient::Query.select("
+          SELECT DISTINCT ?uri
+          WHERE {
+            { ?uri <http://www.w3.org/2000/01/rdf-schema#label> \"#{string}\" . }
+            UNION
+            { ?uri <http://xmlns.com/foaf/0.1/name> \"#{string}\" . }
+          }
+          LIMIT 1
+        ")[0]["uri"]["value"]
+      }
+
       Person.find(uri)
     end
 

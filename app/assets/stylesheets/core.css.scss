@@ -187,6 +187,17 @@ body {
       }
     }
 
+    &.search-bar {
+      background:rgb(249,249,250);
+      border-bottom: 3px solid #999;
+      padding:20px;
+      margin:-30px -25px 60px -25px;
+
+      form.search-form {
+        padding-top:6px;
+      }
+    }
+
     &.background-dark {
       background:#3B3B3B;
     }
@@ -378,7 +389,7 @@ ol {
 
 footer {
   height:200px;
-  background-color:#555;
+  background-color:#666;
   margin-left:-10px;
   margin-right:-10px;
   margin-bottom:-10px;
