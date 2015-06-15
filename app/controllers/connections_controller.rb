@@ -52,8 +52,6 @@ class ConnectionsController < ApplicationController
       connections = person_to_visualise.get_visualisation_graph
       render json: connections.to_json, status: 200
     rescue => e
-      Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
-      e.backtrace.map.with_index(1) { |line, i| Rails.logger.debug("#{i}: #{line}") }
       render json: {text: 'Sorry, something went wrong. Please check the logs for details.'}, status: 404
     end
   end

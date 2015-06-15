@@ -13,7 +13,7 @@ class OrganisationsController < ApplicationController
           org.label = params[:label] if !params[:label].blank? && !params[:label].nil?
           org.country = params[:country] if !params[:country].blank? && !params[:country].nil?
           org.city = params[:city].strip.downcase.titleize if !params[:city].blank? && !params[:city].nil?
-          org.sector = params[:sector] if !params[:sector].blank? && !params[:sector].nil?
+          org.sector = sic_label_to_uri_mapping[params[:sector]] if !params[:sector].blank? && !params[:sector].nil?
 
           org.save
 
@@ -25,6 +25,22 @@ class OrganisationsController < ApplicationController
       end
     end
 
+  end
+
+  private
+
+  # we know labels are unique
+  def sic_label_to_uri_mapping
+    resources = SICConcept.all_classes_and_subclasses
+    mapping = {}
+
+    # array needs to be [label, value]
+    resources.each do |resource|
+      uri = resource.uri.to_s
+      mapping[resource.label] = uri
+    end
+
+    mapping
   end
 
 end

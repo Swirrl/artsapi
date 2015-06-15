@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require typeahead
 //= require d3.min.js
 //= require bootstrap-sprockets
 //= require jquery_ujs

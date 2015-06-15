@@ -78,6 +78,17 @@ module Presenters
     end
     memoize :sector_list
 
+    def sector_list_labels
+      sector_list.map { |i| i[0] }
+    end
+    memoize :sector_list_labels
+
+    def sic_sector_label_for(org)
+      return nil if org.sector.nil?
+      uri = org.sector
+      SICConcept.find_class_or_subclass(uri).label
+    end
+
   end
 
 end
