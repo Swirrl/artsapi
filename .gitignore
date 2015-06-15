@@ -32,3 +32,6 @@
 
 # Ignore db seeds
 /db/seeds.rb
+
+# Ignore foreman procfile
+Procfile

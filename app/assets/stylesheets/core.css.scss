@@ -188,13 +188,27 @@ body {
     }
 
     &.search-bar {
-      background:rgb(249,249,250);
+      background:rgb(252,252,253);
       border-bottom: 3px solid #999;
       padding:20px;
       margin:-30px -25px 60px -25px;
 
       form.search-form {
-        padding-top:6px;
+        padding-top:0px;
+        padding-right:0px;
+        margin-right:0px;
+        clear:right;
+        float:right
+      }
+
+      .btn-group {
+        padding-top:0px;
+        float:right;
+      }
+
+      p {
+        clear:both;
+        float:right;
       }
     }
 
@@ -279,6 +293,12 @@ p#connections-notice {
 .link {
   stroke:#999;
   stroke-opacity:.6;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
 /* 

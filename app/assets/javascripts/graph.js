@@ -76,7 +76,7 @@
         function connectedNodes() {
           if (toggle == 0) {
 
-            d = d3.select(this).node().__data__;
+            var d = d3.select(this).node().__data__;
 
             node.style("opacity", function(o) {
               if(neighboring(d, o) || neighboring(o, d)){
@@ -86,7 +86,13 @@
               }
             });
 
-            // console.log(d);
+            text.style("opacity", function(o) {
+              if(neighboring(d, o) || neighboring(o, d)){
+                return 1;
+              } else {
+                return 0.1;
+              }
+            });
 
             link.style("opacity", function(o) {
               return (d.index === o.source.index || d.index === o.target.index) ? 1 : 0.1;
@@ -96,8 +102,16 @@
           } else {
             node.style("opacity", 1);
             link.style("opacity", 1);
+            text.style("opacity", 1);
             toggle = 0;
           }
+        }
+
+        function dereferenceURI(){
+          var d = d3.select(this).node().__data__;
+          var uri = d.uri;
+          uri = uri.replace("http://data.artsapi.com", '');
+          window.location.href = uri;
         }
 
         force
@@ -111,17 +125,38 @@
             .attr("class", "link")
             .style("stroke-width", function(d) { return Math.sqrt(d.value / 4); });
 
-        var node = svg.selectAll(".node")
+        var gnodes = svg.selectAll('g.gnode')
             .data(graph.nodes)
-          .enter().append("circle")
+          .enter()
+            .append('g')
+            .classed('gnode', true);
+
+        var node = gnodes.append("circle")
             .attr("class", "node")
             .attr("r", function(d) { return (d.org === undefined) ? 5 : 8; })//5)
             .style("fill", function(d) { return color(d.group); })
             .call(force.drag)
-            .on('dblclick', connectedNodes);
+            .on('click', connectedNodes)
+            .on('dblclick', dereferenceURI);
+
+        var text = gnodes.append("text")
+            .text(function(d) { return d.name; });
 
         node.append("title")
-            .text(function(d) { return d.name + "\n" + d.uri + "\n" + "Weight: " + d.weight + ((d.connections === undefined) ? '' : "\n" + "Connections: " + d.connections) + "\n" + "SIC Sector: " + ((d.sector === undefined || d.sector === null) ? 'Unavailable' : d.sector) + "\n" + (d.orgLocation === undefined ? 'Location Unavailable' : d.orgLocation); });
+          .text(function(d) { 
+            return d.name 
+              + "\n" 
+              + d.uri 
+              + "\n" 
+              + "Weight: " 
+              + d.weight 
+              + ((d.connections === undefined) ? '' : "\n" + "Connections: " + d.connections) 
+              + "\n" 
+              + "SIC Sector: " 
+              + ((d.sector === undefined || d.sector === null) ? 'Unavailable' : d.sector) 
+              + "\n" 
+              + (d.orgLocation === undefined ? 'Location Unavailable' : d.orgLocation);
+          });
 
         force.on("tick", function() {
           link.attr("x1", function(d) { return d.source.x; })
@@ -131,6 +166,9 @@
 
           node.attr("cx", function(d) { return d.x; })
               .attr("cy", function(d) { return d.y; });
+
+          text.attr("x", function(d) { return (d.x + 10); })
+              .attr("y", function(d) { return d.y; })
           node.each(collide(0.5));
         });
       }).header("Content-Type", "application/json");
