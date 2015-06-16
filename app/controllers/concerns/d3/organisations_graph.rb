@@ -7,14 +7,6 @@ module D3
 
     # what are the thresholds we want for connection length on a person node
     # and the threshold we want in terms of members of an org?
-
-    # the difficulty here is that the triggering organisation might add nodes
-    # which have no organisation as the check for organisation is to map
-    # over and check members have conns; I think the later check is
-    # for raw members instead which would mean a member with > 1 connection from
-    # an org with many members that have no connections might be added on the
-    # first pass and their organisation will not be added later
-    # naturally this is a massive code smell; we will have to refactor later.
     MIN_CONNECTION_LENGTH = 1
     MIN_MEMBER_NUMBER = 3
 
