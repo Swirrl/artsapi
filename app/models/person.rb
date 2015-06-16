@@ -214,6 +214,14 @@ class Person < ResourceWithPresenter
     parent_org.location_string
   end
 
+  def parent_org_country
+    parent_organisation.best_guess_at_country
+  end
+
+  def parent_org_city
+    parent_organisation.city
+  end
+
   class << self
 
     def get_uri_from_email(email_string)
@@ -230,13 +238,40 @@ class Person < ResourceWithPresenter
       PREFIX org: <http://www.w3.org/ns/org#>"
     end
 
+    # try one, fall back to the other
+    # will throw an exception if neither is found
+    def find_by_email_or_name(string)
+      string.strip!
+      begin
+        find_by_email(string)
+      rescue
+        find_by_name(string)
+      end
+    end
+
     # to facilitate search
     def find_by_email(email)
       uri = get_uri_from_email(email)
       Person.find(uri)
     end
 
-    def total_count
+    def find_by_name(string)
+      uri = User.current_user.within {
+        Tripod::SparqlClient::Query.select("
+          SELECT DISTINCT ?uri
+          WHERE {
+            { ?uri <http://www.w3.org/2000/01/rdf-schema#label> \"#{string}\" . }
+            UNION
+            { ?uri <http://xmlns.com/foaf/0.1/name> \"#{string}\" . }
+          }
+          LIMIT 1
+        ")[0]["uri"]["value"]
+      }
+
+      Person.find(uri)
+    end
+
+    def all_unhydrated
       # get unhydrated uris
       all_people_query = "
         SELECT DISTINCT ?uri
@@ -246,7 +281,88 @@ class Person < ResourceWithPresenter
           }
         }"
 
-      User.current_user.within { Tripod::SparqlClient::Query.select(all_people_query).count }
+      User.current_user.within { Tripod::SparqlClient::Query.select(all_people_query) }
+    end
+
+    def total_count
+      all_unhydrated.count
+    end
+
+    def all_uris
+      all_unhydrated.map { |r| r["uri"]["value"] }
+    end
+
+    def all_uris_and_emails
+      all_people_query = "
+        #{Person.query_prefixes}
+
+        SELECT DISTINCT ?uri ?email
+        WHERE {
+          GRAPH <http://data.artsapi.com/graph/people> {
+            ?uri a <http://xmlns.com/foaf/0.1/Person> .
+            ?uri foaf:mbox ?email .
+          }
+        }"
+
+      results = User.current_user.within { Tripod::SparqlClient::Query.select(all_people_query) }
+
+      results.map { |r| [r["uri"]["value"], r["email"]["value"]] }
+    end
+
+    # check the total emails exchanged between two people
+    def total_emails_between(uri_one, uri_two)
+
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+
+        SELECT ?email
+        WHERE {
+          VALUES ?first_person { <#{uri_one}> }
+          VALUES ?second_person { <#{uri_two}> }
+
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            {
+              ?email arts:emailRecipient ?second_person .
+              ?email arts:emailSender ?first_person .
+            }
+            UNION
+            {
+              ?email arts:emailRecipient ?first_person .
+              ?email arts:emailSender ?second_person .
+            }
+          }
+        }
+      ")
+
+      User.current_user.within { 
+        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      }
+    end
+
+    def connected?(uri_one, uri_two)
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+
+        ASK {
+        SELECT ?email_one ?email_two WHERE {
+          VALUES ?first_person { <#{uri_one}> }
+          VALUES ?second_person { <#{uri_two}> }
+
+          GRAPH <http://data.artsapi.com/graph/emails> {
+              ?email_one arts:emailRecipient ?second_person ;
+                         arts:emailSender ?first_person .
+
+              ?email_two arts:emailRecipient ?first_person ;
+                         arts:emailSender ?second_person .
+
+            }
+          } LIMIT 2
+        }
+      ")
+
+      User.current_user.within { 
+        Tripod::SparqlClient::Query.new(query).execute
+      }
     end
 
     # write connections for arrays or single strings

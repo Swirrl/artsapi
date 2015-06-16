@@ -5,13 +5,7 @@ describe "Viewing a resource" do
   it_behaves_like "given a db with two organisations" do
 
     # mock a signed-in user for DB queries
-    before { User.current_user = user }
-
-    describe "visiting the sign_up route" do
-
-      pending
-
-    end
+    # before { User.current_user = user }
 
     describe "when not signed in" do
 

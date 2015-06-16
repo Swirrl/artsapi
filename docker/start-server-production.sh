@@ -17,7 +17,9 @@ redis-server /etc/redis/redis.conf
 # set secret key
 export SECRET_KEY_BASE=$(/bin/bash -c 'bundle exec rake secret')
 
-# start three sidekiq instances with a thread apiece
+# start five sidekiq instances with a thread apiece
+bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1

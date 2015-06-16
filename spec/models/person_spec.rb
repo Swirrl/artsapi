@@ -64,6 +64,29 @@ describe 'Person' do
         expect(jeff.get_colleagues).to include(walter.uri)
       end
 
+      it "should enqueue a visualisation worker" do
+        jeff.get_connections!
+        expect {
+          Sidekiq::Testing.fake! do
+            jeff.set_visualisation_graph_async
+          end
+        }.to change(PeopleWorker.jobs, :size).by(1)
+      end
+
+      it "should enqueue a connections worker" do
+        expect {
+          Sidekiq::Testing.fake! do
+            jeff.generate_connections_async
+          end
+        }.to change(ConnectionsWorker.jobs, :size).by(1)
+      end
+
+      # it "connections worker should generate connections" do
+      #   jeff.generate_connections_async
+      #   sleep 60
+      #   expect(jeff.connections).not_to be_empty
+      # end
+
     end
 
 
