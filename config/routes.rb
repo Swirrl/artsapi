@@ -117,6 +117,12 @@ Rails.application.routes.draw do
 
   post '/search', to: 'search#show', as: :search
 
+  # export ----------------------------------------
+
+  post '/sna_person_list', to: 'exports#person_export_csv', as: :person_export
+  post '/sna_person_matrix', to: 'exports#person_matrix_csv', as: :person_matrix
+  post '/person_dump', to: 'exports#person_dump_csv', as: :person_dump
+
   # static pages ----------------------------------
 
   get '/about' => 'static#about', as: :about

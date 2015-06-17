@@ -1,5 +1,5 @@
 rails_env = ENV['RAILS_ENV'] || 'production' 
-worker_processes (rails_env == 'production' ? 10 : 4)
+worker_processes (rails_env == 'production' ? 15 : 4)
 timeout 900
 preload_app true
 

@@ -4,6 +4,11 @@ module Connections
   extend ActiveSupport::Concern
   extend Memoist
 
+  # write if non existent
+  def get_or_write_connections!
+    get_connections! if self.connections.nil? || self.connections.empty?
+  end
+
   # writes to db
   def get_connections!
     connections = calculate_connections

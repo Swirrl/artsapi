@@ -12,5 +12,9 @@ class ExportsController < ApplicationController
     # TODO! Exports.assemble_person_matrix_csv
   end
 
+  # dump all people with as many fields as possible
+  def person_dump_csv
+    # TODO! Exports.dump_people_as_csv
+  end
 
 end

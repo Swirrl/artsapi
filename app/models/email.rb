@@ -30,6 +30,10 @@ class Email < ResourceWithPresenter
       User.current_user.within { Tripod::SparqlClient::Query.select(all_emails_sparql).count }
     end
 
+    def unique_interpersonal_edges_via_email
+
+    end
+
   end
 
 end
