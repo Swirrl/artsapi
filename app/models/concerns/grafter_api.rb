@@ -7,10 +7,11 @@ module GrafterAPI
   def self.send_to_grafter!(contents, mine_keywords)
     hash = Digest::MD5.new.to_s
 
+    Rails.logger.debug "> [GrafterAPI] Encoding: #{contents.encoding}"
+    encoding = contents.encoding
+    file = Tempfile.new([hash, '.mbox'], encoding: encoding)
+
     begin
-      Rails.logger.debug "> [GrafterAPI] Encoding: #{contents.encoding}"
-      encoding = contents.encoding
-      file = Tempfile.new([hash, '.mbox'], :encoding => encoding)
       file.write(contents)
       file.close
 

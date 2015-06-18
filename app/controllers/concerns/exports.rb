@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'csv'
 
 module Exports
@@ -190,6 +191,32 @@ module Exports
     end
 
     csv
+  end
+
+  # create a tempfile and upload it to the root 
+  # of the initiating user's dropbox
+  def self.create_tempfile_and_upload(file_contents, export_type)
+    hash = Digest::MD5.new.to_s
+    file_name_and_location = "/#{export_type}_#{DateTime.now.to_s.dasherize.gsub(/T/, 'TIME').gsub(/\:/, "_").gsub(/\+/, 'PLUS')}"
+
+    Rails.logger.debug "> [Exports] Encoding: #{file_contents.encoding}"
+    encoding = file_contents.encoding
+    file = Tempfile.new([hash, '.csv'], encoding: encoding)
+
+    begin
+      file.write(file_contents)
+      file.close
+
+      Rails.logger.debug "> [Exports] File path: #{file.path}"
+      Rails.logger.debug "> [Exports] Uploading to Dropbox..."
+
+      upload_client = UploadClient.new
+      response = upload_client.upload_to_dropbox!(file_name_and_location, file)
+
+      Rails.logger.debug "> [Exports] Complete.\n  Uploaded #{response["size"]} to #{response["path"]} at #{response["modified"]}."
+    ensure
+      file.unlink
+    end
   end
 
 end
