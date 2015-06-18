@@ -89,7 +89,7 @@ module Exports
         human_name = p.human_name
         name = p.name.first
         email = p.mbox
-        connections = p.get_or_write_connections!.count
+        connections = p.get_or_write_connections!.count rescue ""
         position = p.position || ""
         subject_area = p.get_or_generate_subject_area! rescue ""
         sent_emails = p.number_of_sent_emails
@@ -182,7 +182,7 @@ module Exports
         end
 
         current_time = Time.now
-        puts "> #{row_uri} processed.\n  #{progress} of #{total_count} People processed for export. #{(total_count - progress)} People left. \n  #{(current_time - starting_time)} seconds elapsed.\n\n"
+        Rails.logger.debug "> [Matrix Export]#{row_uri} processed.\n  #{progress} of #{total_count} People processed for export. #{(total_count - progress)} People left. \n  #{(current_time - starting_time)} seconds elapsed.\n\n"
         progress += 1
 
         csv << row

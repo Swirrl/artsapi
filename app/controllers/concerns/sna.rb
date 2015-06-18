@@ -2,11 +2,14 @@ module SNA
 
   extend ActiveSupport::Concern
 
+  def self.potential_connections
+    no_of_nodes = Person.total_count
+    (no_of_nodes * (no_of_nodes - 1)) / 2
+  end
+
   def self.network_density
-    n = Person.total_count
-    potential_connections = (n * (n - 1)) / 2
-    actual_connections = Email.unique_interpersonal_edges_via_email
-    actual_connections / potential_connections
+    actual_connections = Email.unique_edges_count
+    actual_connections.to_f / potential_connections.to_f
   end
 
   def self.indegree_outdegree_for_person(uri)
@@ -22,9 +25,9 @@ module SNA
     person = Person.find(uri)
     total_nodes = Person.total_count
 
-    all_edges_count = all_edges_for_person(uri)
+    all_associated_nodes = all_edges_for_person(uri)
 
-    all_edges_count / total_nodes - 1
+    all_associated_nodes.to_f / (total_nodes.to_f - 1.0)
   end
 
   def self.all_edges_for_person(uri) 

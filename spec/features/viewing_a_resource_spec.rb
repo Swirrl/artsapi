@@ -108,6 +108,7 @@ describe "Viewing a resource" do
 
         before do
           AuthHelpers.sign_in user
+          sleep 0.1
           jeff.get_connections!
           visit '/id/organisations/widgetcorp-org'
         end
