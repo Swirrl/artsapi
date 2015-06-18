@@ -195,12 +195,11 @@ module Exports
 
   # create a tempfile and upload it to the root 
   # of the initiating user's dropbox
-  def self.create_tempfile_and_upload(file_contents, export_type)
+  def self.create_tempfile_and_upload!(file_contents, export_type)
     hash = Digest::MD5.new.to_s
-    file_name_and_location = "/#{export_type}_#{DateTime.now.to_s.dasherize.gsub(/T/, 'TIME').gsub(/\:/, "_").gsub(/\+/, 'PLUS')}"
+    file_name_and_location = "/#{export_type}_#{DateTime.now.to_s.dasherize.gsub(/T/, 'TIME').gsub(/\:/, "_").gsub(/\+/, 'PLUS')}.csv"
 
-    Rails.logger.debug "> [Exports] Encoding: #{file_contents.encoding}"
-    encoding = file_contents.encoding
+    encoding = "utf-8"
     file = Tempfile.new([hash, '.csv'], encoding: encoding)
 
     begin
