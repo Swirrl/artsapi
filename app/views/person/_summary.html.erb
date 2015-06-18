@@ -1,10 +1,42 @@
 <div id='person-summary'>
   <blockquote>
     <ul class="list-inline">
-      <li><p><%= add_connection_advice? @presenter.connections, @presenter.resource.uri %></p></li>
-      <li><p><%= @presenter.resource.number_of_sent_emails %> Emails sent</p></li>
-      <li><p><%= @presenter.resource.number_of_incoming_emails %> Emails received</p></li>
-      <li><p>Member of: <a href='<%= @presenter.parent_organisation_path %>' target='_blank'><%= @presenter.parent_organisation_label %></p></a></li>
+      <li>
+        <p><%= add_connection_advice? @presenter.connections, @presenter.resource.uri %>
+        </p>
+      </li>
+      <li>
+        <p>
+          <%= @presenter.resource.number_of_sent_emails %> Emails sent
+        </p>
+      </li>
+      <li>
+        <p>
+          <%= @presenter.resource.number_of_incoming_emails %> Emails received
+        </p>
+      </li>
+      <br>
+      <li>
+        <p>
+          <%= @presenter.indegree_outdegree.second %> Email Recipients <span class="label label-warning">outdegree</span>
+        </p>
+      </li>
+      <li>
+        <p>
+          <%= @presenter.indegree_outdegree.first %> Email Senders <span class="label label-success">indegree</span>
+        </p>
+      </li>
+      <li>
+        <p>
+          Degree centrality: <%= @presenter.degree_centrality %>
+        </p>
+      </li>
+      <br>
+      <li>
+        <p>
+          Member of: <a href='<%= @presenter.parent_organisation_path %>' target='_blank'><%= @presenter.parent_organisation_label %></a>
+        </p>
+      </li>
       <!--
       <li><p><%# @presenter.resource.get_recipients_of_emails.count %> Email recipients</p></li>
       <li><p><%# @presenter.resource.get_incoming_mail_senders.count %> Incoming Email senders</p></li>

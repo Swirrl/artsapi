@@ -34,6 +34,20 @@ module Presenters
       "Connections are being calculated for this Person. Please refresh in a few minutes."
     end
 
+    def degree_centrality
+      SNA.degree_centrality_for_person!(resource.uri).round(5)
+    end
+
+    def total_edges
+      SNA.all_edges_for_person(resource.uri)
+    end
+
+    def indegree_outdegree
+      indegree, outdegree = SNA.indegree_outdegree_for_person(resource.uri)
+      [indegree.count, outdegree.count]
+    end
+    memoize :indegree_outdegree
+
     def keywords
       resource.sorted_keywords
     end

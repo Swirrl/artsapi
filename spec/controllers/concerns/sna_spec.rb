@@ -24,10 +24,10 @@ describe SNA do
       it { expect(SNA.indegree_outdegree_for_person(jeff.uri)).not_to be_empty }
     end
 
-    describe "#degree_centrality_for_person" do
-      it { expect(SNA.degree_centrality_for_person(jeff.uri)).not_to be 0 }
-      it { expect(SNA.degree_centrality_for_person(jeff.uri)).to be > 0 }
-      it { expect(SNA.degree_centrality_for_person(jeff.uri)).not_to be_nil }
+    describe "#degree_centrality_for_person!" do
+      it { expect(SNA.degree_centrality_for_person!(jeff.uri)).not_to be 0 }
+      it { expect(SNA.degree_centrality_for_person!(jeff.uri)).to be > 0 }
+      it { expect(SNA.degree_centrality_for_person!(jeff.uri)).not_to be_nil }
     end
 
   end

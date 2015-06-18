@@ -10,21 +10,54 @@
     <p>The most common subject areas for members of this organisation are <strong><%= @presenter.common_subject_areas_sentence %></strong>.</p>
     <hr>
 
+    <h4>Keywords</h4>
     <p>The most common keywords for members of this organisation are <strong><%= @presenter.common_keywords_sentence %></strong>.</p>
     <hr>
 
     <!-- Second section: Location and Sector  -->
     <h3>Location and Sector</h3>
     <p>Provided you have tagged the location and sector of organisations in the system, we can give some high-level information about your connections.</p>
+
+    <p>To export this information in a tabular format, click the button below. Please make sure you have linked your Dropbox first. If you have not, <%= link_to 'click here to do so', uploads_path %>.</p>
+
+    <div class='export-button margin-top-20'>
+      <%= button_to "Export Sector and Location Data &rarr;".html_safe, person_export_path, remote: true, data: { disable_with: "Queuing Export...", confirm: "Are you sure all data processing has finished?" }, class: 'btn btn-info' %>
+    </div>
+
     <hr>
 
     <!-- Third section: SNA stuff here  -->
     <h3>SNA Analysis</h3>
-    <p>Although this is no replacement for a full SNA study, some things can be calculated about your network from just the data available to ArtsAPI. A breakdown of these things follow.</p>
+    <p>Although this is no replacement for a full SNA study, some things can be calculated about your network from just the data available to ArtsAPI.</p>
+
+    <p>The network density for the complete organisational network in this database is <strong><%= @presenter.network_density %></strong></p>
+
+    <p>You can export a symmetric matrix of connectivity representing all people in the database that have sent or received email. Depending on its size, this may be used for further analysis or to import into specialist SNA software. Click the button below to generate this, but make sure you have linked your Dropbox first. If you have not, <%= link_to 'click here to do so', uploads_path %>.</p>
+
+    <div class='export-button margin-top-20'>
+      <%= button_to "Export Connectivity Matrix &rarr;".html_safe, person_matrix_path, remote: true, data: { disable_with: "Queuing Export...", confirm: "Are you sure all data processing has finished?" }, class: 'btn btn-info' %>
+    </div>
     <hr>
 
-    <!-- Fourth section: generate report based on all data -->
-    <h3>Generate Report</h3>
-    <p>Coming soon!</p>
+    <!-- Fourth section: export -->
+    <h3>Export</h3>
+
+    <p>Click the button below to dump all Person resources, along with their key associated fields and fields from related resources (for example, their parent Organisation). Please make sure you have linked your Dropbox first. If you have not, <%= link_to 'click here to do so', uploads_path %>.</p>
+
+    <div class='export-button margin-top-20'>
+      <%= button_to "Export all Person Resources &rarr;".html_safe, person_dump_path, remote: true, data: { disable_with: "Queuing Export...", confirm: "Are you sure all data processing has finished?" }, class: 'btn btn-info' %>
+    </div>
   </div>
 </div>
+
+<script type="text/javascript">
+
+  $('.export-button form.button_to').bind('ajax:success', function() {
+    alert('Exporting to Dropbox has been queued.');
+  });
+
+  $('.export-button form.button_to').bind('ajax:error', function() {
+    alert('Something went wrong with your export - please make sure you have linked your Dropbox account on the data uploads page and try again.');
+  });
+
+</script>

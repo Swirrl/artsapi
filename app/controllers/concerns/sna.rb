@@ -21,13 +21,20 @@ module SNA
     [indegree, outdegree]
   end
 
-  def self.degree_centrality_for_person(uri)
+  def self.degree_centrality_for_person!(uri, regenerate=false)
     person = Person.find(uri)
+    return person.degree_centrality if !person.degree_centrality.nil? && regenerate == false
+
     total_nodes = Person.total_count
 
     all_associated_nodes = all_edges_for_person(uri)
 
-    all_associated_nodes.to_f / (total_nodes.to_f - 1.0)
+    degree_centrality = all_associated_nodes.to_f / (total_nodes.to_f - 1.0)
+
+    person.degree_centrality = degree_centrality
+    person.save
+
+    degree_centrality
   end
 
   def self.all_edges_for_person(uri) 

@@ -32,6 +32,10 @@ module Presenters
       members.size
     end
 
+    def network_density
+      SNA.network_density
+    end
+
     def members_data
       members.map { |m|
         p = Person.find(m)

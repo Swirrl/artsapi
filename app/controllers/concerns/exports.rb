@@ -92,7 +92,7 @@ module Exports
         email = p.mbox
         connections = p.get_or_write_connections!.count rescue ""
         position = p.position || ""
-        subject_area = p.get_or_generate_subject_area! rescue ""
+        subject_area = KeywordCategory.find(p.get_or_generate_subject_area!.first) rescue ""
         sent_emails = p.number_of_sent_emails
         received_emails = p.number_of_incoming_emails
         org_uri = p.member_of.to_s
