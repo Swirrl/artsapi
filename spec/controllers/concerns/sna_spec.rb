@@ -10,6 +10,7 @@ describe SNA do
     describe "#potential_connections" do
       it { expect(SNA.potential_connections).not_to be 0 }
       it { expect(SNA.potential_connections).to be > 0 }
+      it { expect(SNA.potential_connections).to be 3 }
       it { expect(SNA.potential_connections).not_to be_nil }
     end
 
