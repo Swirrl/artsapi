@@ -21,6 +21,7 @@ class UploadClient
   end
 
   # Using a file location string, download the file and send to Grafter
+  # Really, from the point of view of the application this is an import
   def upload!(file_location_string, mine_keywords=true)
     contents, metadata = self.client.get_file_and_metadata(file_location_string)
 
@@ -30,15 +31,16 @@ class UploadClient
 
     rescue Exception => e
 
-      if Rails.env.production?
-        Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n#{e.backtrace.map { |line| line }}"
-      else
-        Rails.logger.debug "Error: #{e.class.to_s} #{e.message}\n\nStack:\n"
-        e.backtrace.map { |line| Rails.logger.debug(line) }
-      end
+      Rails.logger.debug "> [GrafterAPI] Import Error: #{e.class.to_s} #{e.message}\n\nStack:\n#{e.backtrace.map { |line| line }}"
 
       raise GrafterAPI::ImportError
     end
+  end
+
+  # Principally to be used by the SNA and exporting modules
+  # in order to deliver a multi-hundred MB file to the user's Dropbox
+  def upload_to_dropbox!(location, file)
+    self.client.put_file(location, file)
   end
 
   class << self

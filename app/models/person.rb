@@ -40,6 +40,9 @@ class Person < ResourceWithPresenter
   field :incoming_emails, RDF::ARTS['incomingEmails']
   field :graph_visualisation, RDF::ARTS['visualisation']
 
+  # for SNA
+  field :degree_centrality, RDF::ARTS['degreeCentrality']
+
   def get_visualisation_graph
     if !self.graph_visualisation.nil?
       set_visualisation_graph_async

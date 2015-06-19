@@ -18,6 +18,7 @@ class PeopleWorker
     Rails.logger.debug "> [Sidekiq]: Re-generating email counts for #{uri}"
     person.number_of_incoming_emails(true)
     person.number_of_sent_emails(true)
+    SNA.degree_centrality_for_person!(uri, true)
 
   end
 
