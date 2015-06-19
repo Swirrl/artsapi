@@ -1,17 +1,22 @@
 <table class='table table-striped'>
   <thead>
     <th>Member</th>
+    <th>Degree Centrality</th>
     <th>Number of known Connections</th>
   </thead>
   <tbody>
     <% @presenter.members_data.each do |member| %>
       <tr>
         <td>
-          <a href="<%= member[0] %>">
-            <%= member[1] %>
-          </a>
+          <span class='member-inline-edit-container'>
+            <a href="<%= member[0] %>">
+              <%= member[1] %>
+            </a>
+            <%= inline_edit_link_for("#{ArtsAPI::HOST}#{member[0]}") %>
+          </span>
         </td>
         <td><%= member[2] %></td>
+        <td><%= member[3] %></td>
       </tr>
     <% end %>
   </tbody>

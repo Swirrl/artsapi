@@ -2,9 +2,7 @@
   <div class='col-md-4'>
     <h1 class='text-center'>
       <%= yield(:title) %>
-      <small>
-        <%= inline_edit_link_for(@presenter.resource_uri) if @presenter && @presenter.respond_to?(:resource_uri) && :title_editable %>
-      </small>
+        <%= inline_edit_link_for(@presenter.resource_uri, small: true) if @presenter && @presenter.respond_to?(:resource_uri) && :title_editable %>
     </h1>
   </div>
   <div class='col-md-8'>

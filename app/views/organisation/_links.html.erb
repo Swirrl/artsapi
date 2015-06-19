@@ -8,7 +8,12 @@
     <% @presenter.linked_organisations_data.each do |org| %>
 
       <tr>
-        <td><%= link_with_path_from org[0] %></td>
+        <td>
+          <span class='links-inline-edit-container'>
+            <%= link_with_path_from org[0], text: org[3] %>
+            <%= inline_edit_link_for("#{org[0]}") %>
+          </span>
+        </td>
         <td><%= org[1] %></td>
         <td><%= org[2] %></td>
       </tr>

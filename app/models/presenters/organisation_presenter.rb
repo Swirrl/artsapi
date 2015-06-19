@@ -20,7 +20,8 @@ module Presenters
         o = Organisation.find(lo)
         [lo.to_s, 
           o.has_members.size, 
-          o.linked_to.size]
+          o.linked_to.size,
+          o.label]
       }.sort { |a,b| b[1] <=> a[1] }
     end
 
@@ -41,6 +42,7 @@ module Presenters
         p = Person.find(m)
         [Presenters::Resource.create_path_from_uri(m.to_s), 
           p.human_name,
+          SNA.degree_centrality_for_person!(m.to_s).round(5),
           p.connections.count]
       }.sort { |a,b| b[2] <=> a[2] }
     end

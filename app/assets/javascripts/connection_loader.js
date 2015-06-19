@@ -92,8 +92,8 @@
 
     if(resourceUri !== null){
       var path = '/get_organisation_graph?uri=' + resourceUri;
-      var gravity = 0.5;
-      var visualisation = new window.artsapi.GraphVis(path, gravity);
+      var gravity = 0.3;
+      var visualisation = new window.artsapi.GraphVis(path, gravity, 200);
       visualisation.init();
     }
   }

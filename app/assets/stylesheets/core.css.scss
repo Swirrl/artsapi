@@ -403,6 +403,24 @@ ol {
 
 /* 
 ----------------------------------------
+  LINKS
+----------------------------------------
+*/
+
+a {
+  &.small-edit-link {
+    &:hover {
+      text-decoration:none !important;
+      color:$orange-yellow !important;
+      small {
+        color:$orange-yellow !important;
+      }
+    }
+  }
+}
+
+/* 
+----------------------------------------
   FOOTER
 ----------------------------------------
 */

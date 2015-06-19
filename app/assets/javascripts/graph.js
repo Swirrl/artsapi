@@ -1,6 +1,6 @@
 (function($, window){
 
-  var GraphVis = function(jsonRequestPath, gravityValue){
+  var GraphVis = function(jsonRequestPath, gravityValue, linkDistance=120){
 
     var self = this;
 
@@ -13,7 +13,7 @@
       var force = d3.layout.force()
           .gravity(gravityValue)
           .charge(-600)
-          .linkDistance(120)
+          .linkDistance(linkDistance)
           .size([width, height]);
 
       var svg = d3.select("#graph-vis").append("svg")

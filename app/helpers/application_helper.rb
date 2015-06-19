@@ -4,8 +4,14 @@ module ApplicationHelper
     "| #{title}".html_safe if !title.nil?
   end
 
-  def inline_edit_link_for(uri)
-    "<a href='#' data-uri='#{uri}' class='edit-label'>[edit]</a>".html_safe
+  def inline_edit_link_for(uri, opts={})
+    small = opts.fetch(:small, false)
+    output = "<a href='#' data-uri='#{uri}' class='edit-label #{'small-edit-link' if small}'>"
+    output << "<small>" if small
+    output << "[edit]"
+    output << "</small>" if small
+    output << "</a>"
+    output.html_safe
   end
 
   def flash_style_for(key)
@@ -34,8 +40,8 @@ module ApplicationHelper
     end
   end
 
-  def link_with_path_from(uri)
-    Presenters::Resource.create_link_from_uri(uri).html_safe
+  def link_with_path_from(uri, opts={})
+    Presenters::Resource.create_link_from_uri(uri, opts).html_safe
   end
 
 end

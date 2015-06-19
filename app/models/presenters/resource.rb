@@ -75,9 +75,11 @@ module Presenters
         URI(uri.to_s.match(/http:\/\/data\.artsapi\.com\/id.+/)[0]).path
       end
 
-      def create_link_from_uri(uri)
+      def create_link_from_uri(uri, opts={})
+        text = opts.fetch(:text, nil)
+        text = uri if text.nil?
         path = create_path_from_uri(uri)
-        "<a href='#{path}'>#{uri}</a>"
+        "<a href='#{path}'>#{text}</a>"
       end
 
     end

@@ -70,6 +70,7 @@ module Exports
         "Human Readable Name",
         "Name",
         "Email",
+        "Degree Centrality",
         "Number of Connections",
         "Position",
         "Subject Area",
@@ -90,6 +91,7 @@ module Exports
         human_name = p.human_name
         name = p.name.first
         email = p.mbox
+        degree_centrality = SNA.degree_centrality_for_person!(uri)
         connections = p.get_or_write_connections!.count rescue ""
         position = p.position || ""
         subject_area = KeywordCategory.find(p.get_or_generate_subject_area!.first) rescue ""
@@ -124,6 +126,7 @@ module Exports
           human_name,
           name,
           email,
+          degree_centrality,
           connections,
           position,
           subject_area,
