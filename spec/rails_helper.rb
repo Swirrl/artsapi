@@ -6,6 +6,7 @@ require 'rspec/rails'
 require 'capybara/rails'
 #require 'devise'
 require 'sidekiq/testing'
+require 'capybara/poltergeist'
 
 include Warden::Test::Helpers
 Warden.test_mode!
@@ -16,6 +17,9 @@ Sidekiq::Testing.inline!
 
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.orm = "mongoid"
+
+# Capybara.javascript_driver = :webkit
+# Capybara.javascript_driver = :poltergeist
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
