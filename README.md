@@ -20,7 +20,12 @@ NB: You *must* be running Fuseki on port 3030 if you do not want to modify the m
 
 In production, you will use env vars to declare dropbox credentials. In development, you will need to find the file in `/config/initializers` called `dropbox.example` - add your credentials for Dropbox in here and rename it `dropbox.rb`. Make sure you do not commit this, as you will have to change `production.rb` to not expect env vars with the locations provided (see the Docker/Deployment) section below.
 
-Although effort has been made to try and make the application thread-safe, we cannot guarantee that it will work; hence you will need to pass the `-c 1` option to Sidekiq when running.
+### Foreman
+
+If you wish to use Foreman to manage development (we encourage this), then add the locations into the `Procfile.example` file, and rename it `Procfile`. Then, change out of this directory and `$ gem install foreman`; you will now be able to use `foreman start` to bring up development dependencies. Make sure you have development unicorn configuration at `./config/unicorn_development.rb`
+
+### Thread Safety (Important!)
+Although effort has been made to try and make the application thread-safe, we cannot guarantee thread safety; hence you will need to pass the `-c 1` option to Sidekiq when running.
 
 ## Deployment
 

@@ -83,7 +83,7 @@ module PersonKeywordMethods
         }
       ")
 
-      mentions = Thread.current[:__session_user__].within {
+      mentions = User.current_user.within {
         Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
       }
 
@@ -99,14 +99,6 @@ module PersonKeywordMethods
     ak = all_keywords_from_emails
     ak.sort { |a, b| ak[b[0]][1] <=> ak[a[0]][1] }.each { |h| sorted << [ak[h[0]][0], ak[h[0]][1]] }
     sorted
-  end
-
-  def keywords_csv
-  end
-
-  # for use in rake tasks etc
-  # works out a possible department and writes a triple
-  def generate_and_write_possible_department
   end
 
   # for debug and partner feedback; not for production use!

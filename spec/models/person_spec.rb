@@ -52,8 +52,45 @@ describe 'Person' do
         expect(bad_name.human_name).to eq("Jeff Lebowski")
       end
 
+      it "should be able to get all sent emails" do
+        expect(jeff.all_emails.first).to eq email
+      end
+
       it "should be able to get number of sent emails" do
         expect(jeff.number_of_sent_emails).to eq(3)
+      end
+
+      it "should be able to get number of incoming emails" do
+        expect(jeff.number_of_incoming_emails).to eq(3)
+      end
+
+      it "should be able to regenerate number of sent emails" do
+        new_email = FactoryGirl.create(:email, 
+          sender: jeff_uri, 
+          recipient: [walter_uri])
+        expect(jeff.number_of_sent_emails(true)).to eq(4)
+      end
+
+      it "should be able to regenerate number of incoming emails" do
+        new_email = FactoryGirl.create(:email, 
+          sender: walter_uri, 
+          recipient: [jeff_uri])
+        expect(jeff.number_of_incoming_emails(true)).to eq(4)
+      end
+
+      it "should be able to get parent org" do
+        expect(jeff.parent_organisation).to eq organisation
+      end
+
+      it "should be able to get best guess at country and city" do
+        expect(jeff.org_location_string).to eq "City: Not known, Country: Not known"
+      end
+
+      it "should inherit changes to country and city" do
+        organisation.country = "United Kingdom"
+        organisation.city = "Manchester"
+        organisation.save
+        expect(jeff.org_location_string).to eq "City: Manchester, Country: United Kingdom"
       end
 
       it "should be able to get contained keywords" do
@@ -81,12 +118,6 @@ describe 'Person' do
         }.to change(ConnectionsWorker.jobs, :size).by(1)
       end
 
-      # it "connections worker should generate connections" do
-      #   jeff.generate_connections_async
-      #   sleep 60
-      #   expect(jeff.connections).not_to be_empty
-      # end
-
     end
 
 
@@ -101,6 +132,39 @@ describe 'Person' do
 
       describe "#get_rdf_uri_from_email" do
         it { expect(Person.get_rdf_uri_from_email("kaneda@capsules.jp")).to eq RDF::URI("http://data.artsapi.com/id/people/kaneda-capsules-jp") }
+      end
+
+      describe "#query_prefixes" do
+        it { expect(Person.query_prefixes).to eq "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n      PREFIX arts: <http://data.artsapi.com/def/arts/>\n      PREFIX org: <http://www.w3.org/ns/org#>" }
+      end
+
+      describe "#find_by_email_or_name looking up a valid name" do
+        it { expect(Person.find_by_email_or_name(jeff.name.first)).to eq jeff }
+      end
+
+      describe "#find_by_email_or_name looking up a valid email" do
+        it { expect(Person.find_by_email_or_name('jeff@widgetcorp.org')).to eq jeff }
+      end
+
+      describe "#all_unhydrated" do
+        it { expect(Person.all_unhydrated.first["uri"]["value"]).to eq jeff.uri.to_s }
+      end
+
+      describe "#total_count" do
+        it { expect(Person.total_count).to eq 3 }
+      end
+
+      describe "#all_uris_and_emails" do
+        it { expect(Person.all_uris_and_emails.first[0]).to eq jeff.uri.to_s }
+        it { expect(Person.all_uris_and_emails.first[1]).to eq "jeff@widgetcorp.org" }
+      end
+
+      describe "#total_emails_between" do
+        it { expect(Person.total_emails_between(jeff.uri, walter.uri)).to eq 3 }
+      end
+
+      describe "#connected?" do
+        it { expect(Person.connected?(jeff.uri, walter.uri)).to eq true }
       end
 
     end

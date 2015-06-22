@@ -1,0 +1,4 @@
+mongo: mongod run --config /path/to/mongodb/mongod.conf
+redis: /path/to/redis/bin/redis-server /usr/local/etc/redis.conf
+worker: bundle exec sidekiq -c 1
+web: bundle exec unicorn_rails -c ./config/unicorn_development.rb
