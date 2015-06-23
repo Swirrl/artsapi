@@ -343,7 +343,7 @@ class Person < ResourceWithPresenter
     end
 
     def connected?(uri_one, uri_two)
-      query = Tripod::SparqlQuery.new("
+      query_string = "
         #{Person.query_prefixes}
 
         ASK {
@@ -361,10 +361,10 @@ class Person < ResourceWithPresenter
             }
           } LIMIT 2
         }
-      ")
+      "
 
       User.current_user.within { 
-        Tripod::SparqlClient::Query.new(query).execute
+        JSON.parse(Tripod::SparqlClient::Query.query(query_string, "application/sparql-results+json"))["boolean"]
       }
     end
 

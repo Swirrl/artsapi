@@ -64,6 +64,9 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.5.0"
   gem "capybara", "~> 2.4"
   gem "database_cleaner"
+  # gem "selenium-webdriver"
+  gem 'poltergeist'
+  # gem "capybara-webkit"
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   #gem 'byebug'

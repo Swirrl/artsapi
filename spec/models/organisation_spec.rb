@@ -8,6 +8,119 @@ describe 'Organisation' do
 
     context "instance methods" do
 
+      describe "#sector_label" do
+        before do
+          bootstrap_sic!
+          sector = SIC::Class.find('http://swirrl.com/id/sic/0116')
+
+          organisation.sector = sector.uri
+          organisation.save
+        end
+
+        it { expect(organisation.sector_label).to eq "Growing of fibre crops" }
+      end
+
+      describe "#location_string" do
+        before do
+          organisation.city = "Manchester"
+          organisation.country = "United Kingdom"
+          organisation.save
+        end
+
+        it { expect(organisation.location_string).to eq "City: Manchester, Country: United Kingdom" }
+      end
+
+      describe "#get_top_subject_areas" do
+
+        let!(:email_six) { 
+          FactoryGirl.create(:email, 
+            sender: jeff_uri, 
+            recipient: [RDF::URI("http://data.artsapi.com/id/people/walter-widgetcorp-org"),
+            RDF::URI("http://data.artsapi.com/id/people/donny-widgetcorp-org")], 
+            contains_keywords: [RDF::URI('http://data.artsapi.com/id/keywords/keyword/ask')]) }
+
+        let!(:email_seven) { 
+          FactoryGirl.create(:email, 
+            sender: jeff_uri, 
+            recipient: [walter_uri,
+            RDF::URI("http://data.artsapi.com/id/people/donny-widgetcorp-org")], 
+            contains_keywords: [RDF::URI('http://data.artsapi.com/id/keywords/keyword/planning')]) }
+
+        before do
+          bootstrap_keywords!
+          seed_keyword_mentions_for(organisation)
+        end
+
+        #it { expect(organisation.get_top_subject_areas.length).to eq 1 }
+        #it { expect(organisation.get_top_subject_areas.first).to eq 'http://data.artsapi.com/id/keywords/category/developing' }
+      end
+
+      describe "#get_common_subject_areas" do
+
+        let!(:email_six) { 
+          FactoryGirl.create(:email, 
+            sender: jeff_uri, 
+            recipient: [RDF::URI("http://data.artsapi.com/id/people/walter-widgetcorp-org"),
+            RDF::URI("http://data.artsapi.com/id/people/donny-widgetcorp-org")], 
+            contains_keywords: [RDF::URI('http://data.artsapi.com/id/keywords/keyword/ask')]) }
+
+        let!(:email_seven) { 
+          FactoryGirl.create(:email, 
+            sender: jeff_uri, 
+            recipient: [walter_uri,
+            RDF::URI("http://data.artsapi.com/id/people/donny-widgetcorp-org")], 
+            contains_keywords: [RDF::URI('http://data.artsapi.com/id/keywords/keyword/planning')]) }
+
+        before do
+          bootstrap_keywords!
+          seed_keyword_mentions_for(organisation)
+        end
+
+        #it { expect { organisation.get_common_subject_areas! }.to change(organisation, :common_subject_areas) }
+      end
+
+      describe "#get_top_keywords" do
+        before do
+          bootstrap_keywords!
+          seed_keyword_mentions_for(organisation)
+        end
+
+        it { expect(organisation.get_top_keywords.length).to eq 2 }
+        it { expect(organisation.get_top_keywords.first[0]).to eq 'Ask' }
+        it { expect(organisation.get_top_keywords.first[1]).to eq 4 }
+        it { expect(organisation.get_top_keywords.second[0]).to eq 'Planning' }
+        it { expect(organisation.get_top_keywords.second[1]).to eq 1 }
+      end
+
+      describe "#get_common_keywords" do
+        before do
+          bootstrap_keywords!
+          seed_keyword_mentions_for(organisation)
+        end
+
+        it { expect { organisation.get_common_keywords! }.to change(organisation, :common_keywords) }
+      end
+
+      describe "#members_with_more_than_x_connections" do
+        let!(:email_six) {
+          FactoryGirl.create(:email, 
+            sender: 'http://data.artsapi.com/id/people/donny-widgetcorp-org',
+            recipient: [jeff_uri]) }
+        let!(:donny) { FactoryGirl.create(:person, email: 'donny@widgetcorp.org', made: [email_six.uri]) }
+
+        before { organisation.generate_all_connections! }
+
+        it { expect(organisation.members_with_more_than_x_connections(1).length).to be 1 }
+        it { expect(organisation.members_with_more_than_x_connections(1)).to include jeff_uri }
+        it { expect(organisation.members_with_more_than_x_connections(1)).not_to include walter_uri }
+      end
+
+      describe "best_guess_at_country" do
+        let!(:uk_org) { FactoryGirl.create(:organisation, uri: RDF::URI('http://data.artsapi.com/id/organisations/foouniversity-ac-uk'), label: 'foouniversity-ac-uk') }
+
+        it { expect(uk_org.best_guess_at_country).to eq "United Kingdom" }
+      end
+
       describe "#generate_all_connections" do
         before { @connections = organisation.generate_all_connections! }
 
