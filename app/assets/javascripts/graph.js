@@ -1,6 +1,6 @@
 (function($, window){
 
-  var GraphVis = function(jsonRequestPath, gravityValue, linkDistance=120){
+  var GraphVis = function(jsonRequestPath, gravityValue, linkDistance){
 
     var self = this;
 
@@ -10,10 +10,12 @@
 
       var color = d3.scale.category20();
 
+      var distance = (typeof linkDistance !== 'undefined') ? linkDistance : 120;
+
       var force = d3.layout.force()
           .gravity(gravityValue)
           .charge(-600)
-          .linkDistance(linkDistance)
+          .linkDistance(distance)
           .size([width, height]);
 
       var svg = d3.select("#graph-vis").append("svg")
