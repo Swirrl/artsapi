@@ -47,16 +47,55 @@ module Presenters
       }.sort { |a,b| b[2] <=> a[2] }
     end
 
-    def get_fields_hash
-      if Rails.env.test?
-        super
-      else
-        fields_hash = resource.fields.dup
-        fields_hash.delete(:graph_visualisation)
-        fields_hash.delete(:has_members)
-        fields_hash.delete(:linked_to)
-        fields_hash
+    def country_list
+      ArtsAPI::COUNTRIES_MAPPING.values
+    end
+    memoize :country_list
+
+    def city_list
+      Organisation.all_unique_city_values
+    end
+    memoize :city_list
+
+    def country_table
+      output = []
+      country_list.each do |country|
+        row = [country]
+
+        orgs_in_country = Organisation.all_organisations_in_country(country)
+        row << orgs_in_country.count
+        row << orgs_in_country # return uris and labels in case needed later
+        output << row
       end
+
+      output
+    end
+
+    def city_table
+      output = []
+
+      city_list.each do |city|
+        row = [city]
+
+        orgs_in_city = Organisation.all_organisations_in_city(city)
+        row << orgs_in_city.count
+        row << orgs_in_city # return uris and labels in case needed later
+        output << row
+      end
+
+      output
+    end
+
+    def sector_table
+      output = []
+    end
+
+    def get_fields_hash
+      fields_hash = resource.fields.dup
+      fields_hash.delete(:graph_visualisation)
+      fields_hash.delete(:has_members)
+      fields_hash.delete(:linked_to)
+      fields_hash
     end
 
     def common_subject_areas

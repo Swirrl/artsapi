@@ -1,0 +1,65 @@
+<div class='clustering-country'>
+  <h3>Linked Organisations by Country</h3>
+  <table class='table table-striped'>
+    <thead>
+      <th>Country</th>
+      <th>Number of Organisations</th>
+    </thead>
+    <tbody>
+      <% @presenter.country_table.each do |row| %>
+        <tr>
+          <td>
+            <%= row[0] %>
+          </td>
+          <td>
+            <%= row[1] %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class='clustering-city'>
+  <hr>
+  <h3>Linked Organisations by City</h3>
+  <table class='table table-striped'>
+    <thead>
+      <th>City</th>
+      <th>Number of Organisations</th>
+    </thead>
+    <tbody>
+      <% @presenter.city_table.each do |row| %>
+        <tr>
+          <td>
+            <%= row[0] %>
+          </td>
+          <td>
+            <%= row[1] %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class='clustering-sector'>
+  <hr>
+  <h3>Linked Organisations by Sector</h3>
+  <table class='table table-striped'>
+    <thead>
+      <th>Sector</th>
+      <th>Number of Organisations</th>
+    </thead>
+    <tbody>
+      <% @presenter.sector_table.each do |row| %>
+        <tr>
+          <td>
+          </td>
+          <td>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

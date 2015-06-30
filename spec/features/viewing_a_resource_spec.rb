@@ -122,6 +122,7 @@ describe "Viewing a resource" do
         it { expect(page).to have_content("Links") }
         it { expect(page).to have_content("Data") }
         it { expect(page).to have_content("Analysis") }
+        it { expect(page).to have_content("Clustering") }
 
         it { expect(page).to have_content("2 Members") }
         it { expect(page).to have_content("1 Linked Organisation") }
