@@ -3,7 +3,7 @@
     <p class='lead text-center margin-top-50'>This panel shows information gleaned from the data using keyword analysis and SNA measures. More detailed information on each is below.</p>
 
     <!-- First section: subject area stuff from keywords -->
-    <h3>Keyword Analysis</h3>
+    <h3 class='margin-top-50'>Keyword Analysis</h3>
 
     <h4 class='margin-top-30'>Subject Area</h4>
 
@@ -15,7 +15,7 @@
     <hr>
 
     <!-- Second section: Location and Sector  -->
-    <h3>Location and Sector</h3>
+    <h3>Location and Sector Export</h3>
     <p>Provided you have tagged the location and sector of organisations in the system, we can give some high-level information about your connections.</p>
 
     <p>To export this information in a tabular format, click the button below. Please make sure you have linked your Dropbox first. If you have not, <%= link_to 'click here to do so', uploads_path, target: '_blank' %>.</p>
@@ -27,7 +27,7 @@
     <hr>
 
     <!-- Third section: SNA stuff here  -->
-    <h3>SNA Analysis</h3>
+    <h3>SNA Analysis and Matrix Export</h3>
     <p>Although this is no replacement for a full SNA study, some things can be calculated about your network from just the data available to ArtsAPI.</p>
 
     <p>The network density for the complete organisational network in this database is <strong><%= @presenter.network_density %></strong></p>
@@ -40,7 +40,7 @@
     <hr>
 
     <!-- Fourth section: export -->
-    <h3>Export</h3>
+    <h3>Person Contact List Export</h3>
 
     <p>Click the button below to dump all Person resources, along with their key associated fields and fields from related resources (for example, their parent Organisation). Please make sure you have linked your Dropbox first. If you have not, <%= link_to 'click here to do so', uploads_path, target: '_blank' %>.</p>
 

@@ -62,6 +62,17 @@ module Presenters
     end
     memoize :sector_list
 
+    def linked_orgs_uri_strings
+      resource.linked_to.map(&:to_s)
+    end
+    memoize :linked_orgs_uri_strings
+
+    # expects a multidimensional array
+    # with structure [uri, label]; uri is a string
+    def eliminate_unlinked_orgs(orgs)
+      orgs.map { |org_array| org_array if linked_orgs_uri_strings.include?(org_array[0]) }.compact
+    end
+
     def country_table
       output = []
 
@@ -69,6 +80,7 @@ module Presenters
 
       country_list.each do |country|
         orgs_in_country = Organisation.all_organisations_in_country(country)
+        orgs_in_country = eliminate_unlinked_orgs(orgs_in_country)
 
         if orgs_in_country.count > 0
           row = [country]
@@ -92,12 +104,15 @@ module Presenters
       output = []
 
       city_list.each do |city|
-        row = [city]
-
         orgs_in_city = Organisation.all_organisations_in_city(city)
-        row << orgs_in_city.count
-        row << orgs_in_city # return uris and labels in case needed later
-        output << row
+        orgs_in_city = eliminate_unlinked_orgs(orgs_in_city)
+
+        if orgs_in_city.count > 0
+          row = [city]
+          row << orgs_in_city.count
+          row << orgs_in_city # return uris and labels in case needed later
+          output << row
+        end
       end
 
       output.sort! { |a, b| b[1] <=> a[1] }
@@ -114,6 +129,8 @@ module Presenters
         sector_uri = sector.uri.to_s
 
         orgs_in_sector = Organisation.all_organisations_in_sector(sector_uri)
+        orgs_in_sector = eliminate_unlinked_orgs(orgs_in_sector)
+
         if orgs_in_sector.count > 0
           row = [sector_uri, sector.label]
           row << orgs_in_sector.count
