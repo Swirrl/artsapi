@@ -48,7 +48,7 @@ module Presenters
     end
 
     def country_list
-      ArtsAPI::COUNTRIES_MAPPING.values
+      ArtsAPI::COUNTRIES_MAPPING.values.uniq
     end
     memoize :country_list
 
@@ -59,14 +59,26 @@ module Presenters
 
     def country_table
       output = []
-      country_list.each do |country|
-        row = [country]
 
+      countries_with_no_orgs = 0
+
+      country_list.each do |country|
         orgs_in_country = Organisation.all_organisations_in_country(country)
-        row << orgs_in_country.count
-        row << orgs_in_country # return uris and labels in case needed later
-        output << row
+
+        if orgs_in_country.count > 0
+          row = [country]
+          row << orgs_in_country.count
+          row << orgs_in_country # return uris and labels in case needed later
+          output << row
+        else
+          # do not add row
+          countries_with_no_orgs += 1
+        end
+
       end
+
+      output.sort! { |a, b| b[1] <=> a[1] }
+      # output << ["Countries with no known Organisations", countries_with_no_orgs, []]
 
       output
     end
@@ -82,6 +94,8 @@ module Presenters
         row << orgs_in_city # return uris and labels in case needed later
         output << row
       end
+
+      output.sort! { |a, b| b[1] <=> a[1] }
 
       output
     end

@@ -409,6 +409,9 @@ ol {
 
 a {
   &.small-edit-link {
+    small {
+      font-size:50%;
+    }
     &:hover {
       text-decoration:none !important;
       color:$orange-yellow !important;

@@ -199,6 +199,10 @@ class Organisation < ResourceWithPresenter
 
   class << self
 
+    # all unhydrated orgs
+    def total_count
+    end
+
     # get all the strings that have been input for cities
     def all_unique_city_values
       sparql = "
@@ -206,7 +210,7 @@ class Organisation < ResourceWithPresenter
       WHERE 
       {
         GRAPH <http://data.artsapi.com/graph/organisations> {
-          ?org <http://data.artsapi.com/def/locationCity> ?city .
+          ?org <http://data.artsapi.com/def/arts/locationCity> ?city .
         }
       }"
 
@@ -223,7 +227,7 @@ class Organisation < ResourceWithPresenter
       {
         VALUES ?country { \"#{country}\" }
         GRAPH <http://data.artsapi.com/graph/organisations> {
-          ?uri <http://data.artsapi.com/def/locationCountry> ?country .
+          ?uri <http://data.artsapi.com/def/arts/locationCountry> ?country .
           ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?label .
         }
       }
@@ -242,7 +246,7 @@ class Organisation < ResourceWithPresenter
       {
         VALUES ?city { \"#{city}\" }
         GRAPH <http://data.artsapi.com/graph/organisations> {
-          ?uri <http://data.artsapi.com/def/locationCity> ?city .
+          ?uri <http://data.artsapi.com/def/arts/locationCity> ?city .
           ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?label .
         }
       }
