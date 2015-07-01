@@ -57,6 +57,11 @@ module Presenters
     end
     memoize :city_list
 
+    def sector_list
+      SICConcept.all_classes_and_subclasses
+    end
+    memoize :sector_list
+
     def country_table
       output = []
 
@@ -100,8 +105,25 @@ module Presenters
       output
     end
 
+    # slightly different to the above; each row is 
+    # [uri, label, number]
     def sector_table
       output = []
+
+      sector_list.each do |sector|
+        sector_uri = sector.uri.to_s
+
+        orgs_in_sector = Organisation.all_organisations_in_sector(sector_uri)
+        if orgs_in_sector.count > 0
+          row = [sector_uri, sector.label]
+          row << orgs_in_sector.count
+          output << row
+        end
+      end
+
+      output.sort! { |a, b| b[2] <=> a[2] }
+
+      output
     end
 
     def get_fields_hash

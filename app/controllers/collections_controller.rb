@@ -4,7 +4,7 @@ class CollectionsController < ApplicationController
 
   def show
 
-    if country_or_city_in?(params)
+    if country_city_or_uri_in?(params)
       @presenter = Presenters::CollectionPresenter.new(nil, collection: location_collection_for(params))
       @presenter.contains_type = :organisation
     else
@@ -17,8 +17,8 @@ class CollectionsController < ApplicationController
 
   private
 
-    def country_or_city_in?(params)
-      !!(params.has_key?(:country) || params.has_key?(:city))
+    def country_city_or_uri_in?(params)
+      !!(params.has_key?(:country) || params.has_key?(:city) || params.has_key?(:sector))
     end
 
     def location_collection_for(params)
@@ -31,7 +31,11 @@ class CollectionsController < ApplicationController
       when :city
         results = Organisation.all_organisations_in_city(params[:city])
         results.map { |r| Organisation.find(r[0]) }.compact
+      when :sector
+        results = Organisation.all_organisations_in_sector(params[:sector])
+        results.map { |r| Organisation.find(r[0]) }.compact
       end
+
     end
 
     def resolve_location_type(params)
@@ -39,6 +43,8 @@ class CollectionsController < ApplicationController
         :country
       elsif params.has_key?(:city)
         :city
+      elsif params.has_key?(:sector)
+        :sector
       end
     end
 

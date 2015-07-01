@@ -257,6 +257,26 @@ class Organisation < ResourceWithPresenter
       results.map { |r| [r["uri"]["value"], r["label"]["value"]] }
     end
 
+    # get all orgs in a sector and return their uri and label
+    # expects a uri as input
+    def all_organisations_in_sector(sector)
+      sparql = "
+      SELECT DISTINCT ?uri ?label
+      WHERE 
+      {
+        VALUES ?sector { <#{sector}> }
+        GRAPH <http://data.artsapi.com/graph/organisations> {
+          ?uri <http://data.artsapi.com/def/arts/sector> ?sector .
+          ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+        }
+      }
+      "
+
+      results = User.current_user.within { Tripod::SparqlClient::Query.select(sparql) }
+
+      results.map { |r| [r["uri"]["value"], r["label"]["value"]] }
+    end
+
     # takes a uri object or string
     def write_link(org_one, org_two)
       org_one = Organisation.find(org_one)
