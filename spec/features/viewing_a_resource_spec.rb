@@ -103,12 +103,19 @@ describe "Viewing a resource" do
         it { expect(page).to have_content("Data") }
         it { expect(page).to have_content("Analysis") }
 
+        it { expect(page).to have_content("Subject Area") }
+        it { expect(page).to have_content("Functional Areas") }
+        it { expect(page).to have_content("Degree centrality: 2.0") }
+        it { expect(page).to have_content("indegree") }
+        it { expect(page).to have_content("outdegree") }
+
         it { expect(page).to have_content("3 Emails sent") }
       end
 
       context "resource page for an Organisation" do
 
         before do
+          bootstrap_web_portal!
           jeff.get_connections!
           visit '/id/organisations/widgetcorp-org'
         end
@@ -122,10 +129,23 @@ describe "Viewing a resource" do
         it { expect(page).to have_content("Links") }
         it { expect(page).to have_content("Data") }
         it { expect(page).to have_content("Analysis") }
+        it { expect(page).to have_content("Clustering") }
 
+        it { expect(page).to have_content("Network Density: 3.0") }
         it { expect(page).to have_content("2 Members") }
         it { expect(page).to have_content("1 Linked Organisation") }
         it { expect(page).to have_content("Jeff") }
+
+        # clustering
+        it do
+          expect(page).to have_content("Linked Organisations by Country")
+          expect(page).to have_content("Linked Organisations by City")
+          expect(page).to have_content("Linked Organisations by Sector")
+        end
+
+        it { expect(page).to have_content("United Kingdom") }
+        it { expect(page).to have_content("Manchester") }
+        it { expect(page).to have_content("Web portals") }
       end
 
       context "resource page for an Email" do
@@ -169,7 +189,11 @@ describe "Viewing a resource" do
       end
 
       context "bulk markup screen for organisation" do
-         before { visit collection_tagging_path(type: 'organisation') }
+         before do
+          bootstrap_web_portal!
+          visit collection_tagging_path(type: 'organisation')
+        end
+
          it { expect(page).to have_content('Use this screen to tag these 2 Organisations with a human-readable label') }
 
         #  describe "filling in the field", js: true do

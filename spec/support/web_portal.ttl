@@ -1,0 +1,3 @@
+<http://swirrl.com/id/sic/6312> a <http://swirrl.com/def/sic/Class> ;
+  <http://www.w3.org/2000/01/rdf-schema#label> "Web portals" ;
+  <http://swirrl.com/def/sic/code> "63.12" .

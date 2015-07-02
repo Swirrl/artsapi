@@ -199,6 +199,84 @@ class Organisation < ResourceWithPresenter
 
   class << self
 
+    # all unhydrated orgs
+    def total_count
+    end
+
+    # get all the strings that have been input for cities
+    def all_unique_city_values
+      sparql = "
+      SELECT DISTINCT ?city
+      WHERE 
+      {
+        GRAPH <http://data.artsapi.com/graph/organisations> {
+          ?org <http://data.artsapi.com/def/arts/locationCity> ?city .
+        }
+      }"
+
+      results = User.current_user.within { Tripod::SparqlClient::Query.select(sparql) }
+
+      results.map { |r| r["city"]["value"] }
+    end
+
+    # get all orgs in a country and return their uri and label
+    def all_organisations_in_country(country)
+      sparql = "
+      SELECT DISTINCT ?uri ?label
+      WHERE 
+      {
+        VALUES ?country { \"#{country}\" }
+        GRAPH <http://data.artsapi.com/graph/organisations> {
+          ?uri <http://data.artsapi.com/def/arts/locationCountry> ?country .
+          ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+        }
+      }
+      "
+
+      results = User.current_user.within { Tripod::SparqlClient::Query.select(sparql) }
+
+      results.map { |r| [r["uri"]["value"], r["label"]["value"]] }
+    end
+
+    # get all orgs in a city and return their uri and label
+    def all_organisations_in_city(city)
+      sparql = "
+      SELECT DISTINCT ?uri ?label
+      WHERE 
+      {
+        VALUES ?city { \"#{city}\" }
+        GRAPH <http://data.artsapi.com/graph/organisations> {
+          ?uri <http://data.artsapi.com/def/arts/locationCity> ?city .
+          ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+        }
+      }
+      "
+
+      results = User.current_user.within { Tripod::SparqlClient::Query.select(sparql) }
+
+      results.map { |r| [r["uri"]["value"], r["label"]["value"]] }
+    end
+
+    # get all orgs in a sector and return their uri and label
+    # expects a uri as input
+    def all_organisations_in_sector(sector)
+      sparql = "
+      SELECT DISTINCT ?uri ?label
+      WHERE 
+      {
+        VALUES ?sector { <#{sector}> }
+        GRAPH <http://data.artsapi.com/graph/organisations> {
+          ?uri <http://data.artsapi.com/def/arts/sector> ?sector .
+          ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+        }
+      }
+      "
+
+      results = User.current_user.within { Tripod::SparqlClient::Query.select(sparql) }
+
+      results.map { |r| [r["uri"]["value"], r["label"]["value"]] }
+    end
+
     # takes a uri object or string
     def write_link(org_one, org_two)
       org_one = Organisation.find(org_one)

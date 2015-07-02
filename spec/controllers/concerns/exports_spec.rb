@@ -11,7 +11,7 @@ describe Exports do
       it { expect(Exports.assemble_person_list_csv).not_to be_blank }
 
       it "should have the right structure and number of rows" do 
-        expect(!!(Exports.assemble_person_list_csv.match(/Person\,Sector\,City\,Country\nJeff Lebowsk[a-z]+\,(?:[A-z]|")*\,(?:[A-z]|")*\,(?:[A-z]|")*\nJeff Lebowsk[a-z]+\,(?:[A-z]|")*\,(?:[A-z]|")*\,(?:[A-z]|")*\nJeff Lebowsk[a-z]+\,(?:[A-z]|")*\,(?:[A-z]|")*\,(?:[A-z]|")*\n/)[0])).to eq true
+        expect(!!(Exports.assemble_person_list_csv.match(/Person\,Sector\,City\,Country\nJeff Lebowsk[a-z]+\,(?:[A-z]|")*\,(?:[A-z]|")*\,(?:[A-z]|")*\nJeff Lebowsk[a-z]+\,(?:[A-z]|")*\,(?:[A-z]|")*\,(?:[A-z]|")*\nJeff Lebowsk[a-z]+\,(?:[A-z]|")*\,Manchester\,United Kingdom\n/)[0])).to eq true
       end
     end
 
@@ -27,7 +27,7 @@ describe Exports do
       it { expect(Exports.dump_people_as_csv).not_to be_blank }
 
       it "should have the right structure, number of rows and data we expect" do
-        expect(!!(Exports.dump_people_as_csv.match(/URI\,Label\,Human Readable Name\,Name\,Email\,Degree Centrality\,Number of Connections\,Position\,Subject Area\,Number of Sent Emails\,Number of Received Emails\,Organisation Name\,Organisation URI\,Sector\,City\,Country\nhttp:\/\/data.artsapi.com\/id\/people\/jeff-widgetcorp-org\,""\,Jeff [A-z]+\,Jeff [A-z]+\,jeff@widgetcorp.org\,2.0\,2\,""\,""\,3\,3\,widgetcorp.org\,http:\/\/data.artsapi.com\/id\/organisations\/widgetcorp-org\,""\,""\,""\nhttp:\/\/data.artsapi.com\/id\/people\/walter-widgetcorp-org\,""\,Jeff [A-z]+\,Jeff [A-z]+\,walter@widgetcorp.org\,1.0\,""\,""\,""\,1\,2\,widgetcorp.org\,http:\/\/data.artsapi.com\/id\/organisations\/widgetcorp-org\,""\,""\,""\nhttp:\/\/data.artsapi.com\/id\/people\/john-nyc-gov\,""\,Jeff [A-z]+\,Jeff [A-z]+\,john@nyc.gov\,0.5\,""\,""\,""\,1\,1\,widgetcorp.org\,http:\/\/data.artsapi.com\/id\/organisations\/nyc-gov\,""\,""\,""/)[0])).to eq true
+        expect(!!(Exports.dump_people_as_csv.match(/URI\,Label\,Human Readable Name\,Name\,Email\,Degree Centrality\,Number of Connections\,Position\,Subject Area\,Number of Sent Emails\,Number of Received Emails\,Organisation Name\,Organisation URI\,Sector\,City\,Country\nhttp:\/\/data.artsapi.com\/id\/people\/jeff-widgetcorp-org\,""\,Jeff [A-z]+\,Jeff [A-z]+\,jeff@widgetcorp.org\,2.0\,2\,""\,""\,3\,3\,widgetcorp.org\,http:\/\/data.artsapi.com\/id\/organisations\/widgetcorp-org\,""\,""\,""\nhttp:\/\/data.artsapi.com\/id\/people\/walter-widgetcorp-org\,""\,Jeff [A-z]+\,Jeff [A-z]+\,walter@widgetcorp.org\,1.0\,""\,""\,""\,1\,2\,widgetcorp.org\,http:\/\/data.artsapi.com\/id\/organisations\/widgetcorp-org\,""\,""\,""\nhttp:\/\/data.artsapi.com\/id\/people\/john-nyc-gov\,""\,Jeff [A-z]+\,Jeff [A-z]+\,john@nyc.gov\,0.5\,""\,""\,""\,1\,1\,widgetcorp.org\,http:\/\/data.artsapi.com\/id\/organisations\/nyc-gov\,""\,Manchester\,United Kingdom/)[0])).to eq true
       end
     end
 

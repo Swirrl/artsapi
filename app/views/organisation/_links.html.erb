@@ -1,4 +1,10 @@
-<table class='table table-striped'>
+<div class='margin-top-50'>
+  <p class='lead text-center'>
+    Below is a list of all the Organisations that this Organisation is linked to. To bulk-edit these, <%= link_to 'click here', collection_tagging_path(organisation: @presenter.resource_uri), target: '_blank' %>.
+  </p>
+</div>
+
+<table class='table table-striped margin-top-50'>
   <thead>
     <th>Organisation</th>
     <th>Members</th>

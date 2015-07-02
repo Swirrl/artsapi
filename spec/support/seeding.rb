@@ -10,6 +10,18 @@ def bootstrap_sic!
   User.post_to_data_endpoint(sic_graph, path_to_sic)
 end
 
+def bootstrap_web_portal!
+  path_to_sic = Rails.root.to_s + "/spec/support/web_portal.ttl"
+  sic_graph = 'http://data.artsapi.com/graph/sic'
+
+  Rails.logger.debug "> [SICBootstrap] File path: #{path_to_sic}"
+  Rails.logger.debug "> [SICBootstrap] Uploading..."
+
+  user.set_tripod_endpoints!
+
+  User.post_to_data_endpoint(sic_graph, path_to_sic)
+end
+
 def bootstrap_keywords!
   path_to_keywords = Rails.root.to_s + "/lib/keywords_resources.ttl"
   keywords_graph = 'http://data.artsapi.com/graph/keywords'

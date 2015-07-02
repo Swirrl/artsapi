@@ -34,7 +34,11 @@
       <tbody>
         <% @presenter.keywords.each do |kw| %>
           <tr>
-            <td><a href="/id/keywords/keyword/<%= kw[0].downcase %>"><%= kw[0] %></a></td>
+            <td>
+              <!-- <a href="/id/keywords/keyword/<%# kw[0].downcase %>"> -->
+                <%= kw[0] %>
+              <!-- </a> -->
+            </td>
             <td><%= kw[1] %></td>
           </tr>
         <% end %>

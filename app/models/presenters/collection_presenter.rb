@@ -8,10 +8,11 @@ module Presenters
     attr_accessor :contains_type, :collection
 
     def initialize(type=nil, opts={})
-      self.contains_type = type.to_sym
+      type = type.to_sym if !type.nil?
+      self.contains_type = type
       other_collection = opts.fetch(:collection, nil)
 
-      case type.to_sym
+      case type
       when :organisation
         self.collection = Organisation.all.resources
       when :person

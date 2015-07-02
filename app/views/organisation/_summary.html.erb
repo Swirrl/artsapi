@@ -3,6 +3,7 @@
     <ul class="list-inline">
       <li><p><%= @presenter.number_of_members %> Members</p></li>
       <li><p><%= @presenter.linked_organisations_text %></p></li>
+      <li><p>Network Density: <%= @presenter.network_density.round(5) %></p></li>
     </ul>
   </blockquote>
 </div>
