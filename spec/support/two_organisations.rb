@@ -47,7 +47,10 @@ shared_examples_for "given a db with two organisations" do
   let!(:walter) { FactoryGirl.create(:person, email: 'walter@widgetcorp.org', made: [email_three.uri]) }
 
   let!(:organisation) { FactoryGirl.create(:organisation, has_members: [jeff.uri, walter.uri]) }
-  let!(:organisation_two) { FactoryGirl.create(:organisation, uri: RDF::URI('http://data.artsapi.com/id/organisations/nyc-gov'), has_members: [john_mcclane.uri]) }
+
+  # fully realise that nyc-gov will not be Manchester or UK, but this is a test.
+  # you passed.
+  let!(:organisation_two) { FactoryGirl.create(:organisation, uri: RDF::URI('http://data.artsapi.com/id/organisations/nyc-gov'), has_members: [john_mcclane.uri], sector: "http://swirrl.com/id/sic/6312", country: "United Kingdom", city: "Manchester") }
 
   let(:org_uri) { organisation.uri }
   let(:org_two_uri) { organisation_two.uri }
