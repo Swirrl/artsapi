@@ -20,6 +20,22 @@ describe 'Organisation' do
         it { expect(organisation.sector_label).to eq "Growing of fibre crops" }
       end
 
+      describe "sic extensions for use by organisations" do
+        before { bootstrap_sic! }
+
+        # look up the voluntary/charitable extensions by different methods
+        it { expect(SIC::Class.find('http://swirrl.com/id/sic/10020').label).to eq "Voluntary or unpaid activities n.e.c." }
+        it { expect(SICConcept.find_class_or_subclass("http://swirrl.com/id/sic/10010").label).to eq "Charitable activities" }
+
+        # test all the arts category extensions are there
+        it { expect(SICConcept.all_classes_and_subclasses.map(&:uri).to_s).to include ("http://swirrl.com/id/sic/90031") }
+        it { expect(SICConcept.all_classes_and_subclasses.map(&:uri).to_s).to include ("http://swirrl.com/id/sic/90011") }
+        it { expect(SICConcept.all_classes_and_subclasses.map(&:uri).to_s).to include ("http://swirrl.com/id/sic/90032") }
+        it { expect(SICConcept.all_classes_and_subclasses.map(&:uri).to_s).to include ("http://swirrl.com/id/sic/90012") }
+        it { expect(SICConcept.all_classes_and_subclasses.map(&:uri).to_s).to include ("http://swirrl.com/id/sic/90013") }
+        it { expect(SICConcept.all_classes_and_subclasses.map(&:uri).to_s).to include ("http://swirrl.com/id/sic/90033") }
+      end
+
       describe "#location_string" do
         before do
           organisation.city = "Manchester"
