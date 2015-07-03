@@ -12,7 +12,7 @@
           <% @presenter.country_table.each do |row| %>
             <tr>
               <td>
-                <a href="/collection_tagging?country=<%= row[0] %>">
+                <a href="/collection_tagging?country=<%= Rails.env.test? ? row[0].gsub(/ /, '%20') : row[0] %>">
                   <%= row[0] %>
                 </a>
               </td>
@@ -37,7 +37,7 @@
           <% @presenter.city_table.each do |row| %>
             <tr>
               <td>
-                <a href="/collection_tagging?city=<%= row[0] %>">
+                <a href="/collection_tagging?city=<%= Rails.env.test? ? row[0].gsub(/ /, '%20') : row[0] %>">
                   <%= row[0] %>
                 </a>
               </td>

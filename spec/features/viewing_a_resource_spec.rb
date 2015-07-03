@@ -146,6 +146,27 @@ describe "Viewing a resource" do
         it { expect(page).to have_content("United Kingdom") }
         it { expect(page).to have_content("Manchester") }
         it { expect(page).to have_content("Web portals") }
+
+        describe "clicking Country" do
+          before { click_link "United Kingdom" }
+
+          it { expect(page).to have_content('Use this screen to tag these 1 Organisations with a human-readable label') }
+          it { expect(page).to have_content('Organisation: nyc.gov') }
+        end
+
+        describe "clicking City" do
+          before { click_link "Manchester" }
+
+          it { expect(page).to have_content('Use this screen to tag these 1 Organisations with a human-readable label') }
+          it { expect(page).to have_content('Organisation: nyc.gov') }
+        end
+
+        describe "clicking Web portals" do
+          before { click_link "Web portals" }
+
+          it { expect(page).to have_content('Use this screen to tag these 1 Organisations with a human-readable label') }
+          it { expect(page).to have_content('Organisation: nyc.gov') }
+        end
       end
 
       context "resource page for an Email" do
@@ -195,6 +216,8 @@ describe "Viewing a resource" do
         end
 
          it { expect(page).to have_content('Use this screen to tag these 2 Organisations with a human-readable label') }
+         it { expect(page).to have_content('Organisation: widgetcorp.org') }
+         it { expect(page).to have_content('Organisation: nyc.gov') }
 
         #  describe "filling in the field", js: true do
         #   before { within('.organisation-update-form:first') do
