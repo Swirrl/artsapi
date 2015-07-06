@@ -37,13 +37,17 @@ module Presenters
       SNA.network_density
     end
 
+    # this is far and away the slowest method called during page load
+    # unfortunately to sort for the UI, we need to know connections
     def members_data
       members.map { |m|
-        p = Person.find(m)
+        connections = Person.get_connections_count_for(m.to_s)
+        connections = Person.connections_count_for(m.to_s) if connections == 0
+
         [Presenters::Resource.create_path_from_uri(m.to_s), 
-          p.human_name,
+          m.to_s,
           SNA.degree_centrality_for_person!(m.to_s).round(5),
-          p.connections.count]
+          connections]
       }.sort { |a,b| b[2] <=> a[2] }
     end
 
