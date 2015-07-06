@@ -80,15 +80,19 @@ In order to run the application and create uploads, the env vars `DROPBOX_APP_KE
 
     `$ sudo docker run --name artsapi-mongo -d mongo`
 
-3. Start the application
+3. Start the application. Note that you can also set `ADMIN_MAILER_PASSWORD` in `production.rb` and `SENTRY_KEY` in `sentry.rb` and thus avoid having to pass them through.
 
-    `$ sudo docker run -d --name artsapi-test \
+    ```
+    $ sudo docker run -d --name artsapi-test \
         --link artsapi-mongo:mongodb \
         --link artsapi-fuseki:artsapi-fuseki \
         -p 127.0.0.1:1955:80 \
         -e DROPBOX_APP_KEY=<dropbox-app-key> \
         -e DROPBOX_APP_SECRET=<dropbox-app-secret> \
-        <artsapi-image>`
+        -e ADMIN_MAILER_PASSWORD=<mandrill-password-here> \
+        -e SENTRY_KEY=<sentry-key> \
+        <artsapi-image>
+    ```
 
 4. Make sure you have secured your server! In the example above, you would want Nginx on the host to proxy to `http://localhost:1955`.
 
@@ -102,6 +106,12 @@ NB: Remember, to inspect running containers, you can use `sudo docker exec -i -t
 
 - Fuseki
 - MongoDB
+
+Accounts needed:
+
+1. [Dropbox](https://www.dropbox.com)
+2. [Mandrill](https://www.mandrill.com)
+3. [Sentry](https://getsentry.com)
 
 ### Seeding Users
 
