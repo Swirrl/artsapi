@@ -142,7 +142,7 @@ class Person < ResourceWithPresenter
     User.current_user.within {
       Email.find_by_sparql("
         SELECT DISTINCT ?uri 
-        WHERE { 
+        WHERE {
           ?uri a <http://data.artsapi.com/def/arts/Email> .
           <#{self.uri.to_s}> <http://xmlns.com/foaf/0.1/made> ?uri .
         }")
@@ -239,6 +239,82 @@ class Person < ResourceWithPresenter
       "PREFIX foaf: <http://xmlns.com/foaf/0.1/>
       PREFIX arts: <http://data.artsapi.com/def/arts/>
       PREFIX org: <http://www.w3.org/ns/org#>"
+    end
+
+    def all_emails_for(uri)
+      User.current_user.within {
+        Tripod::SparqlClient::Query.select("
+          SELECT DISTINCT ?email_uri
+          WHERE {
+            ?email_uri a <http://data.artsapi.com/def/arts/Email> .
+            <#{uri}> <http://xmlns.com/foaf/0.1/made> ?email_uri .
+          }
+        ").map { |r| r["email_uri"]["value"] }
+      }
+    end
+
+    def recipients_of_emails_for(uri)
+      all_emails = all_emails_for(uri)
+
+      User.current_user.within {
+        Tripod::SparqlClient::Query.select("
+          #{Person.query_prefixes}
+
+          SELECT DISTINCT ?person
+          WHERE {
+            VALUES ?email { <#{all_emails.map(&:to_s).join("> <")}> }
+
+            GRAPH <http://data.artsapi.com/graph/emails> {
+              ?email arts:emailRecipient ?person
+            }
+          }
+        ").map { |r| r["person"]["value"] }
+      }
+    end
+
+    def connections_count_for(uri)
+      recipients = recipients_of_emails_for(uri)
+
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+
+        SELECT DISTINCT ?person
+        WHERE {
+          VALUES ?person { <#{recipients.join("> <")}> }
+
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?email arts:emailRecipient <#{uri}> .
+            ?email arts:emailSender ?person .
+          }
+        }
+      ")
+
+      User.current_user.within { 
+        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      }
+    end
+
+    # assumes connections have already been calculated
+    def get_connections_count_for(uri)
+      query = Tripod::SparqlQuery.new("
+        #{Person.query_prefixes}
+
+        SELECT DISTINCT ?person
+        WHERE {
+          GRAPH <http://data.artsapi.com/graph/people> {
+            <#{uri}> arts:connection ?person .
+          }
+
+          GRAPH <http://data.artsapi.com/graph/emails> {
+            ?email arts:emailRecipient <#{uri}> .
+            ?email arts:emailSender ?person .
+          }
+        }
+      ")
+
+      User.current_user.within { 
+        Tripod::SparqlClient::Query.select(query.as_count_query_str)[0]["tripod_count_var"]["value"].to_i
+      }
     end
 
     # try one, fall back to the other

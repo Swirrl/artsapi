@@ -10,7 +10,9 @@
         <td>
           <span class='member-inline-edit-container'>
             <a href="<%= member[0] %>">
-              <%= member[1] %>
+              <span class='ajax-label' data-uri="<%= member[1] %>">
+                <%= member[1] %>
+              </span>
             </a>
             <%= inline_edit_link_for("#{ArtsAPI::HOST}#{member[0]}") %>
           </span>

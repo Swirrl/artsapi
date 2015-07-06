@@ -4775,3 +4775,27 @@
   <http://www.w3.org/2000/01/rdf-schema#label> "Visual Arts";
   <http://swirrl.com/def/sic/code> "90.03/3";
   .
+
+<http://swirrl.com/id/sic/V> a <http://swirrl.com/def/sic/Section> ;
+  <http://www.w3.org/2000/01/rdf-schema#label> "ACTIVITIES OF VOLUNTARY OR CHARITABLE ORGANISATIONS AND BODIES" ;
+  <http://swirrl.com/def/sic/code> "V" .
+
+<http://swirrl.com/id/sic/100> a <http://swirrl.com/def/sic/Division> ;
+  <http://www.w3.org/2000/01/rdf-schema#label> "Activities of voluntary or charitable organisations and bodies" ;
+  <http://swirrl.com/def/sic/code> "100" .
+
+<http://swirrl.com/id/sic/1001> a <http://swirrl.com/def/sic/Group> ;
+  <http://www.w3.org/2000/01/rdf-schema#label> "Charitable activities" ;
+  <http://swirrl.com/def/sic/code> "100.1" .
+
+<http://swirrl.com/id/sic/10010> a <http://swirrl.com/def/sic/Class> ;
+  <http://www.w3.org/2000/01/rdf-schema#label> "Charitable activities" ;
+  <http://swirrl.com/def/sic/code> "100.10" .
+
+<http://swirrl.com/id/sic/1002> a <http://swirrl.com/def/sic/Group> ;
+  <http://www.w3.org/2000/01/rdf-schema#label> "Voluntary or unpaid activities n.e.c." ;
+  <http://swirrl.com/def/sic/code> "100.2" .
+
+<http://swirrl.com/id/sic/10020> a <http://swirrl.com/def/sic/Class> ;
+  <http://www.w3.org/2000/01/rdf-schema#label> "Voluntary or unpaid activities n.e.c." ;
+  <http://swirrl.com/def/sic/code> "100.20" .

@@ -110,6 +110,7 @@ describe "Viewing a resource" do
         it { expect(page).to have_content("outdegree") }
 
         it { expect(page).to have_content("3 Emails sent") }
+        it { expect(page).to have_selector('span.ajax-label') }
       end
 
       context "resource page for an Organisation" do
@@ -134,7 +135,10 @@ describe "Viewing a resource" do
         it { expect(page).to have_content("Network Density: 3.0") }
         it { expect(page).to have_content("2 Members") }
         it { expect(page).to have_content("1 Linked Organisation") }
-        it { expect(page).to have_content("Jeff") }
+
+        # this is an ajax label
+        it { expect(page).to have_content("http://data.artsapi.com/id/people/jeff-widgetcorp-org") }
+        it { expect(page).to have_selector('span.ajax-label', text: "http://data.artsapi.com/id/people/jeff-widgetcorp-org") }
 
         # clustering
         it do

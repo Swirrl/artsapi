@@ -48,18 +48,23 @@ module D3
     def filter_connections(conn_array, bin_cutoff, opts={})
       use_naive = opts.fetch(:use_naive, true)
 
-      highest_value = conn_array.first[1].to_f
-      lowest_value = conn_array.last[1].to_f
+      # rescue if conn_array is nil or empty and return empty array
+      begin
+        highest_value = conn_array.first[1].to_f
+        lowest_value = conn_array.last[1].to_f
 
-      if use_naive
-        naive_bin_size = (highest_value - lowest_value) / 20
-        filter_threshold = (naive_bin_size * bin_cutoff) + lowest_value
-      else
-        bin_size_by_length = (conn_array.length / 20)
-        filter_threshold = conn_array[(bin_size_by_length * bin_cutoff).to_i][1]
+        if use_naive
+          naive_bin_size = (highest_value - lowest_value) / 20
+          filter_threshold = (naive_bin_size * bin_cutoff) + lowest_value
+        else
+          bin_size_by_length = (conn_array.length / 20)
+          filter_threshold = conn_array[(bin_size_by_length * bin_cutoff).to_i][1]
+        end
+
+        conn_array.map { |a| a if a[1] > filter_threshold }.compact
+      rescue
+        conn_array ||= []
       end
-
-      conn_array.map { |a| a if a[1] > filter_threshold }.compact
     end
 
     def add_to_hash(uri, value, target_uri, person_counter, bin_cutoff)
