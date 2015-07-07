@@ -4,28 +4,32 @@
   </div>
   <div class='col-md-3 col-md-offset-6'>
 
-    <div class="btn-group" role="group">
+    <% if user_signed_in? %>
 
-      <%= link_to('&larr; Log out'.html_safe, destroy_user_session_path, method: :delete, class: 'btn btn-danger') if user_signed_in? %>
-      <%= link_to('Edit user', edit_user_registration_path, class: 'btn btn-primary') if user_signed_in? %>
+      <div class="btn-group" role="group">
 
-    </div>
-
-    <%= form_tag(search_path, method: :post, class: 'form-inline search-form margin-top-5') do %>
-      <div class="form-group">
-
-        <%= text_field_tag :search, '', class: 'form-control width-200-px', placeholder: 'Enter an email or name...' %>
-
-        <%= submit_tag 'Search', class: 'btn btn-success' %>
+        <%= link_to('&larr; Log out'.html_safe, destroy_user_session_path, method: :delete, class: 'btn btn-danger') %>
+        <%= link_to('Edit user', edit_user_registration_path, class: 'btn btn-primary') %>
 
       </div>
-    <% end %>
 
-    <p class='text-right no-margins'>
-      Signed in as <strong><%= current_user.email if user_signed_in? %></strong>.
-      <br>
-      <%= link_to("Go to your Organisation &rarr;".html_safe, URI(current_user.organisation_from_email).path) if user_signed_in? rescue '' %>
-    </p>
+      <%= form_tag(search_path, method: :post, class: 'form-inline search-form margin-top-5') do %>
+        <div class="form-group">
+
+          <%= text_field_tag :search, '', class: 'form-control width-200-px', placeholder: 'Enter an email or name...' %>
+
+          <%= submit_tag 'Search', class: 'btn btn-success' %>
+
+        </div>
+      <% end %>
+
+      <p class='text-right no-margins'>
+        Signed in as <strong><%= current_user.email %></strong>.
+        <br>
+        <%= link_to("Go to your Organisation &rarr;".html_safe, URI(current_user.organisation_from_email).path) rescue '' %>
+      </p>
+
+    <% end %>
 
   </div>
 
