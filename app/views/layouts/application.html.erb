@@ -15,7 +15,7 @@
 
   <div class="container-fluid">
 
-    <%= render 'shared/search' if user_signed_in? %>
+    <%= render 'shared/search' %>
 
     <div class='row'>
       <%= render 'shared/header' %>
@@ -33,13 +33,23 @@
 
 </body>
 <footer class='footer no-margins margin-top-300'>
-  <div class='padding-top-50'>
-    <p class='text-center'>
-      <%= link_to('&larr; Log out'.html_safe, destroy_user_session_path, method: :delete, class: 'dark-background') if user_signed_in? %> | 
-      <%= link_to('Edit user', edit_user_registration_path, class: 'dark-background') if user_signed_in? %>
-      <br>
-      Signed in as <strong><%= current_user.email if user_signed_in? %></strong>
+  <div class='margin-left-30 padding-top-50'>
+    <p class='text-left'>
+      <% if user_signed_in? %>
+        <%= link_to('&larr; Log out'.html_safe, destroy_user_session_path, method: :delete, class: 'dark-background') %> | 
+        <%= link_to('Edit user', edit_user_registration_path, class: 'dark-background') %>
+        <br>
+        Signed in as <strong><%= current_user.email %></strong>
+      <% end %>
     </p>
+  </div>
+  <div class='margin-left-30 margin-top-20'>
+    <%# image_tag 'nesta_logo.png', width: 150 %>
+    <%= image_tag 'swirrl_logo.png', width: 150, class: 'margin-left-20' %>
+    <%= image_tag 'fe_logo.png', width: 150, class: 'margin-left-20' %>
+    <%= image_tag 'dundee_logo.png', width: 100, class: 'margin-left-20' %>
+    <%= image_tag 'djcad_logo.png', width: 110, class: 'margin-left-20' %>
+    <%= image_tag 'funders_logo.png', width: 230 %>
   </div>
 </footer>
 </html>
