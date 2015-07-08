@@ -18,7 +18,7 @@ stdout_path RAILS_ROOT + "/log/unicorn.log"
 # }
 
 # Uncomment this line - backlog default is 1024
-listen (RAILS_ROOT + '/tmp/unicorn/sockets/unicorn.sock'), :backlog => 2048
+listen 8080 #(RAILS_ROOT + '/tmp/unicorn/sockets/unicorn.sock'), :backlog => 2048
 
 # Mount the folder that contains the unix sockets in the app Dockerfile and include volumes from the app in the nginx Docker
 # VOLUME ["/open_data_communities/tmp/unicorn/sockets"]

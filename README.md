@@ -86,7 +86,8 @@ In order to run the application and create uploads, the env vars `DROPBOX_APP_KE
     $ sudo docker run -d --name artsapi-test \
         --link artsapi-mongo:mongodb \
         --link artsapi-fuseki:artsapi-fuseki \
-        -p 127.0.0.1:1955:80 \
+        -v /var/lib/artsapi-assets:/artsapi-assets \
+        -p 127.0.0.1:1955:8080 \
         -e DROPBOX_APP_KEY=<dropbox-app-key> \
         -e DROPBOX_APP_SECRET=<dropbox-app-secret> \
         -e ADMIN_MAILER_PASSWORD=<mandrill-password-here> \

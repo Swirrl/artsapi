@@ -4,13 +4,10 @@ MAINTAINER Alex Lynham "alex@swirrl.com"
 
 RUN apt-get update
 
-# Install Nginx and rvm/Rails dependencies
+# Install rvm/Rails dependencies
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
-  add-apt-repository -y ppa:nginx/stable && \
   apt-get update && \
-  apt-get install -y nginx tar wget curl nano git nodejs npm automake bison openjdk-7-jre-headless && \
-  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
-  chown -R www-data:www-data /var/lib/nginx
+  apt-get install -y tar wget curl nano git nodejs npm automake bison openjdk-7-jre-headless
 
 # Install Memcached
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libevent-dev libsasl2-2 sasl2-bin libsasl2-2 libsasl2-dev libsasl2-modules memcached
@@ -32,10 +29,6 @@ RUN \
   sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf && \
   sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis/redis.conf && \
   sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis/redis.conf
-
-# Add site conf to nginx
-ADD docker/site.conf /etc/nginx/sites-enabled/site.conf
-RUN rm /etc/nginx/sites-enabled/default
 
 # for rvm
 RUN gpg --allow-non-selfsigned-uid --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3 BF04FF17
@@ -96,11 +89,14 @@ RUN /bin/bash -l -c "ln -s /usr/bin/nodejs /usr/bin/node"
 # Precompile assets
 RUN /bin/bash -l -c "bundle exec rake assets:precompile RAILS_ENV=production RAILS_GROUPS=assets"
 
-# Mount nginx volumes
-VOLUME ["/data", "/etc/nginx/sites-enabled", "/var/log/nginx", "/artsapi/log"]
+# Make a place for them
+RUN mkdir /artsapi-assets
 
-# serve nginx
-EXPOSE 80 
+# Mount nginx volumes
+VOLUME ["/data", "/artsapi/log", "/artsapi-assets"]
+
+# serve unicorn
+EXPOSE 8080
 
 # Start the unicorn server and start nginx
 CMD ["/usr/bin/start-server-production"]

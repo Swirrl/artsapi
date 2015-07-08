@@ -7,7 +7,7 @@ cd /artsapi
 source /etc/profile.d/rvm.sh
 
 # memcached up
-# memcached -d -u root -I 10m -m 1024
+memcached -d -u root -I 40m -m 1024
 
 # daemonize redis
 sed -i.bak "s/# daemonize no/daemonize yes/g" /etc/redis/redis.conf
@@ -34,8 +34,8 @@ bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 
-# unicorn daemonised so we can run nginx
-bundle exec unicorn_rails -D -c ./config/unicorn.rb -E production
+# get assets and put them in a location we know
+cp -r /artsapi/public /artsapi-assets
 
-# unicorn behind nginx so we can serve static assets
-nginx
+# unicorn daemonised so we can run nginx
+bundle exec unicorn_rails -c ./config/unicorn.rb -E production

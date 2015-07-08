@@ -45,7 +45,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -109,7 +109,7 @@ Tripod.configure do |config|
   config.query_endpoint = ENV['FUSEKI_QUERY_ENDPOINT'].nil? ? "http://#{ENV['ARTSAPI_FUSEKI_PORT_3030_TCP_ADDR']}:3030/artsapi/sparql" : "#{ENV['FUSEKI_QUERY_ENDPOINT']}" # check if we're in staging
 
   # memcached exists in this image
-  # config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new("localhost:11211")
+  config.cache_store = Tripod::CacheStores::MemcachedCacheStore.new("localhost:11211")
   config.timeout_seconds = 240
   config.response_limit_bytes = 40.megabytes
 
