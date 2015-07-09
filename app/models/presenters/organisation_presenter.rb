@@ -48,7 +48,7 @@ module Presenters
           m.to_s,
           SNA.degree_centrality_for_person!(m.to_s).round(5),
           connections]
-      }.sort { |a,b| b[2] <=> a[2] }
+      }.sort { |a,b| b[3] <=> a[3] }
     end
 
     def country_list
