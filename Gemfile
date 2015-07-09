@@ -35,7 +35,7 @@ gem 'unicorn-worker-killer', '~> 0.4.2'
 # gem 'capistrano-rails', group: :development
 
 gem 'rdf', '~> 1.1.0'
-gem 'tripod', '~> 0.10.10'
+gem 'tripod', '~> 0.11.1'
 
 gem 'devise'
 gem 'devise_invitable'
