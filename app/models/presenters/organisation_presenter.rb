@@ -36,6 +36,7 @@ module Presenters
     def network_density
       SNA.network_density
     end
+    memoize :network_density
 
     # this is far and away the slowest method called during page load
     # unfortunately to sort for the UI, we need to know connections

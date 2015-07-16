@@ -68,6 +68,10 @@ class UploadsController < ApplicationController
     # do we want to force generation of everything?
     force_all = params[:force] if params.has_key?(:force)
 
+    # lock it for a day
+    current_user.last_clicked_process_data_button = DateTime.now
+    current_user.save
+
     begin
       job_ids = force_all ? Organisation.bootstrap_all! : Organisation.bootstrap_owner_or_largest_org!
 

@@ -3,11 +3,11 @@ class ExportsWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
-  sidekiq_options :retry => 3
+  sidekiq_options :retry => 3, :dead => false
 
   def perform(export_type, current_user_id)
 
-    Rails.logger.debug "> [Sidekiq]: exporting #{export_type}, triggered by #{User.current_user.email}"
+    logger.debug "> [Sidekiq]: exporting #{export_type}, triggered by #{User.current_user.email}"
 
     case export_type
     when 'person_list'

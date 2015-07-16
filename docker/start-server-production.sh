@@ -7,7 +7,7 @@ cd /artsapi
 source /etc/profile.d/rvm.sh
 
 # memcached up
-memcached -d -u root -I 40m -m 1024
+# memcached -d -u root -I 40m -m 1024
 
 # daemonize redis
 sed -i.bak "s/# daemonize no/daemonize yes/g" /etc/redis/redis.conf

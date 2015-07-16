@@ -35,6 +35,7 @@ class User
   # background jobs
   field :job_ids, type: Array, default: []
   field :uploads_in_progress, type: Integer, default: 0
+  field :last_clicked_process_data_button, type: DateTime
 
   def active_jobs
     sidekiq_queue = Sidekiq::Queue.new

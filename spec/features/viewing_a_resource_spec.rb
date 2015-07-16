@@ -223,17 +223,20 @@ describe "Viewing a resource" do
          it { expect(page).to have_content('Organisation: widgetcorp.org') }
          it { expect(page).to have_content('Organisation: nyc.gov') }
 
-        #  describe "filling in the field", js: true do
-        #   before { within('.organisation-update-form:first') do
-        #     fill_in :label, with: 'Widget Corp, Inc.'
-        #     fill_in :city, with: 'Mos Eisley'
-        #     click_button :submit
-        #   end }
+         describe "filling in the field", js: true do
+          before { within first('.organisation-update-form') do
+            fill_in :label, with: 'Widget Corp, Inc.'
+            fill_in :city, with: 'Mos Eisley'
+            click_button 'Update'
+            sleep 2
+          end }
 
-        #   it { expect(page).not_to have_content('widgetcorp-org') }
-        #   it { expect(organisation.label).to eq "Widget Corp, Inc." }
-        #   it { expect(organisation.city).to eq "Mos Eisley" }
-        # end
+          it { expect(page).not_to have_content('Organisation: widgetcorp.org') }
+
+          # hard reload from db
+          it { expect(Organisation.find(organisation.uri).label).to eq "Widget Corp, Inc." }
+          it { expect(Organisation.find(organisation.uri).city).to eq "Mos Eisley" }
+        end
       end
 
 
@@ -241,18 +244,21 @@ describe "Viewing a resource" do
         before { visit collection_tagging_path(type: 'person') }
         it { expect(page).to have_content('Use this screen to tag these 3 People with a human-readable label') }
 
-        # describe "filling in the field", js: true do
-        #   before { within('.person-update-form:first') do
-        #     fill_in :label, with: 'Brian Vader'
-        #     fill_in :position, with: 'A very naughty little sith'
-        #     click_button :submit
-        #   end }
+        describe "filling in the field", js: true do
+          before { within first('.person-update-form') do
+            fill_in :label, with: 'Brian Vader'
+            fill_in :position, with: 'A very naughty little sith'
+            click_button 'Update'
+            sleep 2
+          end }
 
-        #   it { expect(page).not_to have_content('jeff@widgetcorp.org') }
-        #   it { expect(jeff.human_name).to eq "Brian Vader" }
-        #   it { expect(jeff.label).to eq "Brian Vader" }
-        #   it { expect(jeff.position).to eq "A very naughty little sith" }
-        # end
+          it { expect(page).not_to have_content('Email: jeff@widgetcorp.org') }
+
+          # hard reload from db
+          it { expect(Person.find(jeff.uri).human_name).to eq "Brian Vader" }
+          it { expect(Person.find(jeff.uri).label).to eq "Brian Vader" }
+          it { expect(Person.find(jeff.uri).position).to eq "A very naughty little sith" }
+        end
       end
 
     end

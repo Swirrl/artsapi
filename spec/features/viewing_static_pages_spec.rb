@@ -43,6 +43,31 @@ describe "static pages" do
         it { expect(page).to have_content("Welcome to ArtsAPI: Getting Started") }
         it { expect(page).to have_content("Signed in as jeff@widgetcorp.org") }
 
+        describe "process all button", js: true do
+
+          before { visit root_path }
+
+          it { expect(page).to have_css('.process-all-button') }
+        end
+
+        describe "clicking process-all-button", js: true do
+          before do
+            visit root_path
+            find('.process-all-button').click
+          end
+
+          it do
+            sleep 2
+            user.reload
+            expect(user.last_clicked_process_data_button).not_to be_nil
+            expect(user.last_clicked_process_data_button).to be > (DateTime.now - 24.hours)
+
+            visit current_path
+
+            expect(page).to have_css('.process-all-button.disabled')
+          end
+        end
+
         describe "searching for a Person by email" do
 
           before do

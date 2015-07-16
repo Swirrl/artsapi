@@ -35,7 +35,7 @@ gem 'unicorn-worker-killer', '~> 0.4.2'
 # gem 'capistrano-rails', group: :development
 
 gem 'rdf', '~> 1.1.0'
-gem 'tripod', '~> 0.10.10'
+gem 'tripod', '~> 0.11.1'
 
 gem 'devise'
 gem 'devise_invitable'
@@ -69,7 +69,7 @@ group :development, :test do
   gem "database_cleaner"
   # gem "selenium-webdriver"
   gem 'poltergeist'
-  # gem "capybara-webkit"
+  gem 'capybara-webkit'
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   #gem 'byebug'

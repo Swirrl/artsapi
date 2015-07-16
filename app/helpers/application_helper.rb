@@ -44,4 +44,19 @@ module ApplicationHelper
     Presenters::Resource.create_link_from_uri(uri, opts).html_safe
   end
 
+  def process_data_button
+    job_count = current_user.active_jobs.count
+    upload_count = current_user.uploads_in_progress
+    total_count = (job_count + upload_count) || 0
+
+    last_click = current_user.last_clicked_process_data_button || (DateTime.now - 2.days)
+    has_clicked_within_24_hrs = !!(DateTime.now < (last_click + 24.hours))
+
+    if total_count > 0 || has_clicked_within_24_hrs
+      button_to 'Data processing, please come back later', '#', disabled: true, class: 'btn btn-success process-all-button disabled'
+    else
+      button_to 'Process uploaded data', process_data_path, remote: true, data: { disable_with: "Processing...", confirm: "Are you sure all data imports have finished?" }, class: 'btn btn-success process-all-button'
+    end
+  end
+
 end

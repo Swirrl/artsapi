@@ -18,7 +18,10 @@ Sidekiq::Testing.inline!
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.orm = "mongoid"
 
-# Capybara.javascript_driver = :webkit
+Capybara.javascript_driver = :webkit
+Capybara.register_driver :webkit do |app|
+  Capybara::Webkit::Driver.new(app, stderr: WarningSuppressor)
+end
 # Capybara.javascript_driver = :poltergeist
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -94,5 +97,14 @@ RSpec.configure do |config|
   config.after(:each) do
     # clear mongo
     DatabaseCleaner.clean
+  end
+end
+
+class WarningSuppressor
+  class << self
+    def write(message)
+      puts(message) unless (message =~ /QFont::setPixelSize: Pixel size <= 0/) or (message =~ /QNetworkReplyImplPrivate::error: Internal problem, this method must only be called once./) or (message =~ /WARNING: The next major version of capybara-webkit will require at least version 5.0 of Qt. You're using version 4.8.7./)
+      0
+    end
   end
 end
