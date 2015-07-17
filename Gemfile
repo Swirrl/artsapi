@@ -37,7 +37,7 @@ gem 'unicorn-worker-killer', '~> 0.4.2'
 gem 'rdf', '~> 1.1.0'
 gem 'tripod', '~> 0.11.1'
 
-gem 'devise'
+gem 'devise', '3.4.1'
 gem 'devise_invitable'
 gem 'authority'
 gem 'mongoid', '~> 4.0.0'

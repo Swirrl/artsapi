@@ -334,7 +334,7 @@ DEPENDENCIES
   capybara-webkit
   coffee-rails (~> 4.1.0)
   database_cleaner
-  devise
+  devise (= 3.4.1)
   devise_invitable
   dropbox-sdk (~> 1.6.4)
   factory_girl_rails (~> 4.5.0)
