@@ -199,6 +199,23 @@ class Organisation < ResourceWithPresenter
 
   class << self
 
+    def find_by_label(string)
+      uri = User.current_user.within {
+        Tripod::SparqlClient::Query.select("
+          SELECT DISTINCT ?uri
+          WHERE {
+            GRAPH <http://data.artsapi.com/graph/organisations> {
+              ?uri <http://www.w3.org/2000/01/rdf-schema#label> \"#{string}\" .
+            }
+          }
+          LIMIT 1
+        ")[0]["uri"]["value"]
+      }
+
+      Organisation.find(uri)
+    end
+
+
     # all unhydrated orgs
     def total_count
     end

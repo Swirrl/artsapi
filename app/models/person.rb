@@ -339,9 +339,14 @@ class Person < ResourceWithPresenter
         Tripod::SparqlClient::Query.select("
           SELECT DISTINCT ?uri
           WHERE {
-            { ?uri <http://www.w3.org/2000/01/rdf-schema#label> \"#{string}\" . }
-            UNION
-            { ?uri <http://xmlns.com/foaf/0.1/name> \"#{string}\" . }
+            VALUES ?string { \"#{string}\" \"#{string.upcase}\" \"#{string.downcase}\" \"#{string.titleize}\" }
+
+            GRAPH <http://data.artsapi.com/graph/people> {
+              { ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?string . }
+              UNION
+              { ?uri <http://xmlns.com/foaf/0.1/name> ?string . }
+            }
+
           }
           LIMIT 1
         ")[0]["uri"]["value"]

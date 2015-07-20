@@ -85,7 +85,7 @@ describe "static pages" do
           it { expect(page).to have_content("3 Emails sent") }
 
         end
-        
+
         describe "searching for a Person by name" do
 
           before do
@@ -101,6 +101,87 @@ describe "static pages" do
           it { expect(page).to have_content("Data") }
 
           it { expect(page).to have_content("3 Emails sent") }
+
+        end
+
+        describe "searching for a Person by upcase name" do
+
+          before do
+            jeff.label = jeff.name.first.downcase
+            jeff.save
+            fill_in :search, with: jeff.name.first.upcase
+            click_button 'Search'
+          end
+
+          it { expect(page).to have_content(jeff.name.first) }
+          it { expect(page).to have_content("Graph") }
+          it { expect(page).to have_content("Distribution") }
+          it { expect(page).to have_content("Connections") }
+          it { expect(page).to have_content("Keywords") }
+
+          it { expect(page).to have_content("3 Emails sent") }
+
+        end
+
+        describe "searching for a Person by downcase name" do
+
+          before do
+            jeff.label = jeff.name.first.upcase
+            jeff.save
+            fill_in :search, with: jeff.name.first.downcase
+            click_button 'Search'
+          end
+
+          it { expect(page).to have_content(jeff.name.first) }
+          it { expect(page).to have_content("Graph") }
+          it { expect(page).to have_content("Distribution") }
+          it { expect(page).to have_content("Connections") }
+          it { expect(page).to have_content("Keywords") }
+
+          it { expect(page).to have_content("3 Emails sent") }
+
+        end
+
+        describe "searching for a Person by titlecase name" do
+
+          before do
+            jeff.label = jeff.name.first.downcase
+            jeff.name = [jeff.name.first.downcase]
+            jeff.save
+            fill_in :search, with: jeff.name.first.titleize
+            click_button 'Search'
+          end
+
+          it { expect(page).to have_content(jeff.name.first) }
+          it { expect(page).to have_content("Graph") }
+          it { expect(page).to have_content("Distribution") }
+          it { expect(page).to have_content("Connections") }
+          it { expect(page).to have_content("Keywords") }
+
+          it { expect(page).to have_content("3 Emails sent") }
+
+        end
+
+        describe "searching for an Organisation by label" do
+
+          before do
+            fill_in :search, with: 'widgetcorp.org'
+            click_button 'Search'
+          end
+
+          it "should use the label" do
+            expect(page).to have_content('widgetcorp.org')
+          end
+
+          it { expect(page).to have_content("Graph") }
+          it { expect(page).to have_content("Members") }
+          it { expect(page).to have_content("Links") }
+          it { expect(page).to have_content("Data") }
+          it { expect(page).to have_content("Analysis") }
+          it { expect(page).to have_content("Clustering") }
+
+          it { expect(page).to have_content("Network Density: 3.0") }
+          it { expect(page).to have_content("2 Members") }
 
         end
 
