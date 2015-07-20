@@ -23,16 +23,16 @@ bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
-bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
+# bundle exec sidekiq -d -L /artsapi/log/sidekiq.log -e production -c 1
 
 # get assets and put them in a location we know
 cp -r /artsapi/public /artsapi-assets

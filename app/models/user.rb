@@ -106,10 +106,10 @@ class User
   class << self
 
     # Make mongoid and mongo play nice
-    def serialize_from_session(key, salt)
-      record = to_adapter.get(key[0]["$oid"])
-      record if record && record.authenticatable_salt == salt
-    end
+    # def serialize_from_session(key, salt)
+    #   record = to_adapter.get(key[0]["$oid"])
+    #   record if record && record.authenticatable_salt == salt
+    # end
 
     # We need to be able to call User.current_user
     # so that we can call the .within {} method above

@@ -40,7 +40,7 @@ gem 'tripod', '~> 0.11.1'
 gem 'devise', '3.4.1'
 gem 'devise_invitable'
 gem 'authority'
-gem 'mongoid', '~> 4.0.0'
+gem 'mongoid', '~> 4.0.2'
 
 gem 'bootstrap-sass', '~> 3.3.3'
 
