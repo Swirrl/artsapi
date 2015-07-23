@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.9'
+gem 'rails', '4.1.11'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use SCSS for stylesheets
@@ -37,7 +37,7 @@ gem 'unicorn-worker-killer', '~> 0.4.2'
 gem 'rdf', '~> 1.1.0'
 gem 'tripod', '~> 0.11.1'
 
-gem 'devise', '3.4.1'
+gem 'devise', '3.5.1'
 gem 'devise_invitable'
 gem 'authority'
 gem 'mongoid', '~> 4.0.2'
