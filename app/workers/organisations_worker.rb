@@ -14,8 +14,10 @@ class OrganisationsWorker
     organisation.set_visualisation_graph(graph_json)
 
     # reload email counts for users
-    logger.debug "> [Sidekiq]: Re-generating email counts for members of #{uri}"
-    organisation.force_regenerate_email_counts!
+    # [26/7/15] this is expensive and maybe not necessary
+    # let's take it out for now.
+    # logger.debug "> [Sidekiq]: Re-generating email counts for members of #{uri}"
+    # organisation.force_regenerate_email_counts!
 
   end
 
